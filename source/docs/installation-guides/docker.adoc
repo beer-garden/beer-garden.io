@@ -1,0 +1,55 @@
+= Docker/Docker Compose Installation Guide
+:page-layout: docs
+:includedir: _includes
+
+This guide provides step-by-step instructions for installing and running beer-garden using docker. It covers both docker-compose and using the individual docker images.
+
+== Prerequisites
+
+include::{includedir}/docker-prereqs.adoc[]
+
+== Installing via Docker Compose
+
+include::{includedir}/docker-git-clone.adoc[]
+
+In this directory you will see a `docker-compose.yml` file that describes the different components of beer-garden and how they fit together. Before we can run beer-garden we need to make one change to the configuration.
+
+TIP: You can checkout all the options for configuration in the link:../../configuration/[Configuration section]
+
+include::{includedir}/docker-config-change.adoc[]
+
+That's it! You've configured beer-garden!
+
+== Run
+
+include::{includedir}/docker-run-app.adoc[]
+
+== Test your installation
+We have a docker image with a very simple plugin you can use to test out your beer-garden. Run it with this command:
+
+     docker run beer-garden/remote-echo --bg-host <IP-ADDRESS> --ssl-disabled
+
+Where <IP-ADDRESS> is the same value you used during the configuration file step earlier.
+
+NOTE: The --ssl-disabled is necessary because your brand new beer-garden
+doesn't have a valid server certificate.
+
+== Start a Remote Plugin
+If you have a remote plugin, you simply need to start it and point it to the host you just stood up!
+
+== Start a Local Plugin
+If you have a local plugin, then this beer-garden is ready to deploy it. Simply copy your plugin into the `./plugins/` then navigate to `http://<IP-ADDRESS>:2337` then:
+
+1. Click on Administration on the left side of the page
+2. Click on System Administration
+3. Click Rescan System Directory at the top right of the screen
+
+You should see your plugin appear!
+
+TIP: If your plugin does not appear, be sure to checkout the logs using:
+`docker-compose logs -f bartender`
+
+== Stop
+Run this command to stop beer-garden.
+
+     docker-compose down

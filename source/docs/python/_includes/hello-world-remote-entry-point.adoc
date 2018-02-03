@@ -1,0 +1,26 @@
+[source,python]
+.main.py
+----
+from brewtils.plugin import RemotePlugin
+
+# Your implementation of the client goes here
+
+def main():
+    plugin = RemotePlugin(HelloWorldClient(),
+                          name='hello-world',
+                          version='1.0.0',
+                          description='My First Plugin',
+                          bg_host="<HOST>",
+                          bg_port="<PORT>",
+                          ssl_enabled=<SSL_ENABLED>,
+                          max_concurrent=5,
+                          metadata={'foo': 'bar'})
+    plugin.run()
+
+if __name__ == "__main__":
+    main()
+----
+
+To review what's happening here, we add the import for `RemotePlugin` to the top of our file, then create a main method that will simply create a `HelloWorldClient` object. Then we pass the object into the `RemotePlugin` which takes an object, a name of the plugin, plugin version, description and a few more things.  That's all the code you need to get started. Now we just need to move on to configuration.
+
+NOTE: A quick note on multi-threading. If you set `max_concurrent=5` in the initializers, you are inherently saying that your functions are thread safe and can be processed in multiple threads (a maximum of 5 can run). It is up to the plugin developer to determine/create a plugin that can actually operate in a multi-threaded fashion.

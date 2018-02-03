@@ -1,0 +1,23 @@
+Starting in beer-garden 2.1.0, it is possible to tell your plugins how to log from the beer-garden application itself. beer-garden provides a new api (`/api/v1/config/logging`) which will respond with a logging configuration that plugins can optionally use. Checkout our Swagger documentation for the complete details of this new endpoint.
+
+This allows you to do one-time configuration of a logger in beer-garden configuration files and propagate that logging configuration to all of your plugins. To use it, you simply add the following to your entry point.
+
+[source,python]
+----
+from brewtils.log import setup_logger
+
+# Your client definition Here
+
+if __name__ == "__main__":
+    setup_logger(
+        bg_host='localhost',
+        bg_port=2337,
+        system_name='my_name',
+        ca_cert=None,
+        client_cert=None,
+        ssl_enabled=None,
+    )
+    # Init your plugin as normal.
+----
+
+This tells beer-garden to setup a root logger based on what is returned from the endpoint at `api/v1/config/logging`. Checkout the link:../../configuration[configuration section] for more information on how to configure this. This is mostly useful for remote plugins.

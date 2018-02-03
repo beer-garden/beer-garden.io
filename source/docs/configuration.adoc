@@ -1,0 +1,195 @@
+= beer-garden Configuration
+:page-layout: docs
+:rpm-config-home: /opt/beer-garden/conf
+:bt-config: bartender-config.json
+:bv-config: brew-view-config.json
+:bt-log-config: bartender-logging-config.json
+:bv-log-config: brew-view-logging-config.json
+
+
+In this guide, we will go over the configuration options in beer-garden and how they affect the application. We will talk about the configuration at a high level, but we assume you have installed beer-garden somehow.
+
+== Configuration Files ==
+
+There are 4 configuration files that come installed with beer-garden. If you installed an RPM, you will find these in `{rpm-config-home}` otherwise you can generate them through the commands `brew-view` and `bartender` provide. The default names are:
+
+* `{bt-config}`
+* `{bt-log-config}`
+* `{bv-config}`
+* `{bv-log-config}`
+
+== Logging Configuration ==
+
+The logging configuration uses the standard python logging information. This can be edited as you see fit. If nothing is specified, beer-garden will fall back to some basic defaults. You can generate a logging file through:
+
+[source,subs="attributes"]
+----
+generate_bartender_log_config -l {bt-log-config}
+generate_brew_view_log_config -l {bv-log-config}
+----
+
+== Bartender Configuration ==
+
+If you do not have a `{bt-config}` file, then you can generate one via:
+
+[source,subs="attributes"]
+----
+generate_bartender_config -c {bt-config}
+----
+
+If you already have a `{bt-config}` file, then you can upgrade it to the latest version via:
+
+[source,subs="attributes"]
+----
+migrate_bartender_config -c {bt-config}
+----
+
+.Bartender Configuration Options
+[options="header"]
+|===
+|Key |Default |Description
+|`action_request_ttl` |-1 |Number of minutes to wait before deleting ACTION requests
+|`amq_admin_host` |localhost |Hostname of the AMQ Admin host
+|`amq_admin_port` |15672 |Port of the AMQ Admin host
+|`amq_admin_user` |guest |Username to login to the AMQ admin
+|`amq_admin_password` |guest |Password to login to the AMQ admin
+|`amq_connection_attempts` |3 |Number of retries to connect to AMQ
+|`amq_exchange` |beer_garden |Exchange name to use for AMQ
+|`amq_heartbeat_interval` |3600 |Heartbeat interval for AMQ
+|`amq_host` |localhost |Hostname of AMQ to use
+|`amq_port` |5672 |Port of the AMQ host
+|`amq_publish_host` |localhost |Publicly accessible hostname for plugins to connect to
+|`amq_password` |guest |Password to login to the AMQ host
+|`amq_user` |guest |Username to login to the AMQ host
+|`amq_virtual_host` |/ |Virtual host to use for AMQ
+|`ca_cert` |None |Path to CA certificate file to use
+|`ca_verify` |True |Verify external certificates
+|`config` |None |Path to configuration file to use
+|`db_host` |localhost |Hostname/IP of the database server
+|`db_name` |beer_garden |Name of the database to use
+|`db_password` |None |Password to connect to the database
+|`db_port` |27017 |Port of the database server
+|`db_username` |None |Username to connect to the database
+|`event_mongo_ttl` |15 |Number of minutes to wait before deleting events (negative number for never)
+|`log_config` |None |Path to a logging config file.
+|`log_file` |None |File you would like the application to log to
+|`log_level` |INFO |Log level for the application
+|`info_request_ttl` |15 |Number of minutes to wait before deleting INFO request
+|`max_thrift_workers` |25 |Maximum number of threads available to service incoming thrift calls
+|`plugin_directory` |None |Directory where local plugins are located
+|`plugin_log_directory` |None |Directory where local plugin logs should go
+|`plugin_shutdown_timeout` |10 |How long to wait for a local plugin to stop before killing it
+|`plugin_startup_timeout` |5 |How long to wait for a local plugin to start before determining it is dead
+|`plugin_status_heartbeat` |10 |Amount of time between status messages
+|`plugin_status_timeout` |30 |Amount of time to wait before marking a plugin as unresponsive
+|`ssl_enabled` |False |Is the API server using SSL
+|`thrift_host` |0.0.0.0 |Host to bind the thrift server to
+|`thrift_port` |9090 |Port to bind the thrift server to
+|`url_prefix` |None |URL prefix of the API server
+|`web_host` |localhost |Hostname of the API server
+|`web_port` |2337 |Port of the API server
+|===
+
+
+== Brew View Configuration ==
+
+If you do not have a `{bv-config}` file, then you can generate one via:
+
+[source,subs="attributes"]
+----
+generate_brew_view_config -c {bv-config}
+----
+
+If you already have a `{bv-config}` file, then you can upgrade it to the latest version via:
+
+[source,subs="attributes"]
+----
+migrate_brew_view_config -c {bv-config}
+----
+.Brew View Configuration Options
+[options="header"]
+|===
+|Key |Default |Description
+|`allow_unsafe_templates` |False |Allow unsafe templates to be loaded by the application
+|`amq_admin_host` |localhost |Hostname of the AMQ Admin host
+|`amq_admin_port` |15672 |Port of the AMQ Admin host
+|`amq_admin_user` |guest |Username to login to the AMQ admin
+|`amq_admin_password` |guest |Password to login to the AMQ admin
+|`amq_connection_attempts` |3 |Number of retries to connect to AMQ
+|`amq_host` |localhost |Hostname of AMQ to use
+|`amq_port` |5672 |Port of the AMQ host
+|`amq_password` |guest |Password to login to the AMQ host
+|`amq_user` |guest |Username to login to the AMQ host
+|`amq_virtual_host` |/ |Virtual host to use for AMQ
+|`application_name` |Beer Garden |The title to display on the GUI
+|`backend_host` |localhost |The hostname of the backend server
+|`backend_port` |9090 |The port the backend server is bound to
+|`backend_socket_timeout` |3000 |Time (in ms) to wait for backend to respond
+|`config` |None |Path to configuration file to use
+|`cors_enabled` |False |Determine if CORS should be enabled
+|`db_host` |localhost |Hostname/IP of the database server
+|`db_name` |beer_garden |Name of the database to use
+|`db_password` |None |Password to connect to the database
+|`db_port` |27017 |Port of the database server
+|`db_username` |None |Username to connect to the database
+|`debug_mode` |False |Run the application in debug mode (used mostly for development)
+|`event_amq_exchange` |None |Exchange to use for AMQ events
+|`event_amq_virtual_host` |/ |Virtual host to use for AMQ events
+|`event_persist_mongo` |True |Publish events to Mongo
+|`icon_default` |fa-beer |Default font-awesome icon to display
+|`log_config` |None |Path to a logging config file.
+|`log_file` |None |File you would like the application to log to
+|`log_level` |INFO |Log level for the application
+|`plugin_log_config` |None |Path to logging config to use for plugin logging
+|`plugin_log_level` | INFO |Default level to use for plugin logging
+|`public_fqdn` |localhost |Public fully-qualified domain name
+|`shutdown_timeout` |5 |How long to wait for Brew View to shutdown before terminating
+|`ssl_enabled` |False |Should we use SSL on start-up
+|`ssl_private_key` |None |Path to a private key
+|`ssl_public_key` |None |Path to a public key
+|`url_prefix` |None |URL path prefix
+|`web_port` |2337 |Port to bind to
+|===
+
+
+== Plugin Logging Configuration ==
+
+As of beer-garden 2.1.0, there is a new configuration file for plugin logging configurations. If this file is not included, a logging configuration is inferred from the logging configuration of the beer-garden application itself. This logging configuration specifies how you would like plugins to log. A valid logging configuration can be found in `brew-view/dev_conf/example-plugin-logging-config.json`. Let's examine what is allowed to go into this configuration.
+
+=== Level
+You may specify a default level that you would like all plugins to log at. This can be overwritten by `handlers`, or `loggers` entries. The supported levels are:
+
+* `DEBUG`
+* `INFO`
+* `WARN`
+* `ERROR`
+
+===  Handlers
+
+The `handlers` section is a dictionary which may contain one of the following keys:
+
+* `stdout`
+* `file`
+* `logstash`
+
+Each of these keys can have their own configuration and can be overwritten in the `loggers` section. Other handlers are not yet supported.
+
+=== Formatters
+
+The `formatters` section is also a dictionary. Its keys must match up with a specific handler name or the name `default`. Here you can setup a special formatter for each of the individual handlers. The `handlers` should specify which `formatter` they would like to use.
+
+=== Loggers
+The `loggers` section allows you to specify a different logger per system name. If you wanted to customize the logger for a system called `foo` you could create an entry in the loggers section that looks like the following:
+
+[source,json]
+----
+{
+  "foo": {
+    "level": "WARN",
+    "handlers": ["stdout"],
+    "formatters": {"stdout": "%(message)s"}
+  }
+}
+----
+
+This tells beer-garden that when a system with the name `foo` asks for its logging configuration, that we should use this specialized configuration.

@@ -1,0 +1,6 @@
+
+To follow along with this guide, we assume you have the following working:
+
+* Docker - Installation instructions can be found at https://docs.docker.com/install/[Docker Docs]
+* Docker Compose - Installation instructions can be found at https://docs.docker.com/compose/install/[Docker Docs]
+* Git and an account on https://github.com[GitHub]

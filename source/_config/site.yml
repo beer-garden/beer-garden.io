@@ -1,0 +1,42 @@
+name: beer-garden.io
+title: Beer-Garden Documentation
+org: beer-garden.io
+author: Logan Jones
+base_url: ''
+ctx_path: ''
+interpolate: false
+last_commit: <%= ENV['LAST_COMMIT_DATE'] %>
+haml:
+    :ugly: true
+slim|html:
+    :format: :html
+asciidoctor:
+    :safe: :unsafe
+    :attributes:
+        sitename: beer-garden.io
+        base_url: ''
+        ctx_path: ''
+        idprefix: ''
+        idseparator: '-'
+        sectanchors: ''
+        imagesdir: ./images
+        attribute-missing: 'warn'
+        source-highlighter: 'coderay'
+        relfileprefix: '../'
+        outfilesuffix: '/'
+        icons: font
+        iconfont-remote: false
+        iconfont-name: font-awesome
+        webfonts: false
+        git_uri: https://github.com
+        git_ssh_uri: git@github.com:beer-garden/beer-garden.git
+        git_group_uri: https://github.com/beer-garden
+        chat_uri: https://beer-garden.slack.com
+        issues_uri: https://github.com/beer-garden/beer-garden/issues
+        brewtils_docs_uri: https://brewtils.readthedocs.io
+        bg_utils_docs_uri: https://bg-utils.readthedocs.io
+profiles:
+    production:
+        base_url: 'https://beer-garden.io'
+    development:
+        base_url: 'http://localhost:4242'

@@ -1,0 +1,32 @@
+
+Setting the `type` field for a Parameter will let beer-garden do a couple of things.
+
+First, it lets beer-garden perform type validation on that parameter. If the value does not match the type (and can't be converted sensibly) then the Request will be rejected.
+
+Second, it allows the UI to use the best form element for that type of data. For example, you _could_ use a string to represent a date, but setting `type` to 'date' means the UI will use a nice datepicker form element.
+
+Finally, several validation constraints can only be applied to specific types. The <<plugin-param-minimum,minimum>> and <<plugin-param-maximum,maximum>> constraints are good examples of this - they don't make sense for booleans, but they definitely do for integers!
+
+[source,python]
+.Type argument example
+----
+@parameter(key="number", type="Integer")
+def multiply_by_zero(self, number):
+    return number * 0
+----
+
+This table outlines the valid `type` options.
+[options="header"]
+|===
+|Type       |Valid Constraints        |Notes
+|String     |minimum, maximum, regex  |Minimum and Maximum refer to length
+|Integer    |minimum, maximum         |
+|Float      |minimum, maximum         |
+|Boolean    |                         |
+|Date       |                         |Form control will not have 'time' option
+|DateTime   |                         |
+|Dictionary |                         |JSON Object
+|Any        |                         |Valid JSON (Object, Array, String), number, literal `null`, `true`, `false`
+|===
+
+CAUTION: The default `type` is `Any`. This gives the most flexibility, but it's a good idea to always specify a `type` to take advantage of the benefits described above.

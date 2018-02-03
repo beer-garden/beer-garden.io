@@ -1,0 +1,93 @@
+= Native Python Installation
+:page-layout: docs
+
+This guide will take you through step-by-step installation instructions via python.
+
+== Prerequisites
+
+A beer-garden Python installation requires a few things to work:
+
+* Python 2.7.9+ or 3.4+
+* Connectivity to MongoDB 3.2+
+* Connectivity to RabbitMQ
+
+Installing these is outside the scope of this documentation, so please refer to their installation instructions for detailed installation instructions/configuration.
+
+== Installing Brew View
+
+We host the `brew-view` egg on our PyPi server. You can install it via:
+
+[source,subs="attributes"]
+----
+pip install brew-view
+----
+
+You can then start the application:
+
+[source]
+----
+brew-view
+----
+
+You should see a log message saying the application started up. You can now navigate to http://localhost:2337 and see the GUI.
+
+If you would like to configure the application differently, you can generate your own configuration:
+
+[source]
+----
+generate_brew_view_config -c config.json
+----
+
+This will place a config file in `config.json`. Feel free to edit this file however you would like. Read more about the brew-view configuration in the link:../../configuration[configuration section.] Then you can startup the application and point to that configuration.
+
+[source]
+----
+brew-view -c config.json
+----
+
+Everything that is in the config.json can be overriden from the command-line. See more information with:
+
+[source]
+----
+brew-view --help
+----
+
+
+== Installing Bartender ==
+
+We host `bartender` on PyPi. You can install it via:
+
+[source,subs="attributes"]
+----
+pip install bartender
+----
+
+You can then start the application:
+
+[source]
+----
+bartender
+----
+
+That's it! Bartender is up and running.
+
+If you would like to configure the application differently, you can generate your own configuration:
+
+[source]
+----
+generate_bartender_config -c config.json
+----
+
+This will place a config file in `config.json`. Feel free to edit this file however you would like. Read more about the bartender configuration in the link:../../configuration[configuration section.] Then you can startup the application and point to that configuration.
+
+[source]
+----
+bartender -c config.json
+----
+
+Everything that is in the `config.json` can be overriden from the command-line. See more information with:
+
+[source]
+----
+bartender --help
+----

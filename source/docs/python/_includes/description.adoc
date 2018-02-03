@@ -1,0 +1,9 @@
+The `description` field adds a description to the plugin parameter you are defining.
+
+[source,python]
+.Description argument example
+----
+@parameter(key="foo", description="Your first name")
+def do_something(self, foo):
+    pass
+----

@@ -1,0 +1,16 @@
+The `maximum` argument allows you to specify the maximum value for a parameter. This meaning changes based on the `type` and whether or not the `multi` flag is enabled. If the `multi` flag is enabled, then maximum is referring to the list length maximum. Otherwise, if `type` is integer, it will compare the value of the parameter to the maximum. Otherwise if the `type` is a string, it will ensure the length of the string is within bounds.
+
+[source,python]
+.Maximum argument example
+----
+@parameter(key="foo", type="String", maximum=1)
+@parameter(key="bar", type="Integer", maximum=1)
+@parameter(key="bazs", type="String", maximum=1)
+def do_something(self, foo, bar, bazs):
+    # guarantees that foo is 1 character at most
+    # guarantees that bar is no more than 1
+    # guarantees that bazs is no more than 1 item long
+    print(foo)
+    print(bar)
+    print(bazs)
+----

@@ -1,0 +1,19 @@
+The `optional` field allows you to specify whether or not the parameter is optional or required. The default depends on if there is a default value in the method definition.
+
+[source,python]
+.Optional argument example
+----
+@parameter(key="foo", optional=True, nullable=True))
+def do_something(self, foo):
+    # By default, foo would not be optional but
+    # it is specified in the param so it's assumed
+    # the developer will handle the None case.
+    if foo is None:
+        print("foo is empty!")
+    else:
+        print(foo)
+----
+
+If a default is passed in, then optional will be set to True by default.
+
+TIP: If you specify that something is optional, then it must also be nullable if no default is specified.

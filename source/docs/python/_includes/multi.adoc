@@ -1,0 +1,22 @@
+The `multi` field let's beer-garden know that the parameter should be a list. Most of the other fields stay the same and continue to describe the individual items in the list.
+
+[source,python]
+.Multi argument example
+----
+@parameter(key="list_of_strings", multi=True, type="String")
+def do_something(self, list_of_strings):
+    for s in list_of_strings:
+        print(s)
+----
+
+TIP: Some of the fields do change meaning when you've specified that multi
+is true. See the below table for a more detailed description.
+
+.Multi Changes These Arguments
+[options="header"]
+|===
+|Argument | How is it changed?
+|choices | Choices specify the only valid values, no value can be repeated.
+|maximum | Specifies Maximum length of the list
+|minimum | Specifies Minimum length of the list
+|===

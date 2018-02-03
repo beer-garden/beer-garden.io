@@ -1,0 +1,14 @@
+The `nullable` argument allows you to specify if the parameter can be null. If the argument is allowed to be null, then you must tell us this is possible. The default is assuming that parameters cannot be null.
+
+If there is a default value for a parameter, then `nullable` is set to True.
+
+[source,python]
+.Nullable argument example
+----
+@parameter(key="foo", nullable=True))
+def do_something(self, foo):
+    if foo is None:
+        print("That's ok!")
+    else:
+        print("That's ok too!")
+----

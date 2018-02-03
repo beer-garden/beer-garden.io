@@ -1,0 +1,86 @@
+
+One of the benefits of beer-garden is the web form that's automatically created for each Command. We try hard to make sure every combination of parameters will result in a form that makes sense and to give Plugin developers the tools they need to express their data. However, there may be a bug in a specific corner case, or you may want to change the form directly to fit your application. The following sections can help in those cases.
+
+==== Schema and/or Form Modification
+
+The form is generated using a package called Angular Schema Form (ASF). A complete tutorial on ASF is outside the scope of this document, so if you're unfamiliar with how ASF works please consult their documentation. At a very high level: ASF takes a JSON Schema (data model) and Form (presentation and styling) and uses those to construct the form that's presented on the Command View page. Behind the scenes the current data state is stored in the Model, which is updated whenever the user makes changes. This Model is what's shown in the Preview pane.
+
+The normal beer-garden behavior is to use the Command definition to construct a Schema and Form for a particular Command. However, beer-garden allows overriding either of these on a per-command basis.
+
+NOTE: When overriding the Schema or Form definition, it is highly recommended to use the beer-garden-generated Schema or Form as a starting point. Set the `debug_mode` option to `true` in the Brew-view configuration to enable extra displays on the Command View page.
+
+For example, a Command defined like this:
+
+[source,python]
+.Normal Command
+----
+@parameter(key="message", type="String", optional=False)
+def echo(self, message):
+    return message
+----
+
+Will result in these definitions:
+
+[source,json]
+.Schema
+----
+"message": {
+  "title": "message",
+  "optional": false,
+  "nullable": false,
+  "type": [
+    "string",
+    "null"
+  ],
+  "required": true
+}
+----
+
+[source,json]
+.Form
+----
+{
+  "key": [
+    "parameters",
+    "message"
+  ]
+}
+----
+
+In order to make the field read-only you can add the `readonly` key to the form definition:
+
+[source,python]
+.Normal Command
+----
+@command(form={"key": ["parameters", "message"], "readonly": True})
+@parameter(key="message", type="String", optional=False)
+def echo(self, message):
+    return message
+----
+
+See the Angular Schema Form documentation for examples of ways to modify the Form.
+
+NOTE: Changing the Schema or Form does not change the data constraints of the Command. For this reason it's recommended to *not* modify the Schema, as that can cause the Request to fail beer-garden validation during creation.
+
+NOTE: Don't forget to include *all* parameters in the `form` definition. The form definition can be an array as well as a dictionary.
+
+==== Command Page Replacement
+beer-garden also supports *completely* replacing the Command View page with custom HTML. This is intended to allow developers to implement functionality beyond what Angular Schema Form can provide.
+
+WARNING: This feature should be considered a Beta capability. If you're interested in using this feature in production please contact the beer-garden team.
+
+To use an alternate Command View page pass a path to the file as the `template` argument to the `@command` decorator:
+
+[source,python]
+.Command Page Replacement
+----
+@command(template='./resources/minimalist.html')
+def echo_minimalist(self, message):
+    return message
+----
+
+The `minimalist.html` page should define a way for the user to submit a POST request to `/api/v1/requests` with the Request to be created in the body. The request `content-type` can be either 'application/json' or 'application/x-www-form-urlencoded'.
+
+Please note that the template HTML will still be rendered in the context of the beer-garden Angular application. Since this HTML is outside Angular control it's treated as untrusted, which causes certain elements to be removed. If you understand the risks associated with removing this restriction and want to allow these elements you can set the `allow_unsafe_templates` option to `true` in the Brew-view configuration.
+
+IMPORTANT: Please *make sure* you understand the implications of allowing unsafe templates, especially in a production environment. Again, please reach out to the beer-garden team if you're interested in using this capability.

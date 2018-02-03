@@ -1,0 +1,13 @@
+Open up the `conf/bartender-config.json` file and find the line that looks like this:
+
+    "amq_publish_host": "CHANGE_ME_PLEASE",
+
+Change `CHANGE_ME_PLEASE` to the IP address of your system.
+
+----
+"amq_publish_host": "WWW.XXX.YYY.ZZZ",
+----
+
+CAUTION: Make sure to use a real IP address and not 'localhost' or '0.0.0.0'.
+
+TIP: You can also use a fully-qualified domain name instead of an IP address.

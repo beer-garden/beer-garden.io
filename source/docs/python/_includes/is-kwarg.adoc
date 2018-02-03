@@ -1,0 +1,10 @@
+The `is_kwarg` argument allows you to name a keyword argument that is otherwise unspecified. This is useful if you take keyword args, but want to call out the normal use-case ones more explicitly while still being compatible to other python libraries calling you.
+
+[source,python]
+.Is kwarg argument example
+----
+@parameter(key="foo", is_kwarg=True)
+def do_something(self, **kwarg):
+    foo = kwarg.pop("foo")
+    print(foo)
+----

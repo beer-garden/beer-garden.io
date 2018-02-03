@@ -1,0 +1,10 @@
+The `key` argument to `@parameter` is the only required parameter. It must match the name of an argument in whatever method it is decorating. This is how users of your plugin will identify the parameter they would like to set.
+
+[source,python]
+.Key argument example
+----
+@parameter(key="message")
+def do_something(self, message):
+    print(message)
+    return message
+----

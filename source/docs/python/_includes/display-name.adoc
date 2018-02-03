@@ -1,0 +1,9 @@
+The `display_name` field allows you control over how beer-garden renders the name of the field. This is useful if your argument has a less-than-useful name from the end-users perspective.
+
+[source,python]
+.Display name argument example
+----
+@parameter(key="foo", display_name="Name")
+def do_something(self, foo):
+    print("Hi!, my name is: %s" % foo)
+----

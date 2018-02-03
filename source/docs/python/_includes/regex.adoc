@@ -1,0 +1,9 @@
+The `regex` argument allows you to specify a regex that the parameter must pass in order to be considered valid.
+
+[source,python]
+.Regex argument example
+----
+@parameter(key="ip", regex=r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')
+def do_something(self, ipv4):
+    print("This is a valid IPv4: %s" % ipv4)
+----

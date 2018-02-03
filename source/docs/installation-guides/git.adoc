@@ -1,0 +1,92 @@
+= Installing from Source
+:page-layout: docs
+:uri-brew-view: {git_group_uri}/beer-garden/tree/master/brew-view
+:uri-bartender: {git_group_uri}/beer-garden/tree/master/bartender
+
+This guide will show you how to install beer-garden for development. When you're done you should be able to make changes to beer-garden, run the tests, and push up your changes.
+
+== Prerequisites
+
+You will absolutely need these things:
+
+* Python 2.7.9+ or 3.4+. You'll need a full environment (with pip).
+* Connectivity to MongoDB 3.2+
+* Connectivity to RabbitMQ
+* Git, correctly configured to talk to https://github.com[GitHub]
+
+{empty} +
+These things are nice to have:
+
+* Some sort of virtualenv setup, virtualenvwrapper is nice
+* A Python IDE (e.g. PyCharm)
+
+Installing these is outside the scope of this documentation, so please refer to their installation instructions if you need help with them.
+
+== Install and Setup
+=== Clone the Repos
+There are two main repositories you'll need: `beer-garden` and `bindings`. Both are part of the {git_group_uri}[beer-garden GitHub group]. Clone them:
+
+[source,subs="attributes"]
+----
+git clone {git_group_uri}/beer-garden.git
+git clone {git_group_uri}/bindings.git
+----
+
+=== Install Dependencies
+This is where `virtualenvwrapper` is helpful. Even though there are only two repositories, there are actually four separate projects (beer-garden/bartender, beer-garden/brew-view, beer-garden/bg-utils, and bindings/python) that each have their own dependencies. There's a .venv file in each of them, so make a virtualenv for each of them:
+
+[source]
+----
+mkvirtualenv brewtils
+mkvirtualenv bg-utils
+mkvirtualenv brew-view
+mkvirtualenv bartender
+----
+
+Sweet. Now for each of the projects you can install the dependencies:
+
+[source]
+----
+pip install -r requirements.txt
+----
+
+At this point we need a little sidebar about how beer-garden is structured. Brew-view and Bartender are the two pieces of the application that actually run, and bg-utils and brewtils are libraries. Real quick:
+
+* Brewtils is the library plugin developers use to create plugins. It has things like our models and decorators.
+* Bg-utils is our 'internal' library with things that both bartender and brew-view need. It has things like our model-database mappings.
+* Brew-view is the REST server that also serves the static frontend.
+* Bartender is basically all the application logic.
+
+So, as you can probably guess, bartender and brew-view have a compile-time dependency on bg-utils, and bg-utils has a compile-time dependency on brewtils.
+
+When you ran `pip install` earlier pip grabbed the latest brewtils and bg-utils from PyPi. So if you make changes to those projects they won't actually show up when you run brew-view or bartender. We need to tell our virtualenvs to install those eggs in 'editable' mode. From the beer-garden root directory:
+
+[source]
+----
+cd bg-utils; pip uninstall -y brewtils; pip install -e ../../bindings/python
+cd bartender; pip uninstall -y brewtils bg-utils; pip install -e ../../bindings/python -e ../bg-utils
+cd brew-view; pip uninstall -y brewtils bg-utils; pip install -e ../../bindings/python -e ../bg-utils
+----
+
+=== Run the Tests
+To make sure everything is working you can run the Python tests. Each project has a file named `generate_coverage.sh` in its bin directory, so run:
+
+[source]
+----
+bin/generate_coverage.sh
+----
+
+And you should see all the tests pass.
+
+=== Run the Application
+The repositories come with configuration settings that make sense for development (these are in the dev_conf directories), so you should just be able to start the application.
+
+NOTE: Both of these commands will run until you stop them, so you'll either need to use two shells or run them in the background. Use Ctrl-C to kill them.
+
+[source]
+----
+cd brew-view; bin/app.sh
+cd bartender; bin/app.sh
+----
+
+You should see logs as the application starts up. Then you can visit http://localhost:2337 to see the application!

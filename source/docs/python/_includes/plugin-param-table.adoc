@@ -1,0 +1,20 @@
+.Plugin Param Arguments
+[options="header"]
+|===
+|Argument |Required? |Options |Default |Description
+|<<plugin-param-key,key>> |Y |N/A |N/A |Specifies the Argument Name
+|<<plugin-param-type,type>> |N |[String, Integer, Float, Boolean, Any, Dictionary] |Any |Specifies the type of Parameter
+|<<plugin-param-multi,multi>> |N |[True, False] | False | Specifies if the parameter is a list
+|<<plugin-param-display-name,display_name>> |N |N/A |  key  | Specifies a Pretty way to refer to the key
+|<<plugin-param-optional,optional>> |N |[True, False] |False | Specifies if the parameter is required
+|<<plugin-param-default,default>> |N |N/A |  N/A  | The Default value of the Parameter
+|<<plugin-param-description,description>> |N |N/A |  N/A  |A short Description of the Parameter
+|<<plugin-param-choices,choices>> |N |N/A  | N/A |A list of possible values
+|<<plugin-param-is-kwarg,is_kwarg>> |N |N/A  | N/A |If parameter comes in as a kwarg
+|<<plugin-param-model,model>> |N | N/A  | N/A |A python Object that has a parameters list
+|<<plugin-param-nullable,nullable>> |N |[True, False] | False |Specifies if this parameter can be null
+|<<plugin-param-maximum,maximum>> |N |Integer |N/A |Specifies maximum (See detailed for more info)
+|<<plugin-param-minimum,minimum>> |N |Integer |N/A |Specifies minimum (See detailed for more info)
+|<<plugin-param-regex,regex>> |N |N/A |N/A |Specifies regex to validate against this value
+|<<plugin-param-form-input-type,form_input_type>> |N |[textarea] |N/A |Specifies the form type to render for this plugin
+|===

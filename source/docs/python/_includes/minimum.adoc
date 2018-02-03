@@ -1,0 +1,16 @@
+The `minimum` argument allows you to specify the minimum value for a parameter. This meaning changes based on the `type` and whether or not the `multi` flag is enabled. If the `multi` flag is enabled, then minimum is referring to the list length minimum. Otherwise, if `type` is integer, it will compare the value of the parameter to the minimum. Otherwise if the `type` is a string, it will ensure the length of the string is within bounds.
+
+[source,python]
+.Minimum argument example
+----
+@parameter(key="foo", type="String", minimum=1)
+@parameter(key="bar", type="Integer", minimum=1)
+@parameter(key="bazs", type="String", minimum=1)
+def do_something(self, foo, bar, bazs):
+    # guarantees that foo is at least 1 character
+    # guarantees that bar is no less than 1
+    # guarantees that bazs is no less than 1 item long
+    print(foo)
+    print(bar)
+    print(bazs)
+----

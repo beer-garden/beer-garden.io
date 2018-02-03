@@ -1,0 +1,38 @@
+= Contributing to beer-garden
+:uri-snippet: https://gist.github.com
+:page-layout: docs
+
+
+We would love for you to help us make beer-garden better. There are a seemingly infinite number of features that would be great to add. Remember, __no contribution is too small__.
+
+== License Agreement
+By contributing to any of the beer-garden repositories, you agree to license your contributions under the {git_group_uri}/beer-garden/blob/master/LICENSE.md[MIT license]. This ensures your contributions have the same license as the project and that the community is free to use your contributions. You also assert that you are the original author of the work you are contributing unless otherwise stated.
+
+== Submitting an Issue
+
+If you have the next cool idea for beer-garden, we want to hear about it. We use the {issues_uri}[issue tracker on GitHub] to track bugs/features. Before you submit a request or bug, please make sure it has not already been submitted.
+
+Our ideal feature request comes in with a merge request for a way to implement the feature, but feature requests should at least come with an explanation of how you want the app to behave differently than the current implementation.
+
+If you've found a bug in beer-garden, we would love for you to submit a bug report. When submitting a bug report, please include a {uri-snippet}[Snippet] that includes any details that may help reproduce the bug, including your version of beer-garden, language, language version and operating system.
+
+Most importantly, since beer-garden is a plugin framework, __do not__ submit bugs with particular plugins in the beer-garden issue tracker.
+
+Ideal bug reports include a merge request with a failing test.
+
+== Submitting a Merge Request
+
+NOTE: This information is generic on purpose. Each repository in beer-garden's components will have their own way to run tests. Please refer to the specific project for detailed information on how to write/run tests for that particular project.
+
+1. Fork the repository. This will vary based on what project you are working on.
+2. Install the latest development dependencies (usually `pip install
+  -r requirements.txt`)
+3. Create a topic branch (use the pattern `feature/XYZ` where `XYZ` is the
+  issue number)
+4. Add tests for your unimplemented feature or bug fix.
+5. Run the tests, if your tests pass, return to step 4
+6. Implement your feature or bug fix
+7. Run the tests, if your test fail, return to step 6
+8. Add documentation for your feature or bug fix
+9. Add, commit, and push your changes.
+10. Submit a merge request

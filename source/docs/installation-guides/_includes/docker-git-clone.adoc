@@ -1,0 +1,9 @@
+
+
+The first step is to clone the git repository that contains the `docker-compose.yml` file:
+
+[source,subs="attributes"]
+----
+git clone {git_ssh_uri}
+cd beer-garden/docker/docker-compose
+----
