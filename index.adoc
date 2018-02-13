@@ -4,7 +4,7 @@ Logan Jones <https://github.com/loganasherjones[@loganasherjones]>;
 :page-layout: about
 // URIs:
 :uri-repo: {git_group_uri}/beer-garden
-:uri-doc-repo: {git_group_uri}/beer-garden.gov
+:uri-doc-repo: {git_group_uri}/beer-garden.io
 :uri-license: {uri-repo}/blob/master/LICENSE.md
 // Images
 :imagesdir: ./images
