@@ -1,15 +1,11 @@
-name: beer-garden.io
-title: Beer-Garden Documentation
-org: beer-garden.io
-author: Logan Jones
-base_url: ''
-ctx_path: ''
-interpolate: false
-last_commit: <%= ENV['LAST_COMMIT_DATE'] %>
-haml:
-    :ugly: true
-slim|html:
-    :format: :html
+title: Beer Garden
+description: A powerful framework for converting your functions into composable, discoverable services.
+author: Beer Garden Project
+blog_path: /news
+local_tz: America/New_York
+disqus: beer-garden
+disqus_generate_id: true
+disqus_developer: true
 asciidoctor:
     :safe: :unsafe
     :attributes:
@@ -31,12 +27,30 @@ asciidoctor:
         git_uri: https://github.com
         git_ssh_uri: git@github.com:beer-garden/beer-garden.git
         git_group_uri: https://github.com/beer-garden
-        chat_uri: https://beer-garden.slack.com
+        chat_uri: https://beer-garden-io.slack.com
         issues_uri: https://github.com/beer-garden/beer-garden/issues
         brewtils_docs_uri: https://brewtils.readthedocs.io
         bg_utils_docs_uri: https://bg-utils.readthedocs.io
+# base_url: ''
+# ctx_path: ''
+# interpolate: false
+haml:
+    :ugly: true
+slim|html:
+    :format: :html
 profiles:
     production:
         base_url: 'https://beer-garden.io'
+        disqus_developer: false
+        google_analytics_account: GOOGLE_ID
+        google_analytics:
+          account: GOOGLE_ID
+        scss:
+          line_numbers: false
+          style: compressed
+        deploy:
+          host: github_pages
+          branch: gh-pages
     development:
-        base_url: 'http://localhost:4242'
+        deploy: null
+        # base_url: 'http://localhost:4242'
