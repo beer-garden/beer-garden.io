@@ -1,0 +1,35 @@
+---
+layout: base
+---
+
+.bootstrap.masthead
+  .container
+      h2.hero=page.title
+      - if page.leadin
+        p.lead=page.leadin
+
+.bootstrap.container
+  .row.top-buffer
+    .col-lg-4
+      .col-lg-12
+        .btn-toolbar role='toolbar' aria-label='Toolbar with button groups'
+          .btn-group.mr-2 role='group' aria-label='First group'
+            button.btn.btn-default.toggle-navigation type='button' href='#'
+              span.toggle-target
+                i.fa.fa-toggle-on
+                i.fa.fa-toggle-off
+                |  Nav
+          .btn-group-mr-2.pull-right role='group' aria-label='First Group'
+            a.btn.btn-default href='https://github.com/beer-garden/beer-garden.io/edit/master/#{page.relative_source_path}' Edit
+            a.btn.btn-default href='https://github.com/beer-garden/beer-garden.io/raw/master/#{page.relative_source_path}' Raw
+            a.btn.btn-default href='https://github.com/beer-garden/beer-garden.io/commits/master/#{page.relative_source_path}' History
+
+      .col-lg-12.navigation
+          div id='toc' class='toc'
+            .title id='toctitle' =document.attr 'toc-title'
+            =document.converter.convert document, 'outline', toclevels: 3
+
+    .col-lg-8 id="docContent"
+      =content
+
+    hr

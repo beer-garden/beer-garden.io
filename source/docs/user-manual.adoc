@@ -1,7 +1,0 @@
-= User Manual
-:page-layout: docs
-:uri-ad-org-issues: {git_group_uri}/beer-garden.io/issues
-
-
-.Discuss and Contribute
-TIP: Use {uri-ad-org-issues}/7[Issue 7] to drive development of this section. Your contributions make a difference.  No contribution is too small.

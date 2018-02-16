@@ -1,0 +1,25 @@
+= Plugin Developer Guides
+:page-layout: docs
+:uri-bg-plugins: {git_group_uri}/bartender/tree/master/plugins
+:uri-brewtils: {git_group_uri}/py-brewtils/tree/master
+
+These guides provide gentle introductions to plugin development. They are intended for anyone who wants to reduce the effort required to produce code backed by a ReST Interface and GUI. The plugin could be used for anything from provisioning a VM to calling a web service to controlling network devices.
+
+== Guides
+
+* link:../python/local-guide/[Python Plugin (Local)]
+* link:../python/remote-guide/[Python Plugin (Remote)]
+// TODO: Add the Java guide once it is done
+// * link:java/remote-guide/[Java Plugin (Remote)]
+
+TIP: If you want to know what Beer Garden is all about, find the answer in link:../what-is-beergarden/[What is Beer Garden?] If you're looking for a concise survey of plugin developer options, checkout the link:../plugin-syntax-quick-reference/[Plugin Developer Syntax Guide]
+
+These guides will dive into some of the more specific ways you can develop plugins. If you don't want to read through all this documentation and would rather look at code, you can checkout the {uri-bg-plugins}[example plugins] for lots of small examples. These guides will cover:
+
+* The basic structure of a Beer Garden plugin
+* How to create your first Beer Garden plugin
+* How to run your plugin
+
+Pick your favorite currently supported language and let's get started!
+
+TIP: If you don't know the difference between remote and local plugins, please check the link:../local-vs-remote/[local vs remote plugins docs]

@@ -1,0 +1,70 @@
+= API Users Guide
+:page-layout: docs
+:includedir: python/_includes
+:prewrap!:
+
+This guide is intended for people who would like to use Beer Garden's API. Basically, if you want to use Beer Garden without the web interface you've come to the right place!
+
+NOTE: If you feel like you know REST pretty well, Beer Garden comes with OpenAPI (formerly known as Swagger) documentation that helps you explore the REST API yourself. You can find a SwaggerUI page linked from the About page of any Beer Garden web UI.
+
+TIP: This guide assumes you're at least somewhat aware of how Beer Garden is organized. If you need a refresher you should check out
+link:../what-is-beergarden/[what is Beer Garden?]
+
+
+== Client Libraries
+
+Currently, the only supported library is in the python language. We produce a set of bindings called `brewtils` to help you, not only create plugins, but also interact with Beer Garden and its varied interfaces. If you'd like to learn more about `brewtils`, you should link:{brewtils_docs_uri}[check out the API documentation].
+
+== Requests
+
+The Request API is arguably the most important endpoint that Beer Garden provides. Remember that Requests are units of work that you want Beer Garden to perform. So to get Beer Garden (and plugins) to do anything useful you'll need to create a request.
+
+Let's assume you have a System called `echo` with a Command `say` which takes a single parameter `message`. Let's run through how to get Beer Garden to execute this request.
+
+=== Create with Python
+
+The `brewtils` Python library includes a `SystemClient` designed to make this as easy as possible. Create a `SystemClient` for a particular Beer Garden system and then invoke methods on the client as if it were a normal Python object:
+
+include::{includedir}/system-client.adoc[]
+
+=== Create with REST
+
+The `SystemClient` is a nice abstraction, but it can be useful to know what's happening under the hood. Internally the `SystemClient` is making a POST request to the `/api/v1/requests` endpoint with a Request definition. You can replicate this using curl:
+
+[%nowrap]
+.Create a Request with curl
+----
+$ curl -X POST -H 'Content-Type: application/json' -d \
+'{
+  "system": "echo",
+  "system_version": "1.0.0.dev",
+  "instance_name": "default",
+  "command": "say",
+  "parameters": {"message": "Hello from curl!" }
+}' \
+localhost:2337/api/v1/requests
+----
+
+Assuming everything works (you do have a System named 'echo' right?) Beer Garden will return a response with status code 204 and JSON representing the Request you just created.
+
+=== Check the Status
+
+Now you have a brand new Request. That's cool, but it's missing the most important field: the output. That's because the Request definition Beer Garden returned really was _brand new_ - it hadn't been processed by the 'echo' plugin yet. You can verify this yourself by looking at the "status" and "output" fields: they'll be `CREATED` and null, respectively.
+
+Unless your Beer Garden is _very_ busy, by the time you've read this far your 'echo' plugin should have processed your Request. All we need to get an update is the 'id' field of the Request. You can find it by looking at the response from the POST you just made. Let's pretend it's `555a56fae9a45a2ad182ac16`.
+
+[%nowrap]
+.Get a Request with curl
+----
+$ curl http://localhost:2337/api/v1/requests/555a56fae9a45a2ad182ac16
+----
+
+It is possible that your request will not be done, and the status could say something like `CREATED` or `IN_PROGRESS`. If your request failed, you will see `ERROR` as the status field.
+
+As you can see, the Request API is fairly easy to use, and helps keep a nice audit log for what happened on your system.
+
+== Do More with Rest
+
+Creating and querying a Request is just the tip of the REST iceberg. If you're interesting in seeing _everything_ Beer Garden can do through REST calls you should really check out the Swagger documentation. You can get to it from the About page of any Beer Garden UI, and from there you'll be able to see all the available endpoints with their expected input and output models.
+
+TIP: Each endpoint also has a 'Try it out' feature to let you easily experiment, and it'll even show you the equivalent `curl` command.

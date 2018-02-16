@@ -1,0 +1,71 @@
+= Python Plugin Guide (Remote)
+:page-layout: docs
+:includedir: _includes
+:uri-install-guides: ../installation-guides/
+
+The goal of this section is to help you write a remote plugin from scratch. In order to write remote plugins there are a few things that you need.
+
+== Prerequisites
+
+include::{includedir}/prereqs.adoc[]
+
+Now you're ready to start writing your plugin.
+
+NOTE: Don't forget, if you're writing a remote plugin, you'll need to be able to access the Beer Garden REST Service
+
+== Hello World!
+This section will take you through setting up a simple Hello, World example.
+
+=== Write the code
+
+Plugins are basically just classes that you would like to expose over the network. So let's create a simple, and classic "Hello, World!" example. Use your favorite text editor and open up a file called `main.py` and add the following:
+
+include::{includedir}/hello-world-client.adoc[]
+
+Once we have the client, we now need to create our entry point. Let's open back up the previous file and add the following:
+
+include::{includedir}/hello-world-remote-entry-point.adoc[]
+
+=== Run the plugin
+
+Run the plugin like this:
+
+    python main.py
+
+It will start up and print some logging showing the plugin registering with Beer Garden. Congratulations! You've just deployed your first plugin!
+
+=== Use the plugin
+
+At this point you should see your plugin on the `Available Systems` page in `Brew View`. Click the big blue `Explore hello_world commands` button to see a list of all commands available for the Plugin you made.
+
+Since we only defined one command as part of this tutorial the only command listed should be the `say_hello` command. Click the `Make it Happen!` button to go to the page for that command.
+
+The command page is where you can specify options and customization for individual executions of that command. Since we didn't define any options (this command always prints 'Hello World!') the only customization available is the comment field. You can add free-form text here and it will be included as part of the request you're about to generate.
+
+Are you ready? Click the `Make Request` button once you're ready.
+
+Making a request takes you to the Request page for the request you just generated. You can see the unique ID as part of the page title. You should see the status start as `IN PROGRESS` and then change to `SUCCESS` once the request completes. Also notice that the output changes when the request is finished.
+
+If you didn't catch those changes on the first try, don't worry. Use the `Pour it Again` button in the top-right corner to go back to the command screen you just left. From here you can use the `Make Request` button to make another request.
+
+NOTE: This command doesn't have any parameters, but for commands that do the `Pour it Again` button will default them to exactly how they were for the original request.
+
+=== Stop
+The best way to stop a plugin is to use the Systems Management page to send a stop message. In `Brew View` find the `Systems Management` option under the `Administration` menu. Then click the stop icon next to the `hello-world` listing.
+
+You should see your plugin log that it has terminated and stop executing, and if you go to the main page in `Brew View` you should see the `hello-world` plugin is 'STOPPED'.
+
+NOTE: You can also use Ctrl-c to stop the plugin from the terminal. This works, but it doesn't tell Beer Garden that the plugin is stopping. You'll still see the plugin terminate and stop executing, but the status in `Brew View` will still be 'RUNNING'. After a short period the status will change to 'UNRESPONSIVE'.
+
+
+== Exception Handling
+include::{includedir}/exceptions.adoc[]
+
+== Making your plugin more descriptive
+include::{includedir}/descriptive-plugin.adoc[]
+
+== Customizing Command Form
+include::{includedir}/custom-display.adoc[]
+
+== External Logging
+include::{includedir}/external-logging.adoc[]

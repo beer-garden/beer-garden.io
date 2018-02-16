@@ -1,0 +1,21 @@
+The `default` field allows you to specify the default value for a parameter if it is not given by a user. If there is a default value in the method definition then it will use that.
+
+[source,python]
+.Default argument example
+----
+@parameter(key="foo")
+def do_something(self, foo="bar"):
+  print(foo)
+----
+
+In the above case, if someone utilizes this command but does not pass Beer Garden the `foo` parameter, then Beer Garden will default it to `bar`. Below is another example of how to use the default argument.
+
+[source,python]
+.Default argument example
+----
+@parameter(key="foo", default="bar"))
+def do_something(self, foo):
+    print(foo)
+----
+
+These are functionally equivalent for Beer Garden.

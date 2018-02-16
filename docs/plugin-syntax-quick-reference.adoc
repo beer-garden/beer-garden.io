@@ -1,0 +1,132 @@
+= Plugin Syntax Quick Reference Guide
+:page-layout: docs
+:includedir: python/_includes
+
+Beer Garden is a plugin framework that helps developers to create useful, streamlined, event-driven applications in a composable, and easily extendable way. This guide is a quick reference for creating plugins in Beer Garden.
+
+NOTE: These examples focus almost exclusively on the python language bindings. As more bindings are updated, this guide will split itself out.
+
+== Simple Plugin
+
+include::{includedir}/hello-world-client.adoc[]
+
+== Local plugin running
+
+include::{includedir}/hello-world-local-entry-point.adoc[]
+
+== Remote plugin running
+
+include::{includedir}/hello-world-remote-entry-point.adoc[]
+
+== Exception Handling
+
+include::{includedir}/exceptions.adoc[]
+
+== Making a Request
+This section goes over various ways to make a request.
+
+=== Curl
+
+[%nowrap]
+.Create a Request
+----
+curl -X POST -H 'Content-Type: application/json' -d '{"system": "echo", "command": "say", "parameters": {"message": "My Message" } }' http://localhost:2337/api/v1/requests
+    {
+        "message" : "Successfully Created Request",
+        "request" : "http://localhost:2337/api/v1/requests/555a56fae9a45a2ad182ac16"
+    }
+----
+
+[nowrap]
+.Get the status of a request
+----
+    $ curl http://localhost:2337/api/v1/requests/555a56fae9a45a2ad182ac16
+
+    {
+        "children": [],
+        "command": "say",
+        "command_type": null,
+        "comment": "",
+        "created_at": 1491927102000,
+        "updated_at": 1491927102000,
+        "error_class": null,
+        "id": "58ed003e71afd45a7bf21e7a",
+        "instance_name": "default",
+        "output": "Hello, World!",
+        "output_type": "STRING",
+        "parameters": {
+            "message": "Hello, World!"
+        },
+        "parent": null,
+        "status": "SUCCESS",
+        "system": "echo",
+        "system_version": "0.0.1"
+    }
+
+----
+
+=== Python
+
+include::{includedir}/system-client.adoc[]
+
+== Parameters
+
+=== Quick Table
+
+include::{includedir}/plugin-param-table.adoc[]
+
+[[plugin-param-key]]
+=== Key argument
+include::{includedir}/key.adoc[]
+
+[[plugin-param-type]]
+=== Type argument
+include::{includedir}/type.adoc[]
+
+[[plugin-param-multi]]
+=== Multi argument
+include::{includedir}/multi.adoc[]
+
+[[plugin-param-display-name]]
+=== Display name argument
+include::{includedir}/display-name.adoc[]
+
+[[plugin-param-optional]]
+=== Optional argument
+include::{includedir}/optional.adoc[]
+
+[[plugin-param-default]]
+=== Default argument
+include::{includedir}/default.adoc[]
+
+[[plugin-param-description]]
+=== Description argument
+include::{includedir}/description.adoc[]
+
+[[plugin-param-choices]]
+=== Choices argument
+include::{includedir}/choices.adoc[]
+
+[[plugin-param-is-kwarg]]
+=== Is kwarg argument
+include::{includedir}/is-kwarg.adoc[]
+
+[[plugin-param-model]]
+=== Model argument
+include::{includedir}/model.adoc[]
+
+[[plugin-param-nullable]]
+=== Nullable argument
+include::{includedir}/nullable.adoc[]
+
+[[plugin-param-maximum]]
+=== Maximum argument
+include::{includedir}/maximum.adoc[]
+
+[[plugin-param-minimum]]
+=== Minimum argument
+include::{includedir}/minimum.adoc[]
+
+[[plugin-param-regex]]
+=== Regex argument
+include::{includedir}/regex.adoc[]

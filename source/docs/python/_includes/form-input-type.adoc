@@ -1,9 +1,0 @@
-The `form_input_type` field allows you control over how beer-garden renders the text-field. This is useful if you have some string field that is actually quite long. Currently the only supported type is `textarea`.
-
-[source,python]
-.Input Form Type argument example
-----
-@parameter(key="comment", type="String", form_input_type="textarea")
-def do_something(self, comment):
-    print("This is a long comment: %s" % comment)
-----

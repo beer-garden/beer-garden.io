@@ -1,0 +1,52 @@
+In order to help users of Beer Garden understand how to utilize your plugin, you'll need to provide some basic information about your plugins. There are lots of ways to specify lots of different information that your plugin can do. So we'll take it one at a time.
+
+=== Adding a command description
+
+There are two ways you can add a description to your command. One way is by using pydoc comments
+
+[source,python]
+.Pydoc example
+----
+class HelloWorldClient(object):
+
+  @command
+  def hello_world(self):
+    """Prints Hello, World!"""
+    print("Hello, World!")
+----
+
+NOTE: The description will only take the first line of your comment
+
+Or you can specify a description via the `@command` decorator
+
+[source,python]
+.Register example
+----
+class HelloWorldClient(object):
+
+  @command(description="Prints Hello, World!")
+  def hello_world(self):
+    print("Hello, World!")
+----
+
+=== Describing a parameter
+
+Obviously, most methods will have required arguments. You can utilize the `@parameter` decorator to describe the argument as in the following:
+
+[source,python]
+----
+class HelloWorldClient(object):
+
+  @command(description="Echos the message you pass to it")
+  @parameter(key="message",
+                description="Message to print and return")
+  def echo(self, message):
+    print(message)
+    return message
+----
+
+`@parameter` only requires the `key` option be passed to it. The `key` must match the parameter's name in the method. There are lots of different options when considering the `@parameter`. Check out the following table for a high- level summary:
+
+include::plugin-param-table.adoc[]
+
+include::plugin-param-descriptions.adoc[]

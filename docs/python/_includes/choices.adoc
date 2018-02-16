@@ -1,0 +1,191 @@
+The `choices` field allows you to specify possible values for a parameter.
+
+
+==== Basic Usage
+The easiest way to use `choices` is to pass a list of values:
+
+[source,python]
+.Choices list example
+----
+@parameter(key="output_type", choices=["json", "xml"])
+def format(self, obj, output_type):
+    if output_type == "json":
+        return jsonify(obj)
+    elif output_type == "xml":
+        return xmlify(obj)
+----
+
+Sometimes it's useful to have the display text (what shows up in the UI) be different from the 'real' value (what gets sent to the plugin). To do this, instead of a list of literal values just pass a list of objects with `text` and `value` keys:
+
+[source,python]
+.Choices rename example
+----
+@parameter(key="output_type", choices=[
+    {"text": "The best", "value": "json"},
+    {"text": "The worst", "value": "xml"}])
+def format(self, output_type):
+    pass
+----
+
+
+==== Additional Configuration
+There are some configuration options that control how `choices` works. Beer Garden will pick sensible defaults, but to tweak them pass a dictionary to `choices`:
+[source,python]
+.Choices Dictionary example
+----
+@parameter(key="output_type",
+           choices={'type': 'static', 'value': ['json','xml']})
+def format(self, output_type):
+    ...
+----
+
+That way you can add additional key/value pairs to the choices dictionary.
+
+===== Choices Type
+You probably noticed the `'type': 'static'` entry above. Beer Garden is able to figure out exactly what to do when you pass a list of values to `choices`, but it needs a hint when you use the dictionary configuration. There are a couple of other ways to populate the choices list (more on those in a bit) so you need to be explicit.
+
+The example above is using the `static` type, which tells Beer Garden to expect a list of values in the `value` attribute. This is functionally identical to passing a list of values to `choices` directly.
+
+The other choice types will be explained in detail in the <<Choice Sources>> section.
+
+===== Display
+When you use `choices` the UI form control can be a typeahead or a select. To specify which to use just set the `display` key:
+[source,python]
+.Choices Typeahead example
+----
+@parameter(key="output_type",
+           choices={'type': 'static', 'value': ['json','xml'],
+                    'display': 'typeahead'})
+def format(self, output_type):
+    ...
+----
+
+===== Strictness
+The `strict` configuration controls whether values that aren't explicitly listed are allowed. Setting `strict` to False will result in a typeahead control that will use the `choices` values but still allow any text to be submitted.
+[source,python]
+.Choices Non-strict example
+----
+@parameter(key="output_type",
+           choices={'type': 'static', 'value': ['json','xml'],
+                    'strict': False})
+def format(self, output_type):
+    ...
+----
+NOTE: Setting `strict` to False for a select won't affect the display, but the `strict` value also controls validation on the backend.
+
+
+==== Choice Sources
+In all the examples so far the list of choices has been a literal list of values. That's useful, but it's also useful to have values that can change at runtime. In order to do that you need to provide `choices` with instructions on how to populate the choice list instead of the list itself.
+
+NOTE: In all cases the result of the `choices` operation must be a valid choices list.
+
+===== URL
+Specifying a URL will tell the browser to load choices using an HTTP GET request. You can use type 'url' if using dictionary configuration or just pass the URL as a string:
+[source,python]
+.Choices URL example
+----
+@parameter(key="p1", choices='https://test.com/p1.json')
+@parameter(key="p2", choices={"type": "url",
+                              "value": 'https://test.com/p2.json'})
+def format(self, p1, p2):
+    ...
+----
+CAUTION: Be aware that the user's browser will be making this request. So if the Beer Garden UI is being accessed at a secure (https) address then a request to a non-secure (http) URL will likely fail due to mixed-content restrictions.
+
+===== Command
+Specifying a command will load choices by making a request to the current system. You can use type 'command' if using dictionary configuration or just pass the command as a string. If you're not using choice parameters (more on those in a minute) you can omit the parenthesis for brevity.
+[source,python]
+.Choices Command example
+----
+@parameter(key="p1", choices="get_choices()")
+@parameter(key="p2", choices={"type": "command",
+                              "value": "get_choices"})
+def format(self, p1, p2):
+    ...
+
+@command
+def get_choices(self):
+    return [
+        {"text": "The best", "value": "json"},
+        {"text": "The worst", "value": "xml"}
+    ]
+----
+
+NOTE: Currently you must use a command from the same system (this restriction will be removed in a future release - see {issues_uri}/269[issue 269]).
+
+
+==== Choice parameters
+It's often useful to have the choices for one parameter depend on the current value of another. To do that you can use choice parameters.
+
+To create a reference on another parameter enclose its key in `${}`. How the parameter is passed depends on what choice source is being used.
+
+For 'command' types the parameter will be passed as an argument to the command. For example, suppose you have two parameters: `day_type` and `day_of_week`. You'd like the choices for `day_of_week` to depend on what the user has selected for `day_type`:
+[source,python]
+.Choices Command Parameter example
+----
+@command
+def get_days(self, type):
+    if type == "Weekday":
+        return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    elif type == "Weekend":
+        return ["Saturday", "Sunday"]
+    else:
+      raise Exception("Huh?")
+
+@parameter(key="day_type", choices=["Weekday", "Weekend"])
+@parameter(key="day_of_week", choices="get_days(type=${day_type})")
+def my_command(self, day_type, day_of_week):
+    do_something(day_of_week)
+    return "All done!"
+----
+
+For 'url' types the choice parameter should be used as a query parameter:
+[source,python]
+.Choices URL Parameter example
+----
+@parameter(key="day_type", choices=["Weekday", "Weekend"])
+@parameter(key="day_of_week",
+           choices="https://getthedays.com?type=${day_type}")
+def my_command(self, day_type, day_of_week):
+    do_something(day_of_week)
+    return "All done!"
+----
+
+Choice parameters also enable using a static choices dictionary with one parameter used as the dictionary key. To do this use type `static` and pass the dictionary as the value. Since we can construct the dictionary before defining the `command` we can rework the `day_of_week` example to look like this:
+[source,python]
+.Choices Dictionary example
+----
+day_dict = {
+    "Weekday": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "Weekend": ["Saturday", "Sunday"]
+}
+
+@parameter(key="day_type", choices=["Weekday", "Weekend"])
+@parameter(key="day_of_week", choices={'type': 'static',
+                                       'value': day_dict,
+                                       'key_reference': '${day_type}'})
+def my_command(self, day_type, day_of_week):
+    do_something(day_of_week)
+    return "All done!"
+----
+
+When using a choices dictionary the `None` key can be used to specify the allowed values when the reference key is `null`. For example, if we wanted to modify the `day_of_week` example to additionally allow _any_ day to be selected if `day_type` was `null` we could do this:
+[source,python]
+.Choices Dictionary with None example
+----
+day_dict = {
+    "Weekday": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "Weekend": ["Saturday", "Sunday"],
+    None: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+           "Saturday", "Sunday"]
+}
+
+@parameter(key="day_type", choices=["Weekday", "Weekend"],
+           nullable=True)
+@parameter(key="day_of_week", choices={'type': 'static',
+                                       'value': day_dict,
+                                       'key_reference': '${day_type}'})
+def my_command(self, day_type, day_of_week):
+    do_something(day_of_week)
+    return "All done!"
+----

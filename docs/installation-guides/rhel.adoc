@@ -1,0 +1,174 @@
+= Fedora/CentOS/RHEL Installation
+:page-layout: docs
+:uri-config: ../configuration
+
+This guide will take you through step-by-step installation instructions for a CentOS box.
+
+TIP: These directions should be relatively universal, but as RHEL/CentOS/Fedora are different operating systems, there might be slight differences.
+
+== Prerequisites
+
+Beer Garden requires connectivity to a MongoDB server as well as a RabbitMQ installation.  Please refer to their installation instructions for detailed installation instructions/configuration. Here, we will just go over the basics.
+
+=== RabbitMQ ===
+
+First, we need to install the rabbitmq-server and the plugins:
+
+[source]
+----
+sudo yum install -y rabbitmq-server librabbitmq
+----
+
+Then we want to start the service:
+
+[source]
+.Centos 6
+----
+sudo service rabbitmq-server start
+----
+
+[source]
+.Centos 7
+----
+sudo systemctl start rabbitmq-server
+----
+
+We also want to enable the management plugin. This isn't strictly necessary but it makes managing RabbitMQ much easier.
+
+[source]
+----
+sudo rabbitmq-plugins enable rabbitmq_management
+----
+
+IMPORTANT: You may see a problem after you do this where `/etc/rabbitmq/enabled_plugins` is not readable. If so, just do the following: `chown rabbitmq.rabbitmq /etc/rabbitmq/enabled_plugins`
+
+Then restart:
+
+[source]
+.Centos 6
+----
+sudo service rabbitmq-server restart
+----
+
+[source]
+.Centos 7
+----
+sudo systemctl restart rabbitmq-server
+----
+
+The management plugin starts a web interface on http://localhost:15672. You can visit that address in a browser to see the management plugin interface. The default username and password are both 'guest'.
+
+NOTE: The management interface is only bound to localhost, so you can only access it from the same machine that's running RabbitMQ.
+
+If you are planning on running these services long-term, you may want to make sure they stay on:
+
+[source]
+.Centos 6
+----
+sudo chkconfig rabbitmq-server on
+----
+
+[source]
+.Centos 7
+----
+sudo systemctl enable rabbitmq-server
+----
+
+==== User Configuration
+
+If you want remote plugins to be able to connect to your Rabbit queue you'll need to use a different user (the default 'guest' user only allows connections from localhost). Add a new user like this:
+
+[source]
+----
+sudo rabbitmqctl add_user USER PASSWORD
+sudo rabbitmqctl set_user_tags USER administrator
+sudo rabbitmqctl set_permissions beer_garden ".*" ".*" ".*"
+----
+
+=== MongoDB ===
+
+First we need to install the mongo packages:
+
+[source]
+----
+sudo yum install -y mongodb-org
+----
+
+CAUTION: Don't forget, beer-garden requires version 3.2 or higher.
+
+Next, run the service:
+
+[source]
+.Centos 6
+----
+sudo service mongod start
+----
+
+[source]
+.Centos 7
+----
+sudo systemctl restart mongod
+----
+
+Enable the service:
+
+[source]
+.Centos 6
+----
+sudo chkconfig mongod on
+----
+
+[source]
+.Centos 7
+----
+sudo systemctl enable mongod
+----
+
+== Installing Beer Garden
+
+CAUTION: We are working on getting a yum repository hosted through https://packagecloud.io/[Package cloud], so hopefully we can point you at a yum repo sometime soon! For now you'll have to download an RPM from our GitHub releases section.
+
+You'll have to download our latest RPM. Then install with yum:
+
+[source]
+----
+sudo yum install beer-garden
+----
+
+All Beer Garden configuration files are located in `/opt/beer-garden/conf`. Feel free to adjust the configuration as necessary. For more information on configuration see link:../../configuration/[Configuring Beer Garden].
+
+Next we just need to start the service and make sure it's running by default:
+
+[source]
+.Centos 6
+----
+sudo service beer-garden start
+sudo chkconfig beer-garden on
+----
+
+[source]
+.Centos 7
+----
+sudo systemctl enable beer-garden
+sudo systemctl start beer-garden
+----
+
+Now check to see if it's up: http://{host}:{port}/
+
+=== Adding Local Plugins
+
+Plugins come as .tar.gz files right now.  So get access to the .tar.gz file and put it in the right spot:
+
+[source]
+----
+cp /tmp/my-plugin-0.0.1.tar.gz /opt/beer-garden/plugins/.
+cd /opt/beer-garden/plugins/
+tar -zxvf my-plugin-0.0.1.tar.gz
+----
+
+Edit any configuration files necessary for the plugin. You can start the new plugin through the GUI:
+
+* Navigate to the beer-garden GUI
+* Select Administration -> Systems Management
+* Click "Rescan System Directory"
+* You should see your plugin appear!

@@ -25,18 +25,16 @@
 source 'https://rubygems.org'       # This tells Bundler where to look for gems
 
 gem 'awestruct', '0.5.7'
-gem 'asciidoctor', '1.5.4'
+gem 'asciidoctor', '1.5.6.1'
 gem 'compass', '1.0.3'
 gem 'haml', '4.0.7'
 gem 'slim', '3.0.6'
 gem 'tilt', '2.0.2'
 gem 'rb-inotify', '0.9.7', :platforms => [:ruby, :jruby]
-gem 'webrick', '~> 1.3.1'
-gem 'coderay', '1.1.1'
-
-gem 'rake', '>= 0.9.2'                                  # Needed for the Rakefile to work
 gem 'bootstrap-sass', '>= 3.2.0.2'
-gem 'font-awesome-sass'
-gem 'opal'
-gem 'pandoc-ruby'
-gem 'rack-contrib'
+gem 'font-awesome-sass', '<= 5'
+
+gem 'tzinfo', '1.2.2', :group => :test
+gem 'git', '1.2.9.1', :group => :test
+gem 'rake', '10.5.0', :group => :test
+gem 'html-proofer', '3.0.2', :group => :test

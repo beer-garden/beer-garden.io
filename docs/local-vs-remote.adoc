@@ -1,0 +1,46 @@
+= Local vs Remote Plugins
+:page-layout: docs
+:uri-python-local: /python/local-guide/
+:uri-python-remote: /python/remote-guide/
+
+It's important to understand the fundamental difference between local and remote plugins. Deciding which plugin you would like to run will influence the way you write your plugins and even what language your plugin can be written in. They each also have their own set of restrictions and ways you can deploy to them.
+
+== Local Plugins
+Here is a quick breakdown:
+[TIP]
+.Pros of using local plugins
+====
+Plugin management (monitoring, restarting/reloading) You don't have to worry about standing up a new machine to run your plugin, logging gets taken care of by Beer Garden
+====
+
+[CAUTION]
+.Cons of using local plugins
+====
+Restricted to the python version running on the Beer Garden server, you must have access to the Beer Garden server, you share resources with Beer Garden itself, you must structure the code in a particular way
+====
+
+Local plugins refer to plugins that are managed by Beer Garden itself. Local plugins exist on the same machine as Beer Garden. That is, the deployed software is actually on the same server as the Beer Garden service. In addition, the software is assumed to be compatible in the same python version that powers Beer Garden.
+
+What you get as a result of being on the same server, is that Beer Garden can easily manage maintenance of your plugin. If the process dies, Beer Garden will restart it. Beer Garden has "tight" control over your plugin, in that it knows more-or-less what it's doing.
+
+If you are running your own Beer Garden, then the local plugin will probably just work for you. If so, you can start looking at the link:../python/local-guide/[writing local plugins] section.
+
+== Remote Plugins
+Here is a quick breakdown:
+[TIP]
+.Pros of using remote plugins
+====
+No real language restriction, only http(s) access to Beer Garden server required, you can provision the plugin with its own resources. No restrictions of how to start/configure your plugin
+====
+
+[CAUTION]
+.Cons of using remote plugins
+====
+You are responsible for starting/monitoring/restarting your plugin. No way for Beer Garden to tell the plugin to reload it's configuration.
+====
+
+Remote plugins refer to plugins that are not managed by Beer Garden itself. Remote plugins can exist on any machine that can make a http(s) connection to the Beer Garden web service. From a technical perspective, there are no restrictions on what language a remote plugin can be written in.
+
+This does mean that the plugin developer is responsible for keeping the plugin process up and running. If the process dies for whatever reason, Beer Garden will not know how to restart it.
+
+If your Beer Garden is being run by someone else, or if you don't want to worry about getting access to the Beer Garden server, or if you want to write your plugin in something other than the python running Beer Garden, then a remote plugin is for you. In which case, you should start looking at the link:../python/remote-guide[writing remote plugins] section.

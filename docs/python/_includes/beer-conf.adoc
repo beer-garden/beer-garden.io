@@ -1,0 +1,159 @@
+The `beer.conf` file explains how to configure your plugin. Let's explore the required `beer.conf` options.
+
+[source,python]
+.beer.conf (Required fields)
+----
+# Defines the system name of your plugin
+NAME = "my-plugin"
+
+# The version of your plugin
+VERSION = "0.0.1"
+
+# Defines way to run the plugin
+PLUGIN_ENTRY='main.py'
+----
+
+In addition to the required fields, you may optionally provide other values to enhance your plugin. Each option is explained in more detail below.
+
+[source,python]
+.beer.conf (optional fields)
+----
+# Description of what your plugin does
+DESCRIPTION = "My plugin does cool stuff"
+
+# The name of the system in the GUI
+DISPLAY_NAME = "My Plugin"
+
+# Environment variables
+ENVIRONMENT={'MY_PASSWORD':'sup3r$ecret'}
+
+# Instances to start. If none are provided, an
+# instance named 'default' is started
+# In this case, we would create two instances, i1 & i2
+INSTANCES = ["i1", "i2"]
+
+# Arguments to pass to the PLUGIN_ENTRY value
+PLUGIN_ARGS = ['arg1']
+
+# Defines relationship to 'foo' plugin
+REQUIRES=['foo']
+
+# Additional Metadata you would like to add to the system
+METADATA = {'foo': 'bar'}
+----
+
+=== NAME entry
+
+The `NAME` entry is pretty straight-forward. It is the system name that will be used to identify your system.
+
+=== VERSION entry
+
+The `VERSION` entry is supposed to be a semantic-version. That means something that looks like `X.X.X` where `X` can be any number. The version is important to Beer Garden, and it will not let you upload two systems with the same version that has different command/parameters.
+
+TIP: If you are in the process of developing a plugin, and want to change commands or parameters, you can name your version `X.X.X.dev0` which will allow you to overwrite command and parameters in place.
+
+=== PLUGIN_ENTRY entry
+
+The `PLUGIN_ENTRY` entry in the `beer.conf` file is simply the python script that will execute `plugin.run()` That's really all there is to this.
+
+=== DESCRIPTION entry
+
+Again, a pretty straight-forward field. This is the system description that you'll see in the GUI/ReST API.
+
+=== METADATA entry
+
+The `METADATA` field allows you to associate METADATA with your system. This can be helpful for service-discovery type information or anything else specific with your system that you would like programmatically discoverable.
+
+=== DISPLAY_NAME entry
+
+This is the name the system will appear under in the GUI.
+
+=== ENVIRONMENT entry
+
+If there is some reason you cannot or do not want to pass your information in through the command line or through a file of your choosing, you can choose to set variables in your environment using the `ENVIRONMENT` portion of the `beer.conf` file. The `ENVIRONMENT` entry is simply a dictionary that contains all the ENVIRONMENT Variables you want. Please note that all ENVIRONMENT variables will be converted to strings before they are included. You can also utilize other environment variables that you know are set. For example, the `BG_PLUGIN_PATH`:
+
+[source,python]
+----
+ENVIRONMENT={
+    'foo':'bar',
+    'LD_LIBRARY_PATH':'$BG_PLUGIN_PATH/vendor/lib'
+}
+----
+
+Pretty Cool, right?
+
+=== INSTANCES entry
+
+Whether or not you know it, your plugin will have instances. If you do not provide Beer Garden with the `INSTANCES` key, then it will assume you only want one instance of the plugin and will create it with a plugin with a single instance named `default`. Entries in the `INSTANCES` section will be validated against entries in <<plugin_args>> section.
+
+=== PLUGIN_ARGS entry
+
+If you want something to be easily changeable, this is something you may be interested in. Often times, this can be used as a way to pass in a configuration file. For Example:
+
+[source,python]
+----
+PLUGIN_ARGS=['/path/to/config.file']
+PLUGIN_ENTRY='main.py'
+----
+
+Will cause Beer Garden to run your app via: `python main.py /path/to/config.file` You can actually utilize some environment variables to your advantage here as well. Namely the `$BG_PLUGIN_PATH` to get the path of the deployed plugin.
+
+The `PLUGIN_ARGS` entry plays along with the `INSTANCES` entry. If there are multiple instances and the `PLUGIN_ARGS` is a list, Beer Garden assumes that you want to pass the value of `PLUGIN_ARGS` to each and every instance that is defined in the `INSTANCES` section. For example:
+
+[source,python]
+----
+INSTANCES=['foo', 'bar']
+PLUGIN_ARGS=['arg1', 'arg2']
+PLUGIN_ENTRY='main.py'
+----
+
+Tells Beer Garden to start two instances of your plugin via:
+
+[source,bash]
+----
+python main.py arg1 arg2
+python main.py arg1 arg2
+----
+
+If you want to give different instances different arguments, you could do the following:
+
+[source,python]
+----
+INSTANCES = ['foo', 'bar', 'baz']
+PLUGIN_ARGS = {
+    'foo': ['arg1', 'arg2'],
+    'bar': ['arg3'],
+    'baz': []
+}
+----
+
+This will instruct Beer Garden to start 3 instances of your plugins via:
+
+[source,bash]
+----
+python main.py arg1 arg2
+python main.py arg3
+python main.py
+----
+
+If you define your `PLUGIN_ARGS` as a dictionary, then there really is no need to define the `INSTANCES`. So the previous example and this example are functionally equivalent:
+
+[source,python]
+----
+PLUGIN_ARGS = {
+    'foo': ['arg1', 'arg2'],
+    'bar': ['arg3'],
+    'baz': []
+}
+----
+
+=== REQUIRES entry
+
+If you are writing a plugin that interacts with other plugins, then you should note this dependency in the `REQUIRES` field. Simply, if you are writing a plugin 'bar' that relies on foo add:
+
+[source,python]
+----
+REQUIRES=['foo']
+----
+
+And that's it!
