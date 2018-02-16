@@ -42,9 +42,9 @@ profiles:
     production:
         base_url: 'https://beer-garden.io'
         disqus_developer: false
-        google_analytics_account: GOOGLE_ID
+        google_analytics_account: UA-113442079-2
         google_analytics:
-          account: GOOGLE_ID
+          account: UA-113442079-2
         scss:
           line_numbers: false
           style: compressed
