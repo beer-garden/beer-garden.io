@@ -1,4 +1,4 @@
-It is important to be able to tell beer-garden when something on your system goes wrong. `brewtils` takes advantage of Python's exceptions in order to handle command malfunctions. So if you have a function:
+It is important to be able to tell Beer Garden when something on your system goes wrong. `brewtils` takes advantage of Python's exceptions in order to handle command malfunctions. So if you have a function:
 
 [source,python]
 ----
@@ -6,7 +6,7 @@ def my_error(self):
     raise ValueError("Something went wrong!")
 ----
 
-This will result in the request status turning to "ERROR" and its output will be `Something went wrong!`. It is expected that plugins will throw errors as a way to notify beer-garden that something has gone wrong.
+This will result in the request status turning to "ERROR" and its output will be `Something went wrong!`. It is expected that plugins will throw errors as a way to notify Beer Garden that something has gone wrong.
 
 If you choose to handle errors and not throw, you will notice something that may be quite confusing to your plugins users. Let's have an example:
 
@@ -21,7 +21,7 @@ def my_error(self, x):
 
 If `x` being `None` is an error, then you should throw an error. Otherwise, the request will be marked as `SUCCESS` while the output will say `An error occurred`
 
-If your command has a `JSON` output type, then beer-garden will attempt to format your exception as a JSON error message. Here's an example:
+If your command has a `JSON` output type, then Beer Garden will attempt to format your exception as a JSON error message. Here's an example:
 
 [source,python]
 ----
@@ -49,7 +49,7 @@ class MyError(Exception):
     self.bar = kwargs.pop("bar")
 ----
 
-Then you throw that error during a command, beer-garden will modify the output as per the following:
+Then you throw that error during a command, Beer Garden will modify the output as per the following:
 
 ```
 {

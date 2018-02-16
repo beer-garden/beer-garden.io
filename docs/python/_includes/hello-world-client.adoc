@@ -11,5 +11,5 @@ class HelloWorldClient(object):
         return "Hello, World!"
 ----
 <1> Imports from the `brewtils.decorators` module. These are all we need to "pluginify" our class.
-<2> The `@system` decorator marks this class as a beer-garden plugin.
+<2> The `@system` decorator marks this class as a Beer Garden plugin.
 <3> The `@command` decorator marks this method as a Command that's part of the enclosing System.

@@ -1,4 +1,4 @@
-In order to help users of beer-garden understand how to utilize your plugin, you'll need to provide some basic information about your plugins. There are lots of ways to specify lots of different information that your plugin can do. So we'll take it one at a time.
+In order to help users of Beer Garden understand how to utilize your plugin, you'll need to provide some basic information about your plugins. There are lots of ways to specify lots of different information that your plugin can do. So we'll take it one at a time.
 
 === Adding a command description
 

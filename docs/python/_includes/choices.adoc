@@ -29,7 +29,7 @@ def format(self, output_type):
 
 
 ==== Additional Configuration
-There are some configuration options that control how `choices` works. beer-garden will pick sensible defaults, but to tweak them pass a dictionary to `choices`:
+There are some configuration options that control how `choices` works. Beer Garden will pick sensible defaults, but to tweak them pass a dictionary to `choices`:
 [source,python]
 .Choices Dictionary example
 ----
@@ -42,9 +42,9 @@ def format(self, output_type):
 That way you can add additional key/value pairs to the choices dictionary.
 
 ===== Choices Type
-You probably noticed the `'type': 'static'` entry above. beer-garden is able to figure out exactly what to do when you pass a list of values to `choices`, but it needs a hint when you use the dictionary configuration. There are a couple of other ways to populate the choices list (more on those in a bit) so you need to be explicit.
+You probably noticed the `'type': 'static'` entry above. Beer Garden is able to figure out exactly what to do when you pass a list of values to `choices`, but it needs a hint when you use the dictionary configuration. There are a couple of other ways to populate the choices list (more on those in a bit) so you need to be explicit.
 
-The example above is using the `static` type, which tells beer-garden to expect a list of values in the `value` attribute. This is functionally identical to passing a list of values to `choices` directly.
+The example above is using the `static` type, which tells Beer Garden to expect a list of values in the `value` attribute. This is functionally identical to passing a list of values to `choices` directly.
 
 The other choice types will be explained in detail in the <<Choice Sources>> section.
 
@@ -90,7 +90,7 @@ Specifying a URL will tell the browser to load choices using an HTTP GET request
 def format(self, p1, p2):
     ...
 ----
-CAUTION: Be aware that the user's browser will be making this request. So if the beer-garden UI is being accessed at a secure (https) address then a request to a non-secure (http) URL will likely fail due to mixed-content restrictions.
+CAUTION: Be aware that the user's browser will be making this request. So if the Beer Garden UI is being accessed at a secure (https) address then a request to a non-secure (http) URL will likely fail due to mixed-content restrictions.
 
 ===== Command
 Specifying a command will load choices by making a request to the current system. You can use type 'command' if using dictionary configuration or just pass the command as a string. If you're not using choice parameters (more on those in a minute) you can omit the parenthesis for brevity.

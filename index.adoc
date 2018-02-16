@@ -1,4 +1,4 @@
-= beer-garden
+= Beer Garden
 Logan Jones <https://github.com/loganasherjones[@loganasherjones]>;
 :idprefix:
 :page-layout: about
@@ -9,59 +9,61 @@ Logan Jones <https://github.com/loganasherjones[@loganasherjones]>;
 // Images
 :imagesdir: ./images
 
-beer-garden is a plugin framework that helps developers to create useful,
+Beer Garden is a plugin framework that helps developers to create useful,
 streamlined, event-driven applications in a composable, and easily
-extensible way. beer-garden is written in Python and has several packaging
-formats including a python-egg, RPMs and docker images. beer-garden is open
+extensible way. Beer Garden is written in Python and has several packaging
+formats including python distributions, RPMs, and docker images. Beer Garden is open
 source, hosted on GitHub and is released under the MIT license.
 
 .Key Documentation
 [.compact]
-* link:docs/what-is-beergarden/[What is beer-garden?]
+* link:docs/what-is-beergarden/[What is Beer Garden?]
 * link:docs/plugin-developer-guide/[Plugin Developer Guide]
 * link:docs/installation-guides/[Installation Guides]
 * link:docs/api-users-guide/[API Users Guide]
 * link:docs/user-manual/[User Manual]
 
-== beer-garden in a Nutshell
+== Beer Garden in a Nutshell
 
-beer-garden makes it easy to create composable pieces of software with a very
-minimal understanding of best-practices for writing software. In short, the
-goal is to take a developer that knows how to write a function, and create all
-the other boilerplate code for him/her. beer-garden has some defaults for how
-to render the code you write as an HTML form.
+Beer Garden makes it easy to turn your functions into fully functional ReST interfaces that are ready for production use.  In short, the goal is to take anybody that knows how to write a function, and create all the other boilerplate code for them. This includes backing that function by a type-safe, discoverable, ReST interface and a fully functional web form-based interface that is easy-to-use for developers and end-users alike.
 
 image:screenshot.png["Preview Plugin to HTML Form Screenshot"]
 
 == Requirements
 
-beer-garden runs on Linux and needs a couple things to work:
+Beer Garden depends on a few external services and requires the following to run:
 
 * Python (2.7 or >= 3.5)
 * Connectivity to MongoDB (>= 3.2.0)
-* Connectivity to RabbitMQ
+* Connectivity to RabbitMQ (>= 3)
 
 == Installation
 
-beer-garden can be installed using `pip`, `yum`, `docker` or `docker-compose`. Check out our link:docs/installation-guides/[Installation Guides] for more information on the different ways to install beer-garden.
+Beer Garden can be installed using `pip`, `yum`, `docker` or `docker-compose`. Check out our link:docs/installation-guides/[Installation Guides] for more information on the different ways to install Beer Garden.
 
 TIP: You probably noticed that beer-garden needs MongoDB and RabbitMQ to work. That's why we recommend using `docker-compose` if you want to get up and running quickly - the compose configuration will handle those things for you.
 
 
 == Usage
-The installation guides have instructions for basic usage. For more advanced usage information check out the link:docs/user-manual[User Manual].
 
+* If you're a developer and want to get your feet wet, we definitely recommend checking out the link:docs/quickstart[Quickstart section].
+
+* If you're interested in administering your Beer Garden instance, the link:docs/installation-guides/[Installation Guides] have advice for administering your installations.
+
+* If you already have Beer Garden and you want to figure out how to write plugins, checkout the link:docs/plugin-developer-guide[Plugin Developer Guide] for a detailed run-down of creating your very own plugins.
+
+* If you already have Beer Garden and you already have plugins and you just want an easy way to use those plugins be sure to check out our link:docs/api-users-guide[API Users Guide] this will go over our REST Interface as well as python bindings that we provide.
 
 == Getting Help
 
-We want beer-garden to help you _easily_ write and use plugins. If there's anything that's unclear or difficult (or broken!) we want to know about it! Here are the best ways to get in touch with us:
+We want Beer Garden to help you _easily_ write and use plugins. If there's anything that's unclear or difficult (or broken!) we want to know about it! Here are the best ways to get in touch with us:
 
 * Talk to us in {chat_uri}[Slack Channel]
 * Sumbit an issue to the {issues_uri}[Issue Tracker]
 
 == Contributing
 
-beer-garden is open-source, and in the spirit of open-source software _everyone_ is encouraged to help improve this project. If you discover errors or omissions in the source code, documentation, or website content please don't hesitate to submit an issue or open a merge request. New contributors are always welcome!
+Beer Garden is open-source, and in the spirit of open-source software _everyone_ is encouraged to help improve this project. If you discover errors or omissions in the source code, documentation, or website content please don't hesitate to submit an issue or open a merge request. New contributors are always welcome!
 
 Check out the link:docs/contributing/[Contributing] guide to get started.
 
@@ -79,6 +81,11 @@ Here are some ways __you__ can contribute:
 ** Fix issues
 ** Refactor
 
+== Credits
+
+A huge shoutout to https://asciidoctor.org[the Asciidoctor Project]. This website is built with AsciiDoctor and was heavily influenced by the Asciidoctor website. It really is the best way to write documentation and we highly recommend you check it out!
+
+This website is hosted by https://pages.github.com/[GitHub Pages]. It makes deployment easy and cheap. You can use it for blogs, or documentation like this. You should really check it out if you haven't.
 
 == Copyright and Licensing
 

@@ -1,4 +1,4 @@
-= beer-garden Configuration
+= Beer Garden Configuration
 :page-layout: docs
 :rpm-config-home: /opt/beer-garden/conf
 :bt-config: bartender-config.json
@@ -7,11 +7,11 @@
 :bv-log-config: brew-view-logging-config.json
 
 
-In this guide, we will go over the configuration options in beer-garden and how they affect the application. We will talk about the configuration at a high level, but we assume you have installed beer-garden somehow.
+In this guide, we will go over the configuration options in Beer Garden and how they affect the application. We will talk about the configuration at a high level, but we assume you have installed Beer Garden somehow.
 
 == Configuration Files ==
 
-There are 4 configuration files that come installed with beer-garden. If you installed an RPM, you will find these in `{rpm-config-home}` otherwise you can generate them through the commands `brew-view` and `bartender` provide. The default names are:
+There are 4 configuration files that come installed with Beer Garden. If you installed an RPM, you will find these in `{rpm-config-home}` otherwise you can generate them through the commands `brew-view` and `bartender` provide. The default names are:
 
 * `{bt-config}`
 * `{bt-log-config}`
@@ -20,7 +20,7 @@ There are 4 configuration files that come installed with beer-garden. If you ins
 
 == Logging Configuration ==
 
-The logging configuration uses the standard python logging information. This can be edited as you see fit. If nothing is specified, beer-garden will fall back to some basic defaults. You can generate a logging file through:
+The logging configuration uses the standard python logging information. This can be edited as you see fit. If nothing is specified, Beer Garden will fall back to some basic defaults. You can generate a logging file through:
 
 [source,subs="attributes"]
 ----
@@ -154,7 +154,7 @@ migrate_brew_view_config -c {bv-config}
 
 == Plugin Logging Configuration ==
 
-As of beer-garden 2.1.0, there is a new configuration file for plugin logging configurations. If this file is not included, a logging configuration is inferred from the logging configuration of the beer-garden application itself. This logging configuration specifies how you would like plugins to log. A valid logging configuration can be found in `brew-view/dev_conf/example-plugin-logging-config.json`. Let's examine what is allowed to go into this configuration.
+As of Beer Garden 2.1.0, there is a new configuration file for plugin logging configurations. If this file is not included, a logging configuration is inferred from the logging configuration of the Beer Garden application itself. This logging configuration specifies how you would like plugins to log. A valid logging configuration can be found in `brew-view/dev_conf/example-plugin-logging-config.json`. Let's examine what is allowed to go into this configuration.
 
 === Level
 You may specify a default level that you would like all plugins to log at. This can be overwritten by `handlers`, or `loggers` entries. The supported levels are:
@@ -192,4 +192,4 @@ The `loggers` section allows you to specify a different logger per system name. 
 }
 ----
 
-This tells beer-garden that when a system with the name `foo` asks for its logging configuration, that we should use this specialized configuration.
+This tells Beer Garden that when a system with the name `foo` asks for its logging configuration, that we should use this specialized configuration.

@@ -8,7 +8,7 @@ TIP: These directions should be relatively universal, but as RHEL/CentOS/Fedora 
 
 == Prerequisites
 
-beer-garden requires connectivity to a MongoDB server as well as a RabbitMQ installation.  Please refer to their installation instructions for detailed installation instructions/configuration. Here, we will just go over the basics.
+Beer Garden requires connectivity to a MongoDB server as well as a RabbitMQ installation.  Please refer to their installation instructions for detailed installation instructions/configuration. Here, we will just go over the basics.
 
 === RabbitMQ ===
 
@@ -124,7 +124,9 @@ sudo chkconfig mongod on
 sudo systemctl enable mongod
 ----
 
-== Installing beer-garden
+== Installing Beer Garden
+
+CAUTION: We are working on getting a yum repository hosted through https://packagecloud.io/[Package cloud], so hopefully we can point you at a yum repo sometime soon! For now you'll have to download an RPM from our GitHub releases section.
 
 You'll have to download our latest RPM. Then install with yum:
 
@@ -133,7 +135,7 @@ You'll have to download our latest RPM. Then install with yum:
 sudo yum install beer-garden
 ----
 
-All beer-garden configuration files are located in `/opt/beer-garden/conf`. Feel free to adjust the configuration as necessary. For more information on configuration see link:../../configuration/[Configuring beer-garden].
+All Beer Garden configuration files are located in `/opt/beer-garden/conf`. Feel free to adjust the configuration as necessary. For more information on configuration see link:../../configuration/[Configuring Beer Garden].
 
 Next we just need to start the service and make sure it's running by default:
 

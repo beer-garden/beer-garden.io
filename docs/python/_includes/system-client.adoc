@@ -10,7 +10,7 @@ request = client.echo(message="Hello, World!") <2>
 print(request.status)
 print(request.output)
 ----
-<1> Create the client, passing beer-garden connection parameters and the target System name
+<1> Create the client, passing Beer Garden connection parameters and the target System name
 <2> Create a Request for the 'echo' Command as if you were calling a method
 
 The `SystemClient` is a blocking client that will make a rest request that is formatted correctly and returns a request object. This request object can then be queried the same way you would query a normal request object.

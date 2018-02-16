@@ -1,7 +1,7 @@
 = beer-garden Architecture
 :page-layout: docs
-:uri-ad-org-issues: {git_group_uri}/beer-garden.gov/issues
+:uri-ad-org-issues: {git_group_uri}/beer-garden.io/issues
 
 
 .Discuss and Contribute
-TIP: Use {uri-ad-org-issues}/11[Issue 11] to drive development of this section. Your contributions make a difference.  No contribution is too small.
+TIP: Use {uri-ad-org-issues}/4[Issue 4] to drive development of this section. Your contributions make a difference.  No contribution is too small.

@@ -9,7 +9,7 @@ The goal of this section is to help you write a local plugin from scratch. In or
 
 include::{includedir}/prereqs-local.adoc[]
 
-NOTE: Don't forget, if you're writing a local plugin, you'll need to be able to write to the plugins directory of the beer-garden you plan on using.
+NOTE: Don't forget, if you're writing a local plugin, you'll need to be able to write to the plugins directory of the Beer Garden you plan on using.
 
 Now you're ready to start writing your plugin.
 
@@ -27,7 +27,7 @@ Once we have the client, we now need to create our entry point. Let's open back 
 include::{includedir}/hello-world-local-entry-point.adoc[]
 
 === Configure your plugin
-First things first, we need to create a special configuration file that beer-garden uses to determine important information about your plugin. That file is called `beer.conf`
+First things first, we need to create a special configuration file that Beer Garden uses to determine important information about your plugin. That file is called `beer.conf`
 
 [source,python]
 .beer.conf
@@ -57,7 +57,7 @@ setup_args = {
 setup(**setup_args)
 ----
 
-Since our files may or may not be in a correct package, we also are going to add the following to `MANIFEST.in`. Since beer-garden plugins are expected to include a `beer.conf` file in their distributions, the `MANIFEST.in` is python's way of including that file in the source build. You can simply include it as follows:
+Since our files may or may not be in a correct package, we also are going to add the following to `MANIFEST.in`. Since Beer Garden plugins are expected to include a `beer.conf` file in their distributions, the `MANIFEST.in` is python's way of including that file in the source build. You can simply include it as follows:
 
 [source]
 .MANIFEST.in
@@ -75,11 +75,11 @@ Once you are done configuring everything, you simply need to build a source dist
 python setup.py sdist
 ----
 
-This will create a `tar.gz` file in your `dist` directory. This file is what will get transferred to the `plugins/` directory in beer-garden.
+This will create a `tar.gz` file in your `dist` directory. This file is what will get transferred to the `plugins/` directory in Beer Garden.
 
 === Deploying your plugin
 
-Take your `tar.gz` file, and copy it to the plugins directory of beer-garden. The default location for RPMs is `/opt/beer-garden/plugins` but varies based on your installation methods. Once copied, you simply need to untar/compress it:
+Take your `tar.gz` file, and copy it to the plugins directory of Beer Garden. The default location for RPMs is `/opt/beer-garden/plugins` but varies based on your installation methods. Once copied, you simply need to untar/compress it:
 
 [source]
 ----
@@ -88,7 +88,7 @@ cd /opt/beer-garden/plugins/
 tar -zxvf my-plugin-0.0.1.tar.gz
 ----
 
-Now go to the beer-garden GUI under `Administration -> Systems Management` and click `Rescan System Directory` in the top right. This will instruct beer-garden to scan the plugins directory for new plugins and start them. You should see your plugin appear. Once it is up, you can go to `Systems` then your system and see the command `hello_world`! Click `Make it Happen!` then `Make Request` to see your plugin in action.
+Now go to the Beer Garden GUI under `Administration -> Systems Management` and click `Rescan System Directory` in the top right. This will instruct Beer Garden to scan the plugins directory for new plugins and start them. You should see your plugin appear. Once it is up, you can go to `Systems` then your system and see the command `hello_world`! Click `Make it Happen!` then `Make Request` to see your plugin in action.
 
 That's it!
 
@@ -160,7 +160,7 @@ include::{includedir}/exceptions.adoc[]
 
 == Logging
 
-For Local plugins, beer-garden will attempt to make decent decisions about where it should log. For example, if beer-garden is configured to log to `STDOUT` or `STDERR` then your plugin will log there as well. If, however, beer-garden is configured to log to a file (the default behavior for RPMs), then it will give each unique plugin its own log file. If you would like to log, you can either print to `STDOUT` or `STDERR`. The `LocalPlugin` will take care of everything else.
+For Local plugins, Beer Garden will attempt to make decent decisions about where it should log. For example, if Beer Garden is configured to log to `STDOUT` or `STDERR` then your plugin will log there as well. If, however, Beer Garden is configured to log to a file (the default behavior for RPMs), then it will give each unique plugin its own log file. If you would like to log, you can either print to `STDOUT` or `STDERR`. The `LocalPlugin` will take care of everything else.
 
 INFO: Use STDOUT or STDERR for logging
 

@@ -5,7 +5,7 @@ This guide will take you through step-by-step installation instructions via pyth
 
 == Prerequisites
 
-A beer-garden Python installation requires a few things to work:
+A Beer Garden Python installation requires a few things to work:
 
 * Python 2.7.9+ or 3.4+
 * Connectivity to MongoDB 3.2+
@@ -15,7 +15,7 @@ Installing these is outside the scope of this documentation, so please refer to 
 
 == Installing Brew View
 
-We host the `brew-view` egg on our PyPi server. You can install it via:
+We host `brew-view` on PyPi server. You can install it via:
 
 [source,subs="attributes"]
 ----

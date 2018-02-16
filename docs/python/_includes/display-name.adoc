@@ -1,4 +1,4 @@
-The `display_name` field allows you control over how beer-garden renders the name of the field. This is useful if your argument has a less-than-useful name from the end-users perspective.
+The `display_name` field allows you control over how Beer Garden renders the name of the field. This is useful if your argument has a less-than-useful name from the end-users perspective.
 
 [source,python]
 .Display name argument example

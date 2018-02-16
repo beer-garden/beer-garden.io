@@ -4,4 +4,4 @@
 
 
 .Discuss and Contribute
-TIP: Use {uri-ad-org-issues}/7[Issue 7] to drive development of this section. Your contributions make a difference.  No contribution is too small.
+TIP: Use {uri-ad-org-issues}/3[Issue 3] to drive development of this section. Your contributions make a difference.  No contribution is too small.

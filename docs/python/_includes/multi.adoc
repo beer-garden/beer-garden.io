@@ -1,4 +1,4 @@
-The `multi` field let's beer-garden know that the parameter should be a list. Most of the other fields stay the same and continue to describe the individual items in the list.
+The `multi` field let's Beer Garden know that the parameter should be a list. Most of the other fields stay the same and continue to describe the individual items in the list.
 
 [source,python]
 .Multi argument example

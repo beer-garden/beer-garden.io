@@ -2,7 +2,7 @@
 :page-layout: docs
 :includedir: python/_includes
 
-beer-garden is a plugin framework that helps developers to create useful, streamlined, event-driven applications in a composable, and easily extendable way. This guide is a quick reference for creating plugins in beer-garden.
+Beer Garden is a plugin framework that helps developers to create useful, streamlined, event-driven applications in a composable, and easily extendable way. This guide is a quick reference for creating plugins in Beer Garden.
 
 NOTE: These examples focus almost exclusively on the python language bindings. As more bindings are updated, this guide will split itself out.
 

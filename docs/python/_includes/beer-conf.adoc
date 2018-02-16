@@ -48,7 +48,7 @@ The `NAME` entry is pretty straight-forward. It is the system name that will be 
 
 === VERSION entry
 
-The `VERSION` entry is supposed to be a semantic-version. That means something that looks like `X.X.X` where `X` can be any number. The version is important to beer-garden, and it will not let you upload two systems with the same version that has different command/parameters.
+The `VERSION` entry is supposed to be a semantic-version. That means something that looks like `X.X.X` where `X` can be any number. The version is important to Beer Garden, and it will not let you upload two systems with the same version that has different command/parameters.
 
 TIP: If you are in the process of developing a plugin, and want to change commands or parameters, you can name your version `X.X.X.dev0` which will allow you to overwrite command and parameters in place.
 
@@ -84,7 +84,7 @@ Pretty Cool, right?
 
 === INSTANCES entry
 
-Whether or not you know it, your plugin will have instances. If you do not provide beer-garden with the `INSTANCES` key, then it will assume you only want one instance of the plugin and will create it with a plugin with a single instance named `default`. Entries in the `INSTANCES` section will be validated against entries in <<plugin_args>> section.
+Whether or not you know it, your plugin will have instances. If you do not provide Beer Garden with the `INSTANCES` key, then it will assume you only want one instance of the plugin and will create it with a plugin with a single instance named `default`. Entries in the `INSTANCES` section will be validated against entries in <<plugin_args>> section.
 
 === PLUGIN_ARGS entry
 
@@ -98,7 +98,7 @@ PLUGIN_ENTRY='main.py'
 
 Will cause Beer Garden to run your app via: `python main.py /path/to/config.file` You can actually utilize some environment variables to your advantage here as well. Namely the `$BG_PLUGIN_PATH` to get the path of the deployed plugin.
 
-The `PLUGIN_ARGS` entry plays along with the `INSTANCES` entry. If there are multiple instances and the `PLUGIN_ARGS` is a list, beer-garden assumes that you want to pass the value of `PLUGIN_ARGS` to each and every instance that is defined in the `INSTANCES` section. For example:
+The `PLUGIN_ARGS` entry plays along with the `INSTANCES` entry. If there are multiple instances and the `PLUGIN_ARGS` is a list, Beer Garden assumes that you want to pass the value of `PLUGIN_ARGS` to each and every instance that is defined in the `INSTANCES` section. For example:
 
 [source,python]
 ----
@@ -107,7 +107,7 @@ PLUGIN_ARGS=['arg1', 'arg2']
 PLUGIN_ENTRY='main.py'
 ----
 
-Tells beer-garden to start two instances of your plugin via:
+Tells Beer Garden to start two instances of your plugin via:
 
 [source,bash]
 ----
@@ -127,7 +127,7 @@ PLUGIN_ARGS = {
 }
 ----
 
-This will instruct beer-garden to start 3 instances of your plugins via:
+This will instruct Beer Garden to start 3 instances of your plugins via:
 
 [source,bash]
 ----

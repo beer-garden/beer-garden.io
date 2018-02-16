@@ -1,28 +1,28 @@
-= What is beer-garden? Why do we need it?
+= What is Beer Garden? Why do we need it?
 :page-layout: docs
 
 Imagine if writing composable software services was as easy as writing a class in your favorite language with your favorite text editor. And sharing that class was as easy as running your main method.
 
 __It *can* be.__
 
-That's the main idea behind beer-garden. So much of software development is tangled in the weeds of standing up services, getting messages from one component to another, creating GUIs, writing documentation, and concurrently supporting multiple versions.
+That's the main idea behind Beer Garden. So much of software development is tangled in the weeds of standing up services, getting messages from one component to another, creating GUIs, writing documentation, and concurrently supporting multiple versions.
 
-In this introduction we'll cover what beer-garden is, some basic terminology, and how beer-garden can solve these problems for you.
+In this introduction we'll cover what Beer Garden is, some basic terminology, and how Beer Garden can solve these problems for you.
 
-== What is beer-garden
+== What is Beer Garden
 
-beer-garden is a web-based plugin framework that provides a simple home for any type of system you can imagine... Come again? To really understand beer-garden, we need to start speaking the same language. beer-garden has four fundamental building blocks:
+Beer Garden is a web-based plugin framework that provides a simple home for any type of system you can imagine. It's incredibly flexible in the workloads it can execute, though it excels in command-and-control. To really understand Beer Garden, we need to start speaking the same language. Beer Garden has four fundamental building blocks:
 
 1. Systems
 2. Commands
 3. Parameters
 4. Requests
 
-Each of these building blocks plays a vital role in understanding beer-garden's view of the world. So let's dive in a little bit more and understand each role in the beer-garden ecosystem.
+Each of these building blocks plays a vital role in understanding Beer Garden's view of the world. So let's dive in a little bit more and understand each role in the Beer Garden ecosystem.
 
 === Systems
 
-If you are familiar with Object-oriented programming, systems are synonymous with classes. If you are not familiar with object-oriented programming, they can be logically thought of a way to group together similar commands. Systems have lots of properties that make them interesting. Everything from commands to versions to instances of systems are included in beer-garden.
+If you are familiar with Object-oriented programming, systems are synonymous with classes. If you are not familiar with object-oriented programming, they can be logically thought of a way to group together similar commands. Systems have lots of properties that make them interesting. Everything from commands to versions to instances of systems are included in Beer Garden.
 
 TIP: An example of a system could be something like a Calculator
 
@@ -48,20 +48,20 @@ calculator
 
 === Quick Example
 
-Let's run through a simple example. Say you have a system that represents a calculator. So in beer-garden you would have a system with name "calculator". The calculator system has two commands "add" and "subtract" each of these commands accepts two parameters "x" and "y". In this way, beer-garden is able to be self-documenting for how to use the calculator (system), what is available for users to exercise (commands) and how to use these commands (parameters).
+Let's run through a simple example. Say you have a system that represents a calculator. So in Beer Garden you would have a system with name "calculator". The calculator system has two commands "add" and "subtract" each of these commands accepts two parameters "x" and "y". In this way, Beer Garden is able to be self-documenting for how to use the calculator (system), what is available for users to exercise (commands) and how to use these commands (parameters).
 
-Now, if someone wanted to add 1 and 1, it would issue a request to beer-garden. It would create a request with the system "calculator", command "add" and parameters "x=1" and "y=1". beer-garden gives people a GUI to exercise this interface and a REST GUI for other developers to exercise the same interface.
+Now, if someone wanted to add 1 and 1, it would issue a request to Beer Garden. It would create a request with the system "calculator", command "add" and parameters "x=1" and "y=1". Beer Garden gives people a GUI to exercise this interface and a REST GUI for other developers to exercise the same interface.
 
 == How can it help?
 
 "__I can write a script, but I'm not a developer__"::
-beer-garden is a tool that is used to bridge several gaps. One gap is between people who know how to write scripts and software developers. That is, it attempts to take those scripts, and with minimum overhead, turn them into a software friendly service exposed over REST.
+Beer Garden is a tool that is used to bridge several gaps. One gap is between people who know how to write scripts and software developers. That is, it attempts to take those scripts, and with minimum overhead, turn them into a software friendly service exposed over REST.
 
 "_I have a useful script, but I don't want to write a GUI_"::
-beer-garden provides a simple web-based form that can exercise your script. That way, you can give the maximum benefit to the people that actually want to use the script, but can't for whatever reason, including those pesky developers who want access to your production machine.
+Beer Garden provides a simple web-based form that can exercise your script. That way, you can give the maximum benefit to the people that actually want to use the script, but can't for whatever reason, including those pesky developers who want access to your production machine.
 
 "__I wish I had a standard way to call many different services__"::
-beer-garden provides a standardized interface for exercising disparate services while allowing the services the flexibility they need to continue to grow in different directions. As you draw abstractions from these services, you can build one interface to rule them all.
+Beer Garden provides a standardized interface for exercising disparate services while allowing the services the flexibility they need to continue to grow in different directions. As you draw abstractions from these services, you can build one interface to rule them all.
 
 "__I have lots of useful scripts and I'd like to make the discoverable__"::
-beer-garden exposes all these functions and makes them programatically discoverable for very little cost. It allows you the flexibility to continue making your plugins to do whatever small thing you want, but also allows other people to build on top of your plugins making more complex plugins that are dynamic and easy-to-use.
+Beer Garden exposes all these functions and makes them programatically discoverable for very little cost. It allows you the flexibility to continue making your plugins to do whatever small thing you want, but also allows other people to build on top of your plugins making more complex plugins that are dynamic and easy-to-use.

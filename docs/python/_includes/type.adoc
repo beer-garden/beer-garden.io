@@ -1,7 +1,7 @@
 
-Setting the `type` field for a Parameter will let beer-garden do a couple of things.
+Setting the `type` field for a Parameter will let Beer Garden do a couple of things.
 
-First, it lets beer-garden perform type validation on that parameter. If the value does not match the type (and can't be converted sensibly) then the Request will be rejected.
+First, it lets Beer Garden perform type validation on that parameter. If the value does not match the type (and can't be converted sensibly) then the Request will be rejected.
 
 Second, it allows the UI to use the best form element for that type of data. For example, you _could_ use a string to represent a date, but setting `type` to 'date' means the UI will use a nice datepicker form element.
 
