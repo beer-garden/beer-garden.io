@@ -1,13 +1,13 @@
 = Python Plugin Guide (Local)
 :page-layout: docs
 :includedir: _includes
-:uri-install-guides: ../installation-guides/
+:uri-install-guides: ../../installation-guides/
 
 The goal of this section is to help you write a local plugin from scratch. In order to write local plugins there are a few things that you need.
 
 == Prerequisites
 
-include::{includedir}/prereqs-local.adoc[]
+include::{includedir}/prereqs.adoc[]
 
 NOTE: Don't forget, if you're writing a local plugin, you'll need to be able to write to the plugins directory of the Beer Garden you plan on using.
 
