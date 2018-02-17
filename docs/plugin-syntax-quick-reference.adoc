@@ -37,7 +37,7 @@ curl -X POST -H 'Content-Type: application/json' -d '{"system": "echo", "command
     }
 ----
 
-[nowrap]
+[%nowrap]
 .Get the status of a request
 ----
     $ curl http://localhost:2337/api/v1/requests/555a56fae9a45a2ad182ac16
