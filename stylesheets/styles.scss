@@ -33,18 +33,6 @@ body {
   background-repeat: repeat-x;
 }
 
-.footer {
-  position: relative;;
-  color: #fff;
-  text-align: right;
-  background-color: #3f4345;
-  margin-bottom: -11px;
-}
-
-.footer p {
-  font-size: small;
-}
-
 main {
   margin-top: -22px
 }
@@ -93,11 +81,89 @@ h2.hero {
   }
 }
 
-.bottom-fixed {
-  bottom: 0px;
-  position: fixed;
-  width: 100%;
-}
 .top-buffer { margin-top: 20px;}
+
+footer {
+  background-color: #3c3d41;
+  color: white;
+  padding-top: 30px;
+
+  .footer-copyright {
+    background-color: #333333;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    text-align: center;
+    p {
+      margin: 10px;
+      color: #ccc;
+    }
+  }
+
+  a {
+    color: #d2d1d1;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: none;
+    color: white;
+  }
+
+  a:focus {
+    text-decoration: none;
+    color: white;
+  }
+
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+    line-height: 1.7;
+  }
+
+  h5 {
+    font-size: 18px;
+    color: white;
+    font-weight: bold;
+    margin-top: 30px;
+  }
+
+  .info {
+    text-align: justify;
+    color: #afb0b1;
+  }
+
+  .row {
+    margin-bottom: 60px;
+  }
+
+  .social-networks {
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 38px;
+
+    a {
+      font-size: 32px;
+      margin-right: 5px;
+      margin-left: 5px;
+      color: #f9f9f9;
+      padding: 10px;
+      transition: 0.2s;
+    }
+
+    a:hover {
+      text-decoration: none
+    }
+
+    .github:hover {
+      color: #959595;
+    }
+
+    .slack:hover {
+      color: #e88b1d;
+    }
+  }
+
+}
+
 
 @import "asciidoctor-coderay";
