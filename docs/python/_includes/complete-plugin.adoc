@@ -17,7 +17,7 @@ if __name__ == "__main__":
     client = MyClient()
     plugin = RemotePlugin(client, name="my-plugin",
                           version="0.0.1.dev0",
-                          bg_host='YOUR_IP',
+                          bg_host='brew-view',
                           bg_port=2337, ssl_enabled=False)
     plugin.run()
 ----

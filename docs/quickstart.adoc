@@ -31,11 +31,13 @@ Copy and paste the following code in a file called [x-]`__main__.py`
 
 include::{plugin-include-dir}/complete-plugin.adoc[]
 
-Update `bg_host='YOUR_IP'` to be your own IP address. Now you can simply run your plugin using one of the images we provide!
+NOTE: If you are not going to run this plugin inside docker, you might need to change `bg_host='brew-view'` to your FQDN or IP address on which Beer Garden is running.
+
+Now you can simply run your plugin using one of the images we provide!
 
 [source,subs="attributes"]
 ----
-docker run -v $(pwd):/src \
+docker run -v $(pwd):/src --network dockercompose_bg-network \
 {plugin-base-image}
 ----
 
