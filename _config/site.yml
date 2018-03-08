@@ -27,7 +27,7 @@ asciidoctor:
         git_uri: https://github.com
         git_ssh_uri: git@github.com:beer-garden/beer-garden.git
         git_group_uri: https://github.com/beer-garden
-        chat_uri: https://beer-garden-io.slack.com
+        chat_uri: https://gitter.im/beer-garden-io/Lobby
         issues_uri: https://github.com/beer-garden/beer-garden/issues
         brewtils_docs_uri: https://brewtils.readthedocs.io
         bg_utils_docs_uri: https://bg-utils.readthedocs.io
