@@ -5,7 +5,7 @@ Logan Jones <https://github.com/loganasherjones> @loganasherjones
 
 Follow the links on this page to learn about Beer Garden or plugin development. You'll also find tips on how to be troubleshoot Beer Garden and how to write effective, composable plugins with Beer Garden syntax.
 
-TIP: Can't find the information you need? Reach out to project members and users via the {chat_uri}[channel on Slack]
+TIP: Can't find the information you need? Reach out to project members and users via {chat_uri}[Gitter]
 
 == The Basics
 
