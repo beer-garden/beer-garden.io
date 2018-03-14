@@ -9,57 +9,46 @@ Logan Jones <https://github.com/loganasherjones[@loganasherjones]>;
 // Images
 :imagesdir: ./images
 
-Beer Garden is a plugin framework that helps developers to create useful,
-streamlined, event-driven applications in a composable, and easily
-extensible way. Beer Garden is written in Python and has several packaging
-formats including python distributions, RPMs, and docker images. Beer Garden is open
-source, hosted on GitHub and is released under the MIT license.
 
-.Key Documentation
-[.compact]
-* link:docs/what-is-beergarden/[What is Beer Garden?]
-* link:docs/plugin-developer-guide/[Plugin Developer Guide]
-* link:docs/installation-guides/[Installation Guides]
-* link:docs/api-users-guide/[API Users Guide]
-* link:docs/user-manual/[User Manual]
+== In a Nutshell
 
-== Beer Garden in a Nutshell
+Imagine if writing composable software services was as easy as writing a class in your favorite language with your favorite text editor. And sharing that class was as easy as running your main method.
 
-Beer Garden makes it easy to turn your functions into fully functional ReST interfaces that are ready for production use.  In short, the goal is to take anybody that knows how to write a function, and create all the other boilerplate code for them. This includes backing that function by a type-safe, discoverable, ReST interface and a fully functional web form-based interface that is easy-to-use for developers and end-users alike.
+__it **can** be.__
+
+That's the main idea behind Beer Garden. So much of software development is tangled in the weeds of standing up services, getting messages from one component to another, creating GUIs, writing documentation, and concurrently supporting multiple versions. We want to change that.
+
+Beer Garden makes it easy to turn your functions into REST interfaces that are ready for production use, and does it in a way that's acessible to anyone that can write a function. It creates all the boilerplate and infrastruction needed to turn that function into a type-safe, discoverble REST interface and an easy-to-use webform-based UI.
+
+If that sounds interesting to you then go ahead and check out the link:docs/quickstart[Quickstart section]!
 
 image:screenshot.png["Preview Plugin to HTML Form Screenshot"]
 
-== Requirements
 
-Beer Garden depends on a few external services and requires the following to run:
+== Futher Reading
 
-* Python (2.7 or >= 3.5)
-* Connectivity to MongoDB (>= 3.2.0)
-* Connectivity to RabbitMQ (>= 3)
+* If you're still not quite sure what Beer Garden is or what it can do for you there's more information in link:docs/what-is-beergarden[What is Beer Garden?]
 
-== Installation
+* If you're trying to get up and running as quickly as possible then the link:docs/quickstart[Quickstart section] is for you
 
-Beer Garden can be installed using `pip`, `yum`, `docker` or `docker-compose`. Check out our link:docs/installation-guides/[Installation Guides] for more information on the different ways to install Beer Garden.
+* If you're interested in administering a Beer Garden instance the link:docs/installation-guides/[Installation Guides] will be helpul in getting started, and the link:docs/configuration[Configuration Guide] will help with configuration
 
-TIP: You probably noticed that beer-garden needs MongoDB and RabbitMQ to work. That's why we recommend using `docker-compose` if you want to get up and running quickly - the compose configuration will handle those things for you.
+* If you're looking for guidance on writing plugins check out the link:docs/plugin-developer-guide[Plugin Developer Guide] for a detailed rundown
 
+* If you'd like to better understand how to interact with Beer Garden (and learn the magic behind the Python bindings) take a look at the link:docs/api-users-guide[API Guide]
 
-== Usage
+* If you want to understand how the different components of Beer Garden work and interact then the link:docs/architecture[Architecture Guide] is the place to look
 
-* If you're a developer and want to get your feet wet, we definitely recommend checking out the link:docs/quickstart[Quickstart section].
+* For documentation on the Python bindings head over to {brewtils_docs_uri}[Read the Docs]
 
-* If you're interested in administering your Beer Garden instance, the link:docs/installation-guides/[Installation Guides] have advice for administering your installations.
-
-* If you already have Beer Garden and you want to figure out how to write plugins, checkout the link:docs/plugin-developer-guide[Plugin Developer Guide] for a detailed run-down of creating your very own plugins.
-
-* If you already have Beer Garden and you already have plugins and you just want an easy way to use those plugins be sure to check out our link:docs/api-users-guide[API Users Guide] this will go over our REST Interface as well as python bindings that we provide.
 
 == Getting Help
 
-We want Beer Garden to help you _easily_ write and use plugins. If there's anything that's unclear or difficult (or broken!) we want to know about it! Here are the best ways to get in touch with us:
+We want Beer Garden to make your life easier. If there's anything that's unclear or difficult (or broken!) we want to know about it! Here are the best ways to get in touch with us:
 
 * Talk to us in {chat_uri}[Gitter]
 * Sumbit an issue to the {issues_uri}[Issue Tracker]
+
 
 == Contributing
 
@@ -81,11 +70,13 @@ Here are some ways __you__ can contribute:
 ** Fix issues
 ** Refactor
 
+
 == Credits
 
 A huge shoutout to https://asciidoctor.org[the Asciidoctor Project]. This website is built with AsciiDoctor and was heavily influenced by the Asciidoctor website. It really is the best way to write documentation and we highly recommend you check it out!
 
-This website is hosted by https://pages.github.com/[GitHub Pages]. It makes deployment easy and cheap. You can use it for blogs, or documentation like this. You should really check it out if you haven't.
+This website is hosted by https://pages.github.com/[GitHub Pages]. It makes deployment easy and cheap. You can use it for blogs or documentation like this. Definitely take a look if you haven't.
+
 
 == Copyright and Licensing
 
