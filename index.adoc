@@ -58,7 +58,7 @@ TIP: You probably noticed that beer-garden needs MongoDB and RabbitMQ to work. T
 
 We want Beer Garden to help you _easily_ write and use plugins. If there's anything that's unclear or difficult (or broken!) we want to know about it! Here are the best ways to get in touch with us:
 
-* Talk to us in {chat_uri}[Slack Channel]
+* Talk to us in {chat_uri}[Gitter]
 * Sumbit an issue to the {issues_uri}[Issue Tracker]
 
 == Contributing
