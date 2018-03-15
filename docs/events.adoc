@@ -48,8 +48,8 @@ Events will always be well-formed JSON. Here's an example of an event:
 <1> All events will have a name
 <2> All events will have a timestamp (milliseconds since the epoch)
 <3> All events will have an error flag (boolean, None being equivalent to False)
-<4> Events may have a metadata field. This will contain 'extra' useful information, but will normally include at the the public url of the Beer Garden that generated the Event. Events that relate to a specific entity will also include a url that can be used to retrieve the full entity definition.
-<5> All events will have a payload. The specific data included will vary based on event type.
+<4> Events may have a metadata field. This will contain 'extra' useful information, but will normally include at least the the public url of the Beer Garden that generated the Event. Events that relate to a specific entity will also include a url that can be used to retrieve the full entity definition.
+<5> Events may have a payload. The specific data included will vary based on event type.
 
 ==== Enabling Events
 
