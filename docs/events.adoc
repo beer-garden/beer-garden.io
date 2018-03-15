@@ -29,14 +29,14 @@ Events will always be well-formed JSON. Here's an example of an event:
 .event.json
 ----
 {
-    "name": "REQUEST_CREATED",
-    "timestamp": 1521126132897,
-    "error": None,
-    "metadata": {
+    "name": "REQUEST_CREATED", <1>
+    "timestamp": 1521126132897, <2>
+    "error": None, <3>
+    "metadata": { <4>
         "entity_url": "https://this.is.beergarden:443/api/v1/requests/5aaa8af45991735bf1a6c123",
         "public_url": "https://this.is.beergarden:443/"
     },
-    "payload": {
+    "payload": { <5>
         "id": "5aaa8af45991735bf1a6c123",
         "command": "say",
         "system": "echo",
@@ -45,13 +45,11 @@ Events will always be well-formed JSON. Here's an example of an event:
     }
 }
 ----
-
-Some things to notice:
-* All events will have a name
-* All events will have a timestamp (milliseconds since the epoch)
-* All events will have an error flag (boolean, None being equivalent to False)
-* Events may have a metadata field. This will contain 'extra' useful information, but will normally include at the the public url of the Beer Garden that generated the Event. Events that relate to a specific entity will also include a url that can be used to retrieve the full entity definition.
-* All events will have a payload. The specific data included will vary based on event type.
+<1> All events will have a name
+<2> All events will have a timestamp (milliseconds since the epoch)
+<3> All events will have an error flag (boolean, None being equivalent to False)
+<4> Events may have a metadata field. This will contain 'extra' useful information, but will normally include at the the public url of the Beer Garden that generated the Event. Events that relate to a specific entity will also include a url that can be used to retrieve the full entity definition.
+<5> All events will have a payload. The specific data included will vary based on event type.
 
 ==== Enabling Events
 
@@ -80,7 +78,7 @@ To publish events to RabbitMQ set the ``event_amq_virtual_host`` and ``event_amq
 }
 ----
 
-WARN: Beer Garden doesn't create an exchange for events. While you _could_ use the normal Beer Garden request exchange we recommend you don't. Instead, you should create a separate exchange. Check the RabbitMQ docs for instructions on how to do this.
+WARNING: Beer Garden doesn't create an exchange for events. While you _could_ use the normal Beer Garden request exchange we recommend you don't. Instead, you should create a separate exchange. Check the RabbitMQ docs for instructions on how to do this.
 
 To consume from RabbitMQ, you'll need to create a queue on the same virtual host as ``event_amq_virtual_host`` and then bind that queue to a routing key on the ``event_amq_exchange``. To receive all events you can bind to the ``#`` routing key. If you want to filter which events your queue will receive there are some rules about how Beer Garden assigns routing keys to events:
 
@@ -89,6 +87,6 @@ To consume from RabbitMQ, you'll need to create a queue on the same virtual host
 
 ==== Publishing Custom Events
 
-WARN: This is a beta capability
+WARNING: This is a beta capability
 
 It's possible to publish your own events. Just POST a valid Event to the ``/api/vbeta/events`` endpoint. The brewtils EasyClient ``publish_event`` method can help with this.
