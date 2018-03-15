@@ -62,7 +62,7 @@ To perist events to Mongo set the ``event_persist_mongo`` configuration option i
 .config.json
 ----
 {
-    "event_perist_mongo": True
+    "event_persist_mongo": True
 }
 ----
 
