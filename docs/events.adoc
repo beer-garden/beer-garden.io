@@ -26,7 +26,7 @@ Events are generated whenever any of the following events occur:
 Events will always be well-formed JSON. Here's an example of an event:
 
 [source,json]
-event.json
+.event.json
 ----
 {
     "name": "REQUEST_CREATED", <1>
@@ -59,7 +59,7 @@ Events are disabled by default, but they can be published to a RabbitMQ topic ex
 To perist events to Mongo set the ``event_persist_mongo`` configuration option in Brew view to ``True``:
 
 [source,json]
-config.json
+.config.json
 ----
 {
     "event_perist_mongo": True
@@ -70,7 +70,7 @@ config.json
 To publish events to RabbitMQ set the ``event_amq_virtual_host`` and ``event_amq_exchange`` configuration options to valid values.
 
 [source,json]
-config.json
+.config.json
 ----
 {
     "event_amq_virtual_host": "/",
