@@ -29,10 +29,10 @@ Events will always be well-formed JSON. Here's an example of an event:
 .event.json
 ----
 {
-    "name": "REQUEST_CREATED", <1>
-    "timestamp": 1521126132897, <2>
-    "error": None, <3>
-    "metadata": { <4>
+    "name": "REQUEST_CREATED",
+    "timestamp": 1521126132897,
+    "error": None,
+    "metadata": {
         "entity_url": "https://this.is.beergarden:443/api/v1/requests/5aaa8af45991735bf1a6c123",
         "public_url": "https://this.is.beergarden:443/"
     },
@@ -45,11 +45,13 @@ Events will always be well-formed JSON. Here's an example of an event:
     }
 }
 ----
-<1> All events will have a name
-<2> All events will have a timestamp (milliseconds since the epoch)
-<3> All events will have an error flag (boolean, None being equivalent to False)
-<4> Events may have a metadata field. This will contain 'extra' useful information, but will normally include at the the public url of the Beer Garden that generated the Event. Events that relate to a specific entity will also include a url that can be used to retrieve the full entity definition.
-<5> All events will have a payload. The specific data included will vary based on event type.
+
+Some things to notice:
+* All events will have a name
+* All events will have a timestamp (milliseconds since the epoch)
+* All events will have an error flag (boolean, None being equivalent to False)
+* Events may have a metadata field. This will contain 'extra' useful information, but will normally include at the the public url of the Beer Garden that generated the Event. Events that relate to a specific entity will also include a url that can be used to retrieve the full entity definition.
+* All events will have a payload. The specific data included will vary based on event type.
 
 ==== Enabling Events
 
