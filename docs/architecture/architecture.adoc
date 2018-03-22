@@ -1,0 +1,78 @@
+= Beer Garden Architecture
+:page-layout: docs
+:uri-ad-org-issues: {git_group_uri}/beer-garden.io/issues
+
+
+Beer Garden's goal is abstract away a lot of complexity from end users and plugin developers.
+
+If you'd like to work on Beer Garden itself, or just want to get a better understanding of what's going on behind the scenes, this is the place for you!
+
+
+== Components
+'Beer Garden' is actually a collection of several different components. In this section we'll discuss each one individually and how each fit into the larger picture.
+
+=== Brew View
+Brew View is the Beer Garden server. It's a Tornado server whose main job is to expose the Beer Garden REST interface, but it also does double-duty in that it also serves the frontend javascript application.
+
+Brew View sends instructions to Bartender over a thrift interface. In certain cases it will update Mongo. For GET requests it will query Mongo without involving Bartender. Brew-view will publish event notifications to RabbitMQ without Bartender, but actual Beer Garden requests are passed to Bartender for publication.
+
+=== Bartender
+Bartender is the Beer Garden backend. It's responsible for several things:
+
+- Routing requests to plugins
+- RabbitMQ communication
+- Managing plugin status
+- Removing old requests
+- Controlling local plugins
+
+Bartender receives instructions from Brew View over the thrift interface. In certain cases it interacts with Mongo directly. It's the main RabbitMQ client.
+
+
+=== Mongo
+Mongo is the Beer Garden database. It has ``command``, ``instance``, ``request``, and ``systems`` (and optionally ``event``) collections.
+
+=== RabbitMQ
+RabbitMQ is the Beer Garden message queue. After requests are created and validated they're passed to RabbitMQ for delivery to a plugin.
+
+RabbitMQ can also be used for event notification delivery.
+
+=== Frontend
+The Beer Garden frontend is an AngularJS application. It's built with ``yarn`` and ``webpack`` and served by Brew View.
+
+
+== Lifecycles
+Beer Garden has two main lifecycles - the request lifecycle and the plugin lifecycle.
+
+=== Request
+Requests are created by POSTing to the ``/api/v1/requests/`` endpoint. The HTTP request body will be used to construct the Beer Garden request. The body needs to be either ``application/json`` (preferred) or ``application/x-www-form-urlencoded``. Both the Beer Garden frontend and the brewtils ``SystemClient`` are making a POST to this endpoint under the hood.
+
+Brew View takes the request body and attempts to parse it into a valid Beer Garden request and save it to Mongo. These steps require passing the first-level validation check. This ensures that the request is syntatically valid and meets certain basic requirements (such as the ``status`` field being a valid value).  If it fails at this it will return a 400 status code, otherwise the request ID is passed to Bartender for processing.
+
+Bartender then pulls the completed request out of the database and *validates* it. This validation is significatly more involved than the preliminary validation done by Brew View. Here are some of the validation steps:
+
+- Ensure that a system (which the correct version) exists that can service the request
+- That system has an instance matching the instance the request is addressed to
+- That system has a command matching the request's command
+- The request's command parameters meet all the constraints placed on them by the command definition
+- There are no extra command parameters
+
+If all of these conditions are met Bartender will send the request to RabbitMQ using a routing key that ensures the request will be processed by the correct plugin.
+
+RabbitMQ will place the request in the specified plugin's request queue.
+
+Plugins maintain a consumer connection to RabbitMQ awaiting messages. When a new message is placed in their queue the plugin does several things. First, it attempts to parse the message into a valid Beer Garden request. If that's successful then it checks that the request is correctly addressed. If either of those checks fail the message is discarded.
+
+If the requests passes those checks then the plugin is able to process the request. The first step is to send an update to Beer Garden setting the status for that request to ``IN_PROGRESS``. The plugin then invokes the actual command method and captures the return value. The plugin then sends an update to Beer Garden with the results and output of the method invokation.
+
+If the 'final' update fails then the completed request is placed back on the RabbitMQ queue. This is to take advantage of RabbitMQ's message durability - if the plugin goes down at this point the request completion and output will be preserved. The request will be read from the queue and placed into a periodic retry loop. The plugin will reattempt to update the request status up to a maximum of ``max_attempts`` times, waiting an increasing amount of time between attempts (up to ``max_timeout``). Requests that fail to update before reaching ``max_attempts`` will be discarded. Note that a request in this state does not prevent processing of additional requests.
+
+If the 'final' update succeeds the plugin will send an acknowledgement of the message to RabbitMQ. This lets RabbitMQ know the message was successfully processed, which ends the request lifecycle.
+
+If at any time an attempt to update a request fails because Brew View appears to be down the plugin will enter a wait state. While in this state no new requests will be processed (since status can't be communicated to Beer Garden). The plugin will periodically attempt to contact Brew View and will resume normal operation once successful.
+
+
+== Event Notifications
+include::events.adoc[]
+
+.Discuss and Contribute
+TIP: Use {uri-ad-org-issues}/4[Issue 4] to drive development of this section. Your contributions make a difference.  No contribution is too small.
