@@ -71,6 +71,39 @@ If the 'final' update succeeds the plugin will send an acknowledgement of the me
 If at any time an attempt to update a request fails because Brew View appears to be down the plugin will enter a wait state. While in this state no new requests will be processed (since status can't be communicated to Beer Garden). The plugin will periodically attempt to contact Brew View and will resume normal operation once successful.
 
 
+=== Plugins
+We'll start by talking about remote plugins and touch on the differences with local plugins at the end.
+
+==== Remote
+Remote plugins are just Python processes that expect to communicate with Beer Garden. When they're created they need to be provided with all the parameters necessary to connect to a Beer Garden. This can be as simple as a ``bg_host``, but can be more complicated based on the Beer Garden configuration.
+
+When a plugin is started it will immediately try to register itself with Beer Garden. This involves:
+- The plugin will first check to see if a system with this name and version is already registered with Beer Garden
+- If a system already exists the plugin will attempt to update certain fields (such as commands and metadata) for that system
+- The plugin will make sure an instance with its name exists on the system. If it's unsuccessful due to a max_instance constraint the plugin will error.
+- The plugin will then send an initialization request to Beer Garden.
+
+When Beer Garden receives an initializion request it:
+- Verifies that the plugin exists in the database
+- Creates the message queue for the plugin if it doesn't already exist
+- Creates an admin queue for the plugin
+- Sets the status of the plugin to 'INITIALIZING'
+- Places a start message on the plugin's admin queue
+
+Beer Garden then returns a description of the plugin that was just initialized. This includes connection information for the RabbitMQ queues the plugin is expected to listen on. The plugin uses this to create two listeners - one on each RabbitMQ queue.
+
+The plugin then continues listening on its queues until it receives a stop message on its admin queue, the plugin process receives a SIGINT (Ctrl-c), or it encounters a fatal exception.
+
+==== Local
+Local plugins use the same underlying implementation as remote plugins. The difference is that local plugins are packaged with some additional metadata that allows Bartender to manage the plugin process for you.
+
+When Bartender starts it will attempt to start all the plugins in its configured plugins directory. Since Bartender is the one starting the process you don't need to worry about providing Beer Garden connection information - Bartender already knows how to talk to Brew View and will pass that information to the plugin by setting the correct environment variables. Bartender will read a special file named ``beer.conf`` and use it to pass additional parameter to the plugin as well.
+
+The actual implementation of starting, initialization, running, and stopping is exactly the same for local plugins as it is for remote plugins. The difference is how the Python process is created. With remote plugins starting the plugin process is the plugin developer's responsiblity, but with local plugins Bartender assumes that responsibility.
+
+Since Bartender knows how to start the plugin process it's possible to use the ``start`` feature on the administration page. With remote plugins, once the plugin is stopped Beer Garden has no way to start it again.  Bartender will also monitor the plugin process and will attempt to restart the plugin if it dies unexpectedly.
+
+
 == Event Notifications
 include::events.adoc[]
 
