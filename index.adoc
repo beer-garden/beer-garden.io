@@ -27,7 +27,7 @@ source, hosted on GitHub and is released under the MIT license.
 
 Beer Garden makes it easy to turn your functions into fully functional ReST interfaces that are ready for production use.  In short, the goal is to take anybody that knows how to write a function, and create all the other boilerplate code for them. This includes backing that function by a type-safe, discoverable, ReST interface and a fully functional web form-based interface that is easy-to-use for developers and end-users alike.
 
-image:screenshot.png["Preview Plugin to HTML Form Screenshot"]
+image:demo.gif["Preview Plugin to HTML Form Screenshot"]
 
 == Requirements
 

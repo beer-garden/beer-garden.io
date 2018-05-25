@@ -7,12 +7,17 @@
 @import "bootstrap/responsive-utilities";
 @import "bootstrap/grid";
 @import "font-awesome";
-@import url('https://fonts.googleapis.com/css?family=Julius+Sans+One');
+@import url('https://fonts.googleapis.com/css?family=Josefin+Sans');
 
 @import "foundation";
 
 .bootstrap {
   @import "bootstrap";
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+  }
 }
 
 body {
@@ -29,7 +34,7 @@ body {
   color: #ccf7ff;
   text-align: center;
   background-color: #03658f;
-  background-image: linear-gradient(to bottom, #03658f 0, #0080af 100%);
+  background-image: linear-gradient(to bottom, #7F9C60 0,  #8CC35C  100%);
   background-repeat: repeat-x;
 }
 
@@ -38,14 +43,14 @@ main {
 }
 
 h1.hero {
-  font-family: "Julius Sans One", cursive;
+  font-family: "Josefin Sans", san-serif;
   font-weight: bold;
   font-size: 90px;
   color: #fff;
 }
 
 h2.hero {
-  font-family: "Helvetica Neue", Helvetica,Arial,sans-serif;
+  font-family: "Josefin Sans", san-serif;
   font-size: 50px;
   color: #fff;
   text-align: left;
