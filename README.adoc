@@ -65,7 +65,11 @@ Now you are ready to deploy
 
 == Deploying the site to Github Pages
 
-TODO: Fill this out
+Just run
+
+  git fetch origin gh-pages
+  rake deploy
+  git push origin gh-pages
 
 
 == Install Awestruct
