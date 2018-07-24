@@ -13,16 +13,16 @@ Beer Garden is a plugin framework that provides a simple home for any type of sy
 
 To really understand Beer Garden, we need to start speaking the same language. Beer Garden has four fundamental building blocks. Quick definitions are given below along with how each would be used if you were to use Beer Garden to define a calculator.
 
-Systems
+Systems::
 	A group of similar commands, analogous to a class. Something like a calculator.
 
-Commands
+Commands::
 	The definition of an action, analogous to functions. The addition operation on a calculator.
 
-Parameters
+Parameters::
 	Inputs to a command, analogous to function parameters. The numbers to be added together in the addition operation.
 
-Requests
+Requests::
 	An actual action that is performed, analogous to calling a function. The act of adding two numbers using the addition operation.
 
 

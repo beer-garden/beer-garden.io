@@ -10,26 +10,28 @@ Logan Jones <https://github.com/loganasherjones[@loganasherjones]>;
 :imagesdir: ./images
 
 
-Imagine if writing composable software services was as easy as writing a class in your favorite language with your favorite text editor. And sharing that class was as easy as running your main method.
+Imagine if writing composable software services was as easy as writing a class in your favorite language with your favorite text editor. And sharing was as easy as running your main method.
 
-__it **can** be.__
+__It **can** be.__
 
-That's the main idea behind Beer Garden. So much of software development is tangled in the weeds of standing up services, getting messages from one component to another, creating GUIs, writing documentation, and concurrently supporting multiple versions. We want to change that.
+That's the main idea behind Beer Garden. So much of software development is tangled in the weeds of standing up services, getting messages from one component to another, creating UIs, writing documentation, and concurrently supporting multiple versions. We want to change that.
 
-Beer Garden makes it easy to turn your functions into REST interfaces that are ready for production use, and does it in a way that's acessible to anyone that can write a function. It creates all the boilerplate and infrastruction needed to turn that function into a type-safe, discoverble REST interface and an easy-to-use webform-based UI.
+Beer Garden makes it easy to turn your functions into REST interfaces that are ready for production use, in a way that's accessible to anyone that can write a function. It creates all the boilerplate and infrastructure needed to turn that function into a type-safe, discoverable REST interface and an easy-to-use webform-based UI.
 
-If that sounds interesting to you then go ahead and check out the link:docs/quickstart[Quickstart section]!
+If that sounds interesting go ahead and check out the link:docs/quickstart[Quickstart section]!
 
+
+== Look at me!
 image:demo.gif["Preview Plugin to HTML Form Screenshot"]
 
 
-== Futher Reading
+== Further Reading
 
 * If you're still not quite sure what Beer Garden is or what it can do for you there's more information in link:docs/what-is-beergarden[What is Beer Garden?]
 
 * If you're trying to get up and running as quickly as possible then the link:docs/quickstart[Quickstart section] is for you
 
-* If you're interested in administering a Beer Garden instance the link:docs/installation-guides/[Installation Guides] will be helpul in getting started, and the link:docs/configuration[Configuration Guide] will help with configuration
+* If you're interested in administering a Beer Garden the link:docs/installation-guides/[Installation Guides] will be helpful in getting started, and the link:docs/configuration[Configuration Guide] will help with configuration
 
 * If you're looking for guidance on writing plugins check out the link:docs/plugin-developer-guide[Plugin Developer Guide] for a detailed rundown
 
@@ -45,7 +47,7 @@ image:demo.gif["Preview Plugin to HTML Form Screenshot"]
 We want Beer Garden to make your life easier. If there's anything that's unclear or difficult (or broken!) we want to know about it! Here are the best ways to get in touch with us:
 
 * Talk to us in {chat_uri}[Gitter]
-* Sumbit an issue to the {issues_uri}[Issue Tracker]
+* Submit an issue to the {issues_uri}[Issue Tracker]
 
 
 == Contributing
@@ -71,9 +73,9 @@ Here are some ways __you__ can contribute:
 
 == Credits
 
-A huge shoutout to https://asciidoctor.org[the Asciidoctor Project]. This website is built with AsciiDoctor and was heavily influenced by the Asciidoctor website. It really is the best way to write documentation and we highly recommend you check it out!
+A huge shout-out to https://asciidoctor.org[the Asciidoctor Project]. This website is built with AsciiDoctor and was heavily influenced by the Asciidoctor website. It really is the best way to write documentation and we highly recommend you check it out!
 
-This website is hosted by https://pages.github.com/[GitHub Pages]. It makes deployment easy and cheap. You can use it for blogs or documentation like this. Definitely take a look if you haven't.
+This website is hosted by https://pages.github.com/[GitHub Pages]. It makes deployment easy and cheap. You can use it for blogs or documentation like this. Definitely take a look!
 
 
 == Copyright and Licensing
