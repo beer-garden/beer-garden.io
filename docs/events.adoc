@@ -1,0 +1,92 @@
+
+=== Event Notifications
+
+Sometimes, particularly if you're integrating with Beer Garden, it can be helpful to know when certain things happen. To make this process as easy as possible Beer Garden supports the concept of _event notifications_.
+
+Events are generated whenever any of the following events occur:
+
+* Bartender started
+* Bartender stopped
+* Brew view started
+* Brew view stopped
+* Request created
+* Request started
+* Request completed
+* Instance initialized
+* Instance started
+* Instance stopped
+* System created
+* System updated
+* System removed
+* Queue cleared
+* All queues cleared
+
+==== Event Structure
+
+Events will always be well-formed JSON. Here's an example of an event:
+
+[source,json]
+.event.json
+----
+{
+    "name": "REQUEST_CREATED", <1>
+    "timestamp": 1521126132897, <2>
+    "error": None, <3>
+    "metadata": { <4>
+        "entity_url": "https://this.is.beergarden:443/api/v1/requests/5aaa8af45991735bf1a6c123",
+        "public_url": "https://this.is.beergarden:443/"
+    },
+    "payload": { <5>
+        "id": "5aaa8af45991735bf1a6c123",
+        "command": "say",
+        "system": "echo",
+        "system_version": "1.0.0",
+        "instance_name": "default"
+    }
+}
+----
+<1> All events will have a name
+<2> All events will have a timestamp (milliseconds since the epoch)
+<3> All events will have an error flag (boolean, None being equivalent to False)
+<4> Events may have a metadata field. This will contain 'extra' useful information, but will normally include at least the the public url of the Beer Garden that generated the Event. Events that relate to a specific entity will also include a url that can be used to retrieve the full entity definition.
+<5> Events may have a payload. The specific data included will vary based on event type.
+
+==== Enabling Events
+
+Events are disabled by default, but they can be published to a RabbitMQ topic exchange and/or persisted to MongoDB.
+
+===== Mongo
+To perist events to Mongo set the ``event_persist_mongo`` configuration option in Brew view to ``True``:
+
+[source,json]
+.config.json
+----
+{
+    "event_persist_mongo": True
+}
+----
+
+===== RabbitMQ
+To publish events to RabbitMQ set the ``event_amq_virtual_host`` and ``event_amq_exchange`` configuration options to valid values.
+
+[source,json]
+.config.json
+----
+{
+    "event_amq_virtual_host": "/",
+    "event_amq_exchange": "beergarden_event"
+}
+----
+
+WARNING: Beer Garden doesn't create an exchange for events. While you _could_ use the normal Beer Garden request exchange we recommend you don't. Instead, you should create a separate exchange. Check the RabbitMQ docs for instructions on how to do this.
+
+To consume from RabbitMQ, you'll need to create a queue on the same virtual host as ``event_amq_virtual_host`` and then bind that queue to a routing key on the ``event_amq_exchange``. To receive all events you can bind to the ``#`` routing key. If you want to filter which events your queue will receive there are some rules about how Beer Garden assigns routing keys to events:
+
+* The default routing key is 'beergarden'. Events that don't fit any other rules will use this.
+* Request events will have a routing key of the form ``request.<system_name>.<mangled_system_version>.<instance_name>``. Since RabbitMQ treats '.' as a delimiter the system version is mangled to replace all instances of '.' with '-'. So an example would be ``request.echo.1-0-0.default``. If you were only interested in requests related to the 'echo' system you could bind your queue to the ``request.echo.#`` routing key.
+
+==== Publishing Custom Events
+
+WARNING: This is a beta capability
+
+It's possible to publish your own events. Just POST a valid Event to the ``/api/vbeta/events`` endpoint. The brewtils EasyClient ``publish_event`` method can help with this.

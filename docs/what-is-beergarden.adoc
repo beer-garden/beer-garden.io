@@ -62,5 +62,5 @@ Beer Garden provides a web-based form that can exercise your script. That way yo
 "__I wish I had a standard way to call many different services__"::
 Beer Garden provides a standardized interface for exercising disparate services while allowing the services the flexibility they need to continue to grow in different directions. As you draw abstractions from these services, you can build one interface to rule them all.
 
-"__I have lots of useful scripts and I'd like to make the discoverable__"::
+"__I have lots of useful scripts and I'd like to make them discoverable__"::
 Beer Garden exposes all these functions and makes them programatically discoverable for very little cost. It allows you the flexibility to continue making your plugins to do whatever small thing you want, but also allows other people to build on top of your plugins making more complex plugins that are dynamic and easy-to-use.

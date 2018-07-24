@@ -20,7 +20,7 @@ Beer Garden makes it easy to turn your functions into REST interfaces that are r
 
 If that sounds interesting to you then go ahead and check out the link:docs/quickstart[Quickstart section]!
 
-image:screenshot.png["Preview Plugin to HTML Form Screenshot"]
+image:demo.gif["Preview Plugin to HTML Form Screenshot"]
 
 
 == Futher Reading
