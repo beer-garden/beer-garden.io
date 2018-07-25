@@ -2,14 +2,11 @@
 :page-layout: docs
 :uri-ad-org-issues: {git_group_uri}/beer-garden.io/issues
 
-
-Beer Garden's goal is abstract away a lot of complexity from end users and plugin developers.
-
-If you'd like to work on Beer Garden itself, or just want to get a better understanding of what's going on behind the scenes, this is the place for you!
+If you'd like to work on Beer Garden itself, or want to get a better understanding of what's going on behind the scenes, this is the place for you!
 
 
 == Components
-'Beer Garden' is actually a collection of several different components. In this section we'll discuss each one individually and how each fit into the larger picture.
+Beer Garden is actually a collection of several different components. In this section we'll discuss each one individually and how each fit into the larger picture.
 
 === Brew View
 Brew View is the Beer Garden server. It's a Tornado server whose main job is to expose the Beer Garden REST interface, but it also does double-duty in that it also serves the frontend javascript application.
