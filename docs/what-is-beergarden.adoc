@@ -1,64 +1,63 @@
 = What is Beer Garden? Why do we need it?
 :page-layout: docs
 
-Imagine if writing composable software services was as easy as writing a class in your favorite language with your favorite text editor. And sharing that class was as easy as running your main method.
+In this introduction we'll cover what Beer Garden is, some basic terminology, and how Beer Garden can solve problems for you.
 
-__It *can* be.__
-
-That's the main idea behind Beer Garden. So much of software development is tangled in the weeds of standing up services, getting messages from one component to another, creating GUIs, writing documentation, and concurrently supporting multiple versions.
-
-In this introduction we'll cover what Beer Garden is, some basic terminology, and how Beer Garden can solve these problems for you.
 
 == What is Beer Garden
 
-Beer Garden is a web-based plugin framework that provides a simple home for any type of system you can imagine. It's incredibly flexible in the workloads it can execute, though it excels in command-and-control. To really understand Beer Garden, we need to start speaking the same language. Beer Garden has four fundamental building blocks:
+Beer Garden is a plugin framework that provides a simple home for any type of system you can imagine. It's incredibly flexible in the workloads it can execute, though it excels in command-and-control.
 
-1. Systems
-2. Commands
-3. Parameters
-4. Requests
 
-Each of these building blocks plays a vital role in understanding Beer Garden's view of the world. So let's dive in a little bit more and understand each role in the Beer Garden ecosystem.
+== Terminology
 
-=== Systems
+To really understand Beer Garden, we need to start speaking the same language. Beer Garden has four fundamental building blocks. Quick definitions are given below along with how each would be used if you were to use Beer Garden to define a calculator.
 
-If you are familiar with Object-oriented programming, systems are synonymous with classes. If you are not familiar with object-oriented programming, they can be logically thought of a way to group together similar commands. Systems have lots of properties that make them interesting. Everything from commands to versions to instances of systems are included in Beer Garden.
+Systems::
+	A group of similar commands, analogous to a class. Something like a calculator.
 
-TIP: An example of a system could be something like a Calculator
+Commands::
+	The definition of an action, analogous to functions. The addition operation on a calculator.
 
-=== Commands
+Parameters::
+	Inputs to a command, analogous to function parameters. The numbers to be added together in the addition operation.
 
-If you are familiar with programming at all, commands are synonymous with methods. If you are not familiar with programming, commands are simply the definition of the action that you would like to take, not the action itself. Commands belong to a system. Commands may or may not have parameters.
+Requests::
+	An actual action that is performed, analogous to calling a function. The act of adding two numbers using the addition operation.
 
-TIP: An example of a command could be something like the '+' operator on a
-Calculator
 
-=== Parameters
+== An Example
 
-Parameters describe the type of information you can give to a command. This includes type, max/min values, regexes and lots more. Basically, parameters are the documentation that people want when they want to understand how to use the system/command you've created.
+So let's use those definitions to expand the calculator example a little. You want to give an end user the ability to add two numbers together and see the result.
 
-TIP: An example of a parameter could be something like 'x' when adding x + 1
+In Beer Garden you would have a System with name "Calculator". The Calculator System would have a single Command, called "add". The "add" command would accept two Parameters, let's call them "x" and "y". The "add" Command would implement the logic to turn the two Parameters into the correct result. In order to exercise the functionality provided by the "add" Command the user can create a Request with concrete values for the "x" and "y" Parameters. When that Request has been processed the result can be determined by looking at the Request's output.
 
-=== Requests
+Ok, that was admittedly a lot. Showing the code underlying the Calculator should make things clearer:
 
-Requests represent the actions that you actually want to take on the system. A request must detail what system it would like to take action on, what command to run, and what parameters to use on that command.
+[source,python]
+----
+class Calculator: <1>
 
-TIP: An example of a request would be like pressing '1', '+', '1', '=' on a
-calculator
+    def add(self, x, y): <2, 3>
+        return x + y
+----
+<1> Define the "Calculator" System
+<2> Define the "add" Command
+<3> Define the "x" and "y" Parameters
 
-=== Quick Example
+Now, if the end user wanted to add 1 and 1, they would issue a Request to Beer Garden. The most common way is to use the web UI that Beer Garden creates for this command. There will be input fields for "x" and "y", and a big "Make Request" button. Clicking that will take the user to a page where they'll be shown the result of their Request.
 
-Let's run through a simple example. Say you have a system that represents a calculator. So in Beer Garden you would have a system with name "calculator". The calculator system has two commands "add" and "subtract" each of these commands accepts two parameters "x" and "y". In this way, Beer Garden is able to be self-documenting for how to use the calculator (system), what is available for users to exercise (commands) and how to use these commands (parameters).
+If you'd like more information on how the building blocks work there's much more in the link:docs/user-manual[User's Manual].
 
-Now, if someone wanted to add 1 and 1, it would issue a request to Beer Garden. It would create a request with the system "calculator", command "add" and parameters "x=1" and "y=1". Beer Garden gives people a GUI to exercise this interface and a REST GUI for other developers to exercise the same interface.
 
 == How can it help?
+Beer Garden aims to bridge several gaps. Here are some scenarios where it can be helpful:
 
 "__I can write a script, but I'm not a developer__"::
-Beer Garden is a tool that is used to bridge several gaps. One gap is between people who know how to write scripts and software developers. That is, it attempts to take those scripts, and with minimum overhead, turn them into a software friendly service exposed over REST.
+One gap is between people who know how to write scripts and software developers. Beer Garden can take scripts written by anyone and turn them into a service exposed over REST with very little effort.
 
 "_I have a useful script, but I don't want to write a GUI_"::
-Beer Garden provides a simple web-based form that can exercise your script. That way, you can give the maximum benefit to the people that actually want to use the script, but can't for whatever reason, including those pesky developers who want access to your production machine.
+Beer Garden provides a web-based form that can exercise your script. That way you can make life easy for the people that will actually use the script.
 
 "__I wish I had a standard way to call many different services__"::
 Beer Garden provides a standardized interface for exercising disparate services while allowing the services the flexibility they need to continue to grow in different directions. As you draw abstractions from these services, you can build one interface to rule them all.
