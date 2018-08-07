@@ -33,6 +33,7 @@ gem 'tilt', '2.0.2'
 gem 'rb-inotify', '0.9.7', :platforms => [:ruby, :jruby]
 gem 'bootstrap-sass', '>= 3.2.0.2'
 gem 'font-awesome-sass', '<= 5'
+gem 'rack-contrib', '< 2'
 
 gem 'tzinfo', '1.2.2', :group => :test
 gem 'git', '1.2.9.1', :group => :test
