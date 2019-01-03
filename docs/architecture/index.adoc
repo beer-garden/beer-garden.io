@@ -103,6 +103,3 @@ Since Bartender knows how to start the plugin process it's possible to use the `
 
 == Event Notifications
 include::events.adoc[]
-
-.Discuss and Contribute
-TIP: Use {uri-ad-org-issues}/4[Issue 4] to drive development of this section. Your contributions make a difference.  No contribution is too small.
