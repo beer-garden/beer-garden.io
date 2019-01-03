@@ -30,9 +30,9 @@ Requests::
 
 So let's use those definitions to expand the calculator example a little. You want to give an end user the ability to add two numbers together and see the result.
 
-In Beer Garden you would have a System with name "Calculator". The Calculator System would have a single Command, called "add". The "add" command would accept two Parameters, let's call them "x" and "y". The "add" Command would implement the logic to turn the two Parameters into the correct result. In order to exercise the functionality provided by the "add" Command the user can create a Request with concrete values for the "x" and "y" Parameters. When that Request has been processed the result can be determined by looking at the Request's output.
+In Beer Garden you would make a System with name "calculator". The calculator System has a single Command, called "add". The "add" command accepts two Parameters, let's call them "x" and "y". The "add" Command implements the logic to turn the two Parameters into the correct result. To exercise the "add" Command the user creates a Request with actual values for the "x" and "y" Parameters. Once that Request has been processed the user can look at the Request's output to see the result.
 
-Ok, that was admittedly a lot. Showing the code underlying the Calculator should make things clearer:
+Ok, that was admittedly a lot. The code should make things clearer:
 
 [source,python]
 ----
@@ -45,9 +45,9 @@ class Calculator: <1>
 <2> Define the "add" Command
 <3> Define the "x" and "y" Parameters
 
-Now, if the end user wanted to add 1 and 1, they would issue a Request to Beer Garden. The most common way is to use the web UI that Beer Garden creates for this command. There will be input fields for "x" and "y", and a big "Make Request" button. Clicking that will take the user to a page where they'll be shown the result of their Request.
+Now when the end user wants to add 1 and 2, they'll issue a Request to Beer Garden. The most common way to do that is to use the web UI that Beer Garden creates for this command. There will be input fields for "x" and "y", and a big "Make Request" button. Clicking that will take the user to a page where they'll be shown the result of their Request.
 
-If you'd like more information on how the building blocks work there's much more in the link:docs/user-manual[User's Manual].
+NOTE: There are other ways to create a Request. Check out link:/docs/api-users-guide/#requests[Requests] to learn more.
 
 
 == How can it help?
