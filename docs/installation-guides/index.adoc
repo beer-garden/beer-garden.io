@@ -15,6 +15,3 @@ Install using an RPM. Again you'll have to setup RabbitMQ and Mongo yourself.
 
 ## link:git/[Development Setup]
 This is for developers that want to hack on Beer Garden. Clone the repositories, install dependencies, try things out etc.
-
-## link:../configuration[Configuration]
-If you have a Beer Garden that is already running but you want to figure out all the knobs you can turn, this is the page for you!
