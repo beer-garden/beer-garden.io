@@ -1,0 +1,51 @@
+
+= Securing Your Beergarden
+
+Oh boy. This is a big one. Hold on, it's about to get real.
+
+Please, please, please read and understand Beergarden architecture before attempting to secure anything. Beergarden tries to make creating and running plugins as simple as possible, but Beergarden itself has a fair amount of moving pieces. Understanding what they are and how they fit together is crucial to security.
+
+For this discussion we're going to assume you're operating Beergarden as a standalone, aka not behind a reverse proxy.
+
+Ok, here we go.
+
+== TLS
+Step one is to use TLS everywhere. If you don't, everything else you do will be a waste of time. This is - by far - the most important thing.
+
+First, you will need a server certificate. How to obtain one is beyond the scope of these instructions, but check out Let's Encrypt if you need guidance. You can also use a self-signed certificate or a certificate signed by an authority not part of the standard Certifi bundle. Again, a discussion of the tradeoffs associated with this is beyond scope. If you do this, Beergarden assumes that you understand the risks and have made a conscious choice to accept them.
+
+Ok, so you have a server certificate. Great! Now you need to tell Brew-view about it:
+
+[source,yaml]
+.brew-view-config.yaml
+----
+web:
+  host: 0.0.0.0
+  port: 2337
+  ssl:
+    ca_cert: null
+    ca_path: null
+    enabled: true
+    private_key: /path/to/the/private/key
+    public_key: /path/to/the/public/key
+----
+
+Some things to note:
+- `enabled` has been set to `true`. This tells Brew-view to operate in secure mode.
+- `private_key` and `public_key` have been set to their respective paths.
+- `ca_cert` and `ca_path` are null. If you're using a certificate signed by a real Certificate Authority, this is what you want. However, if you're using a certificate signed by some other authority you'll need to specify a cert or path describing that authority (and all intermediates). If you're familiar with `SSLContext`, the values provided will be passed to `load_verify_locations`.
+
+Cool! Now you can use https to connect to Brew-view. Since Bartender makes requests to Brew-view it needs to know how to do that correctly:
+
+[source,yaml]
+.bartender-config.yaml
+----
+web:
+  ca_cert: null
+  ca_verify: true
+  host: localhost
+  port: 2337
+  ssl_enabled: true
+----
+
+Here you can see that `ssl_enabled` has been set to true, `ca_verify` is set to `true`, and `ca_cert` is `null`. Again, these are the correct values for a real certificate. You can use an alternate CA bundle using `ca_cert` or you can disable certificate verification completely (for a self-signed certificate) by setting `ca_verify` to `false`.
