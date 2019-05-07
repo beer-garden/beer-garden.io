@@ -1,7 +1,7 @@
 = Python Plugin Guide (Remote)
 :page-layout: docs
 :includedir: _includes
-:uri-install-guides: ../installation-guides/
+:uri-install-guides: ../../installation-guides/
 
 The goal of this section is to help you write a remote plugin from scratch. In order to write remote plugins there are a few things that you need.
 
