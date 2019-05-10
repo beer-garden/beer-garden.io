@@ -1,0 +1,100 @@
+
+= Decorators
+
+Decorators are a super useful thing to use. They're how you tell Beergarden about your commands.
+
+Things start to get tricky when you need to combine decorators. This is because normal decorator behavior is to replace one function object with another. The problem (from Beergarden's perspective) arises when the decorator implementation doesn't properly preserve function metadata. To understand what's happening we need a quick primer on how the Beergarden decorators work. Consider this example:
+
+[source,python]
+.+info_command.py+
+----
+@system
+class TimeClient(object):
+
+    @command
+    def time(self):
+        return str(datetime.utcnow())
+----
+
+So what's actually going on here? It's pretty clear that we're defining a class `TimeClient` with an instance method `time` that does something useful(ish). What's less clear is what the decorators are doing.
+
+If you're familiar with Python decorators you probably know that decorators are used to replace one function with another. That allows for "wrapping" the original function, usually to provide additional functionality and then invoking the original function. However, there's no requirement to call the original function. It's totally possible to define a decorator that will replace the decorated function with one that always returns "foo", for example.
+
+All that to say: Python decorators are very powerful and flexible. When using them it's important to remember that and take steps to ensure that all important metadata is preserved.
+
+Beergarden decorators use the `wrapt` library to ensure that decorated functions remain accurate. Wrapt is an object proxy library with a focus on ensuring correctness above and beyond what standard decorators provide. This is important because Beergarden depends heavily on function attributes being correct.
+
+
+== Classmethod
+
+Right now `@classmethod` decorators need to be the outermost decorator:
+
+[source,python]
+.+classmethod.py+
+----
+@system
+class TimeClient(object):
+
+    @classmethod
+    @command
+    def time(cls):
+        return str(datetime.utcnow())
+----
+
+
+== Staticmethod
+
+Right now `@staticmethod` decorators don't work at all. We're working on it!
+
+
+== Custom Decorators
+
+Custom decorators can work, but you'll need to take a little extra care to preserve function attributes that Beergarden cares about. We strongly recommend using the wrapt library to create your decorators. It's already a brewtils dependency, so anywhere you can `import brewtils` you'll also be able to `import wrapt`. Here's an example of decorator that can be applied to a Beergarden command:
+
+[source,python]
+.+decorator.py+
+----
+def bg_decorator(_wrapped=None, subject="Beergarden!"):
+    """Decorator that will print a message before and after command execution
+
+    Args:
+        _wrapped: Function to be wrapped. Don't ever set this yourself!
+        subject: The message subject.
+
+    Returns:
+        The decorated command.
+
+    """
+    if _wrapped is None:
+        return functools.partial(bg_decorator, subject=subject)
+
+    @wrapt.decorator
+    def wrapper(wrapped, _, args, kwargs):
+        print("Hello, " + subject)
+
+        return_value = wrapped(*args, **kwargs)
+
+        print("Goodbye, " + subject)
+
+        return return_value
+
+    return wrapper(_wrapped)
+
+@system
+class TimeClient(object):
+
+    @bg_decorator(subject="Matt!")
+    @command
+    def time(self):
+        return str(datetime.utcnow())
+----
+
+This is a little complicated, so let's break down what's happening:
+
+This decorator can take an optional keyword argument, `subject`. This means that the decorator can be applied with that argument specified (like above), in which case `bg_decorator` will actually be called twice: Once with `_wrapped=None, subject="Matt!"` and once with `_wrapped=<function time>`. To handle this sequence correctly we return a partial when the decorator is called for the first time.
+
+It can also be applied without any arguments (aka, no parenthesis following `bg_decorator`). In that case `bg_decorator` will only be invoked once, this time with `_wrapped=<function time>`. This case doesn't require any special handling.
+
+We then define a wrapt decorator that will be returned from the decorator. A full discussion of wrapt decorators is outside the scope of this guide, but the important part is the call to `wrapped(*args, **kwargs)`. This is what actually calls the decorated function.
+
+More info on wrapt can be found on Read the Docs: https://wrapt.readthedocs.io/en/latest/decorators.html.
