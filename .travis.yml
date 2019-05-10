@@ -1,18 +1,26 @@
-dist: trusty
-sudo: false
-git:
-  # use depth 2 just in case two refs get pushed at once (like a tag)
-  depth: 2
 language: ruby
 cache: bundler
-bundler_args: --path=.bundle/gems
+
 rvm:
 - 2.4.1
+
+bundler_args: "--path=.bundle/gems"
+
 env:
   global:
-  - secure: TODO:
   - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
-branches:
-  only:
-  - master
-script: bundle exec rake travis
+
+  # GITHUB_TOKEN
+  - secure: MfijGocd4f3hhcfzMGLDQ/Ojk5gta7ymwGwm8TCiuHvr4WTMNFGi6eC0px2l8L4deditM+3xSlw0xTLWuHEgTrq+5m34m14DW+QEklUzmLAVqMiBpV2lEYoaSpirMRDo6QZE2S4ZvyyCIdic4mZ+q++s1LOTID9TVI/1yNO139u47synSO+ZnHiRMy2OdlL/F8s7OSUmkh1/RQBth/8wDQrbywjwm4fhXcywVo3P/jFuu3J7zUtWmeultfS3bfNqX/o/lUKcjfXoyFjkl6M0/elWdO1fAEgK5ZhyrxmPY/e4hzPB5tiRTE+W4a9dBrEOe0PEOmzNarEiJnqSO5O+J/l6cLnjpCXEKKLm6eGtGQ130Fq3T05Ij1XuUaU3wt/L4Z4z34M4zTnZNvy5HjtwuxmoSUb+kWkZ7rIzG96Ifgv9YFVYzssclVcvHtMAXvv3wndFHAY0NaKDbDZLpQhuB+LBD0GXywnjSywvxKSyoKj71KHO3Soe+geLk8TUKNkSQsISXU81Lcm6YnxbGbtss+lzAcMFqIY7To94sq7M0ZrYHGxV2TA0LXqNZ/Kz8iYppUJRj0ZnoLSfEhCinba7D+5zGesTjUF9UXRk5L+wyLXsSWRmpddw8Tg7V4rli1ajbwKqrZMVWk1WXd7pI/TyuBZt6Brpi6Zkwg/Bkp7eaQs=
+
+script: rake deploy
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  keep_history: true
+  on:
+    branch: travis
+  name: BeerBuildBot
+  email: buildbot@beer-garden.io
+  github_token: "$GITHUB_TOKEN"
