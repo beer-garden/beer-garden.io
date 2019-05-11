@@ -18,7 +18,7 @@ script: rake deploy
 deploy:
   provider: pages
   skip_cleanup: true
-  keep_history: true
+  keep_history: false
   on:
     branch: travis
   name: BeerBuildBot
