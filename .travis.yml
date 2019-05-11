@@ -20,7 +20,7 @@ deploy:
   skip_cleanup: true
   keep_history: false
   on:
-    branch: travis
+    branch: master
   name: BeerBuildBot
   email: buildbot@beer-garden.io
   github_token: "$GITHUB_TOKEN"
