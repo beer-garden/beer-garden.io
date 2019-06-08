@@ -1,5 +1,5 @@
-
 = Securing Your Beergarden
+:page-layout: docs
 
 Oh boy. This is a big one. Hold on, it's about to get real.
 

@@ -1,5 +1,6 @@
 
 = Decorators
+:page-layout: docs
 
 Decorators are a super useful thing to use. They're how you tell Beergarden about your commands.
 

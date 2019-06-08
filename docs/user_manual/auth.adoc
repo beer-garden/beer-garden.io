@@ -1,7 +1,7 @@
+= Authentication and Authorization
+:page-layout: docs
 
- = Auth
-
- Beergarden authorization exists to allow different users different levels of access to the system. It does this by using the concepts of Users, Roles, and Permissions.
+Beergarden authorization exists to allow different users different levels of access to the system. It does this by using the concepts of Users, Roles, and Permissions.
 
 == Models
 The first thing to discuss is how Beergarden organizes auth objects:
@@ -46,33 +46,55 @@ When you start Beergarden for the first time some default roles and users are cr
 === Roles
 ==== bg-readonly
 This role allows read access to everything, but only read access. This role is good for users who should be able to look but not touch.
+
 * bg-command-read
+
 * bg-event-read
+
 * bg-instance-read
+
 * bg-job-read
+
 * bg-queue-read
+
 * bg-request-read
+
 * bg-system-read
 
 ==== bg-operator
 This role is the "normal" roll for a typical (non-administrator) Beergarden user. It allows read access to everything, but it also allows Request creation, which means that anyone with this role can initiate requests.
+
 * bg-command-read
+
 * bg-event-read
+
 * bg-instance-read
+
 * bg-job-read
+
 * bg-queue-read
+
 * bg-request-read
+
 * bg-system-read
+
 * bg-request-create
 
 ==== bg-anonymous
 This role is special in that it's used by the anonymous user. That is, users that have not authenticated will have this role. By default it's identical to the read-only role, but it's separate to allow for customization.
+
 * bg-command-read
+
 * bg-event-read
+
 * bg-instance-read
+
 * bg-job-read
+
 * bg-queue-read
+
 * bg-request-read
+
 * bg-system-read
 
 ==== bg-admin
@@ -81,13 +103,21 @@ This role permits everything. Easy.
 
 ==== bg-plugin
 This role has all the permissions necessary for plugins to do their jobs. All plugins should have this role, or things are going to go sideways.
+
 * bg-instance-update
+
 * bg-job-create
+
 * bg-job-update
+
 * bg-request-create
+
 * bg-request-update
+
 * bg-system-create
+
 * bg-system-read
+
 * bg-system-update
 
 === Users

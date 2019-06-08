@@ -1,4 +1,5 @@
 = Reverse Proxy
+:page-layout: docs
 
 Beergarden tries to make running its webserver component (Brew-view) as easy as possible. However, sometimes it makes a lot of sense to run behind a reverse proxy. A full discussion of the costs and benefits of this approach are beyond the scope of this user manual, but here are some things to keep in mind if you want to run behind a proxy.
 

@@ -1,0 +1,20 @@
+= User Manual
+:page-layout: docs
+:uri-ad-org-issues: {git_group_uri}/beer-garden.io/issues
+
+Beer Garden has a lot more to offer than just plugins. Check these out:
+
+## link:auth/[Authentication / Authorization]
+Auth
+
+## link:decorators/[Custom Decorators]
+How to write decorators that will work with Beer Garden Commands.
+
+## link:mongo_pruner/[Mongo Pruner]
+How to manage completed Requests.
+
+## link:reverse_proxy/[Reverse Proxy]
+If you want to run Beer Garden behind a reverse proxy, this is for you!
+
+## link:security/[Security]
+How to secure your Beer Garden.
