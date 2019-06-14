@@ -1,15 +1,18 @@
 [source,python]
+.plugin.py
 ----
-from brewtils.decorators import command, system # <1>
+from brewtils import command, system
 
-@system # <2>
+@system # <1>
 class HelloWorldClient(object):
 
-    @command <3>
+    @command <2>
     def hello_world(self):
-        print "Hello, World!"
-        return "Hello, World!"
+        greeting = "Hello, World!"
+
+        print(greeting)
+
+        return greeting
 ----
-<1> Imports from the `brewtils.decorators` module. These are all we need to "pluginify" our class.
-<2> The `@system` decorator marks this class as a Beer Garden plugin.
-<3> The `@command` decorator marks this method as a Command that's part of the enclosing System.
+<1> The `@system` decorator marks this class as a Beer Garden plugin.
+<2> The `@command` decorator marks this method as a Command that's part of the enclosing System.

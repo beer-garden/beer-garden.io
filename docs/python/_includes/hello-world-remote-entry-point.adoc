@@ -1,26 +1,38 @@
 [source,python]
-.main.py
+.plugin.py
 ----
-from brewtils.plugin import RemotePlugin
+from brewtils import command, system, Plugin
 
-# Your implementation of the client goes here
+
+@system
+class HelloWorldClient(object):
+
+    @command
+    def hello_world(self):
+        greeting = "Hello, World!"
+
+        print(greeting)
+
+        return greeting
+
 
 def main():
-    plugin = RemotePlugin(HelloWorldClient(),
-                          name='hello-world',
-                          version='1.0.0',
-                          description='My First Plugin',
-                          bg_host="<HOST>",
-                          bg_port="<PORT>",
-                          ssl_enabled=<SSL_ENABLED>,
-                          max_concurrent=5,
-                          metadata={'foo': 'bar'})
+    client = HelloWorldClient()
+
+    plugin = Plugin(
+        client,
+        name='hello-world',
+        version='1.0.0',
+        description='My First Plugin',
+        bg_host="<HOST>",
+        bg_port="<PORT>",
+        ssl_enabled=<SSL_ENABLED>,
+    )
     plugin.run()
+
 
 if __name__ == "__main__":
     main()
 ----
 
-To review what's happening here, we add the import for `RemotePlugin` to the top of our file, then create a main method that will simply create a `HelloWorldClient` object. Then we pass the object into the `RemotePlugin` which takes an object, a name of the plugin, plugin version, description and a few more things.  That's all the code you need to get started. Now we just need to move on to configuration.
-
-NOTE: A quick note on multi-threading. If you set `max_concurrent=5` in the initializers, you are inherently saying that your functions are thread safe and can be processed in multiple threads (a maximum of 5 can run). It is up to the plugin developer to determine/create a plugin that can actually operate in a multi-threaded fashion.
+To review what's happening here: we added an import `Plugin` at the top of our file and created a standard main method. In that method we created a `HelloWorldClient` object and a `Plugin` object. Notice that when we create the `Plugin` we pass it the client and some additional parameters. Don't worry too much about the additional paramters - we'll cover them later.

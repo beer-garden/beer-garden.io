@@ -18,7 +18,7 @@ This section will take you through setting up a simple Hello, World example.
 
 === Write the code
 
-Plugins are basically just classes that you would like to expose over the network. So let's create a simple, and classic "Hello, World!" example. Use your favorite text editor and open up a file called `main.py` and add the following:
+Plugins are basically just classes that you would like to expose over the network. So let's create a simple, and classic "Hello, World!" example. Use your favorite text editor and open up a file called `plugin.py` and add the following:
 
 include::{includedir}/hello-world-client.adoc[]
 
@@ -26,7 +26,9 @@ Once we have the client, we now need to create our entry point. Let's open back 
 
 include::{includedir}/hello-world-remote-entry-point.adoc[]
 
-=== Run the plugin
+That's all the code you need!
+
+=== Run the code
 
 Run the plugin like this:
 
@@ -34,7 +36,7 @@ Run the plugin like this:
 
 It will start up and print some logging showing the plugin registering with Beer Garden. Congratulations! You've just deployed your first plugin!
 
-=== Use the plugin
+=== Use the code
 
 At this point you should see your plugin on the `Available Systems` page in `Brew View`. Click the big blue `Explore hello_world commands` button to see a list of all commands available for the Plugin you made.
 
@@ -50,7 +52,7 @@ If you didn't catch those changes on the first try, don't worry. Use the `Pour i
 
 NOTE: This command doesn't have any parameters, but for commands that do the `Pour it Again` button will default them to exactly how they were for the original request.
 
-=== Stop
+=== Stop the code
 The best way to stop a plugin is to use the Systems Management page to send a stop message. In `Brew View` find the `Systems Management` option under the `Administration` menu. Then click the stop icon next to the `hello-world` listing.
 
 You should see your plugin log that it has terminated and stop executing, and if you go to the main page in `Brew View` you should see the `hello-world` plugin is 'STOPPED'.

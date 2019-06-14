@@ -1,18 +1,15 @@
 [source,python]
-.main.py
+.plugin.py
 ----
-from bg_utils.local_plugin import LocalPlugin # <1>
+from brewtils import Plugin
 
 # Your implementation of the client goes here
 
 def main():
     client = HelloWorldClient()
-    plugin = LocalPlugin(client) # <2>
-    plugin.run() # <3>
+    plugin = Plugin(client)
+    plugin.run()
 
 if __name__ == "__main__":
     main()
 ----
-<1> Import the `LocalPlugin` definition from `brewtils`.
-<2> Create an instance of `LocalPlugin`, passing in an instance of the `HelloWorldClient` you just defined as the first argument.
-<3> Call the `run` method to start the `LocalPlugin` you just created.
