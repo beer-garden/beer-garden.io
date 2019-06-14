@@ -2,7 +2,7 @@
 :page-layout: docs
 :plugin-include-dir: python/_includes
 :install-include-dir: installation-guides/_includes
-:plugin-base-image: bgio/plugins:python3
+:plugin-base-image: bgio/plugins
 
 Get up and running with Beer Garden!
 
