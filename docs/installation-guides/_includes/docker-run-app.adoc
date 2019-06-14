@@ -1,11 +1,8 @@
-Run this command to start beer-garden:
+Then run this command to start Beer Garden:
 
-     docker-compose up -d
+[source]
+----
+docker-compose up -d
+----
 
-This will create the necessary docker containers and then run them in the background. Run the following command to see the log output from the containers starting:
-
-     docker-compose logs -f
-
-Look for a line that says "Bartender started" - once you see that beer-garden is up and running. Use `ctrl-c` to exit.
-
-beer-garden starts by default on port 2337, so point a browser at `http://<IP-ADDRESS>:2337` (where `<IP-ADDRESS>` is the address you used for the previous step). You'll see a message saying beer-garden couldn't find any   systems. Don't worry - you're about to add one.
+Once that finishes Beer Garden will be listening on port 2337. Point a browser at `http://localhost:2337` and you'll see a message letting you know that Beer Garden couldn't find any systems. That's OK - you're about to add one!

@@ -4,7 +4,11 @@
 :install-include-dir: installation-guides/_includes
 :plugin-base-image: bgio/plugins:python3
 
-This guide is designed to get you up and running in Beer Garden in the fastest possible way. We will cover, installing Beer Garden and writing your first plugin. Let's dive in!
+Get up and running with Beer Garden!
+
+This guide is designed to get you up and running with Beer Garden in the fastest possible way. We'll install Beer Garden, write a simple plugin, and exercise it.
+
+Let's dive in!
 
 == Prerequisites
 
@@ -12,35 +16,39 @@ include::{install-include-dir}/docker-prereqs.adoc[]
 
 == Install Beer Garden
 
-We are going to use `docker` and `docker-compose` to install and run Beer Garden.
+To start we're going to use `docker` and `docker-compose` to install and run Beer Garden.
 
 include::{install-include-dir}/docker-git-clone.adoc[]
-
-include::{install-include-dir}/docker-config-change.adoc[]
 
 include::{install-include-dir}/docker-run-app.adoc[]
 
 == Create your first plugin
 
-Now that Beer Garden is up, let's create a plugin that let's us use Beer Garden! We will create a simple client that will print and return the message passed to it. Change to your workspace and let's start coding!
+Now let's create a plugin! We'll create a plugin that will print and return a message passed to it.
 
-    mkdir -p $HOME/my_plugin
-    cd $HOME/my_plugin
-
-Copy and paste the following code in a file called [x-]`__main__.py`
+Create a file called [x-]`__main__.py` that looks like this:
 
 include::{plugin-include-dir}/complete-plugin.adoc[]
 
-NOTE: If you are not going to run this plugin inside docker, you might need to change `bg_host='brew-view'` to your FQDN or IP address on which Beer Garden is running.
-
-Now you can simply run your plugin using one of the images we provide!
+Sweet! Now you can use the plugin image to run your plugin:
 
 [source,subs="attributes"]
 ----
-docker run -v $(pwd):/src --network dockercompose_bg-network \
-{plugin-base-image}
+docker run -v $(pwd):/src --network host {plugin-base-image}
 ----
 
-Your plugin is now accessible in the Beer Garden GUI! Click on the `my-plugin` system, and try out the `do_something` command! Fill out whatever message you want and you should see it in the GUI as well as the output from your `docker run` command!
+You should see a message letting you know that your plugin has started - now just refresh your browser and you should see your plugin availible!
 
-This is just the tip of the iceberg, please feel free to look around the site for more information! Happy brewing!
+== Use your plugin
+
+Click the big `Explore` button to see a list of commands availible for your `hello-world` plugin. Right now there's just one - `say_hello`. Click the `Make it Happen!` button to bring up the Make Request page.
+
+On this page you'll see a text field for the `message` parameter pre-filled with the default text "Hello, World!". Click the `Make Request` button to create your first request!
+
+Making a request in the GUI navigates to the Request View page for that request. There you're able to see attributes of the request like its status and output. For this request you should see "SUCCESS" listed under the "Status" heading and whatever text you entered in the "Output" display.
+
+Now check the terminal where your plugin is running - you should see the same "Output" text there as well.
+
+Congrats, you've written and executed your first plugin! This is just the tip of the iceberg - please look around if you're interested in more information.
+
+Happy brewing!

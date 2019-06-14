@@ -1,5 +1,4 @@
-
-To follow along with this guide, we assume you have the following working:
+For this guide we assume you have the following:
 
 * Docker - Installation instructions can be found at https://docs.docker.com/install/[Docker Docs]
 * Docker Compose - Installation instructions can be found at https://docs.docker.com/compose/install/[Docker Docs]
