@@ -99,6 +99,7 @@ This role is special in that it's used by the anonymous user. That is, users tha
 
 ==== bg-admin
 This role permits everything. Easy.
+
 * bg-all
 
 ==== bg-plugin
