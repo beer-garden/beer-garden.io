@@ -2,9 +2,9 @@
 = Decorators
 :page-layout: docs
 
-Decorators are a super useful thing to use. They're how you tell Beergarden about your commands.
+Decorators are a super useful thing to use. They're how you tell Beer Garden about your commands.
 
-Things start to get tricky when you need to combine decorators. This is because normal decorator behavior is to replace one function object with another. The problem (from Beergarden's perspective) arises when the decorator implementation doesn't properly preserve function metadata. To understand what's happening we need a quick primer on how the Beergarden decorators work. Consider this example:
+Things start to get tricky when you need to combine decorators. This is because normal decorator behavior is to replace one function object with another. The problem (from Beer Garden's perspective) arises when the decorator implementation doesn't properly preserve function metadata. To understand what's happening we need a quick primer on how the Beer Garden decorators work. Consider this example:
 
 [source,python]
 .+info_command.py+
@@ -17,13 +17,13 @@ class TimeClient(object):
         return str(datetime.utcnow())
 ----
 
-So what's actually going on here? It's pretty clear that we're defining a class `TimeClient` with an instance method `time` that does something useful(ish). What's less clear is what the decorators are doing.
+So what's actually going on here? You've defined a class `TimeClient` with an instance method `time` that does something useful(ish). What's less clear is what the decorators are doing.
 
 If you're familiar with Python decorators you probably know that decorators are used to replace one function with another. That allows for "wrapping" the original function, usually to provide additional functionality and then invoking the original function. However, there's no requirement to call the original function. It's totally possible to define a decorator that will replace the decorated function with one that always returns "foo", for example.
 
 All that to say: Python decorators are very powerful and flexible. When using them it's important to remember that and take steps to ensure that all important metadata is preserved.
 
-Beergarden decorators use the `wrapt` library to ensure that decorated functions remain accurate. Wrapt is an object proxy library with a focus on ensuring correctness above and beyond what standard decorators provide. This is important because Beergarden depends heavily on function attributes being correct.
+Beer Garden decorators use the https://wrapt.readthedocs.io/en/latest/[wrapt] library to ensure that decorated functions remain accurate. Wrapt is an object proxy library with a focus on ensuring correctness above and beyond what standard decorators provide. This is important because Beer Garden depends heavily on function attributes being correct.
 
 
 == Classmethod
@@ -45,17 +45,17 @@ class TimeClient(object):
 
 == Staticmethod
 
-Right now `@staticmethod` decorators don't work at all. We're working on it!
+Right now `@staticmethod` decorators don't work at all. We're https://github.com/beer-garden/beer-garden/issues/281[working on it]!
 
 
 == Custom Decorators
 
-Custom decorators can work, but you'll need to take a little extra care to preserve function attributes that Beergarden cares about. We strongly recommend using the wrapt library to create your decorators. It's already a brewtils dependency, so anywhere you can `import brewtils` you'll also be able to `import wrapt`. Here's an example of decorator that can be applied to a Beergarden command:
+Custom decorators can work, but you'll need to take a little extra care to preserve function attributes that Beer Garden cares about. We strongly recommend using the wrapt library to create your decorators. It's already a brewtils dependency, so anywhere you can `import brewtils` you'll also be able to `import wrapt`. Here's an example of decorator that can be applied to a Beer Garden command:
 
 [source,python]
 .+decorator.py+
 ----
-def bg_decorator(_wrapped=None, subject="Beergarden!"):
+def bg_decorator(_wrapped=None, subject="Beer Garden!"):
     """Decorator that will print a message before and after command execution
 
     Args:
