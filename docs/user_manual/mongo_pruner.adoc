@@ -1,9 +1,12 @@
 = Mongo Pruner
 :page-layout: docs
 
-One of the optional features Beergarden comes with is a Mongo Pruner. You can use it to automatically age off certain requests from the database. This can be useful to prevent your database from growing uncontrolled.
+One of the optional features Beer Garden comes with is a Mongo Pruner. You can use it to automatically age off certain requests from the database. This can be useful to prevent your database from growing uncontrolled.
 
-First, you need to be aware that Beergarden makes a distinction between two types of commands - "Action" and "Info". There are no hard rules for what type a specific command should be (Beergarden won't enforce this), but generally, if executing the command changes the state of something it should be an "Action" (this is the default), and if the command is purely a query it should be an "Info".
+First, you need to be aware that Beer Garden makes a distinction between two types of commands - "Action" and "Info". Beer Garden doesn't enforce any rules about which type of commands are info and which are actions. Some best practice guidlines to follow are:
+
+1. If executing the command changes the state of something it should be an "Action" (this is the default).
+2. If the command's only job is to return data, and does not have side effects, it should be an "Info".
 
 When you create a command, you can mark it as "Info" like this:
 
@@ -15,7 +18,7 @@ def time(self):
     return str(datetime.utcnow())
 ----
 
-At this point you might ask, why bother making this distinction if Beergarden isn't going to enforce anything? Well, we've found that Beergarden administrators generally care very much about preserving the history for Requests that change things (aka Action requests) and care very little about preserving history of Requests that don't (aka Info requests).
+At this point you might ask, why bother making this distinction if Beer Garden isn't going to enforce anything? Well, we've found that Beer Garden administrators generally care very much about preserving the history for Requests that change things (aka Action requests) and care very little about preserving history of Requests that don't (aka Info requests).
 
 Ok, that's enough background. Onto the Mongo Pruner:
 The pruner will periodically check the database and age off requests according to the Time-to-Live defined in the Bartender configuration. If you look at the config file you'll see that the TTLs are broken out by command type:
@@ -32,8 +35,8 @@ db:
 
 This tells the pruner how long to keep Requests around after they complete. A negative value means never remove that type of request, so it'll stick around forever.
 
-You can see there's an extra TTL for `event` as well. This refers to Beergarden Events that have been written to the database - these can be aged off just like Requests.
+You can see there's an extra TTL for `event` as well. This refers to Beer Garden Events that have been written to the database - these can be aged off just like Requests.
 
-The Mongo Pruner will run with a frequency of half the smallest non-negative TTL specified in the config. So in the example above the Pruner will run every 7.5 minutes.
+The Mongo Pruner will run with a frequency of half the smallest non-negative TTL specified in the config. So in the example above, the Pruner will run every 7.5 minutes.
 
 Finally, a quick note on how the Pruner handles child requests: it doesn't. The pruner only looks at top-level (parent) requests when determining what to remove. However, when a top-level request is removed all its children are removed with it. So in the example above a top-level Info Request will be pruned 15 minutes after it completes, but if an Action Request generates an Info Request as part of its processing both Requests will persist forever.
