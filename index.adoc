@@ -39,6 +39,8 @@ image:demo.gif["Preview Plugin to HTML Form Screenshot"]
 
 * If you want to understand how the different components of Beer Garden work and interact then the link:docs/architecture[Architecture Guide] is the place to look
 
+* To learn about additional cool things Beer Garden can do explore the link:docs/user_manual[User Manual]
+
 * For documentation on the Python bindings head over to {brewtils_docs_uri}[Read the Docs]
 
 
