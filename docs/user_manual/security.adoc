@@ -14,7 +14,13 @@ Step one is to use TLS everywhere. If you don't, everything else you do will be 
 
 First, you will need a server certificate. How to obtain one is beyond the scope of these instructions, but check out Let's Encrypt if you need guidance. You can also use a self-signed certificate or a certificate signed by an authority not part of the standard Certifi bundle. Again, a discussion of the tradeoffs associated with this is beyond scope. If you do this, Beer Garden assumes that you understand the risks and have made a conscious choice to accept them.
 
-Ok, so you have a server certificate. Great! Now you need to tell Brew-view about it:
+Ok, so now you have a server certificate. Great!
+
+=== Beer Garden TLS
+The first step is telling Beer Garden itself to use TLS.
+
+==== Brew-view
+First, tell Brew-view to operate securely:
 
 [source,yaml]
 .brew-view-config.yaml
@@ -35,7 +41,10 @@ Some things to note:
 - `private_key` and `public_key` have been set to their respective paths.
 - `ca_cert` and `ca_path` are null. If you're using a certificate signed by a real Certificate Authority, this is what you want. However, if you're using a certificate signed by some other authority you'll need to specify a cert or path describing that authority (and all intermediates). If you're familiar with `SSLContext`, the values provided will be passed to `load_verify_locations`.
 
-Cool! Now you can use https to connect to Brew-view. Since Bartender makes requests to Brew-view it needs to know how to do that correctly:
+Cool! Now you can use https to connect to Brew-view.
+
+==== Bartender
+Since Bartender makes requests to Brew-view it needs to know how to do that correctly:
 
 [source,yaml]
 .bartender-config.yaml
@@ -49,3 +58,29 @@ web:
 ----
 
 Here you can see that `ssl_enabled` has been set to true, `ca_verify` is set to `true`, and `ca_cert` is `null`. Again, these are the correct values for a real certificate. You can use an alternate CA bundle using `ca_cert` or you can disable certificate verification completely (for a self-signed certificate) by setting `ca_verify` to `false`.
+
+==== Remote Plugins
+Any remote plugins will need to be informed of the correct way to talk to Beer Garden. Secure connections are actually the default here, but it it doesn't hurt to be explict. Again, any non-standard certificate authority will need to be specified.
+
+[source,python]
+.plugin_main.py
+----
+plugin = Plugin(
+    host="my-real-dns-name",
+    port=443,
+    ssl_enabled=True,
+    ca_cert="path/to/bundle.pem",
+)
+----
+
+
+=== RabbitMQ
+Next, you'll need to ensure that all connections made to RabbitMQ use TLS.
+
+==== Rabbit Config
+First, RabbitMQ needs to be configured as it does not expose a TLS listener by default. Full documentation on how to do that can be found in the RabbitMQ docs on https://www.rabbitmq.com/ssl.html[TLS Support].
+
+Note that Beer Garden uses both the standard messaging connection as well as the Management Plugin connection (which is an HTTP connection). Both of these need to be configured to use TLS.
+
+==== Bartender, Again
+Now you need to tell Bartender how to correctly connect to the RabbitMQ TLS listener you just configured.
