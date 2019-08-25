@@ -120,15 +120,36 @@ The PSM subsystem is responsible for:
 * Plugin Monitoring
 * Plugin Removal
 
+Plugins in this case are the abstract concept of plugins. That is to say, the PSM doesn't know anything about the actual process that is running.  The only distinction the Plugin State Manager makes is about downstream vs upstream plugins.
+
+It is completely up to the PSM to change a plugin's state (i.e. is the plugin unresponsive? healthy? running? stopped? etc.)
+
+While the plugin state manager is responsible for initiating status messages, it will delegate requesting information from the plugin to the request subsystem.
+
+Here are some additional notes:
+
+* `PATCH` on a system is equivalent to a `PATCH` on all instances.
+* `PATCH` is used for start/stop
+* `DELETE` is used for removal of a particular plugin.
+
 === Plugin State Manager API
 
 CAUTION: This API is not finalized. It is just a working copy of where we are so far.
 
-* TODO: Fill this out.
+* `register(system: System)` - Create a queue if required, Update DB. All the information we need to create the system should be on the system class itself.
+* `start(system: System, instances=None)` - Attempt to start a plugin. Only guarantees that we attempted, not that the plugin will actually start. In `start`, `stop`, and `kill`, if `instances` is specified, the action will only be applied to those specific instances. If it not provided, it will apply to all `instances` on the `System` object passed in.
+* `stop(system: System, instances=None)` - Attempt to stop a plugin. Only guarantees that we attempted, not that the plugin is actually stopped.
+* `remove(system: System, instances=None)` - Called for instance removal or system removal. Will attempt to `stop`, if this is not successful, it will not remove the plugin, if it is successful, then it will also remove the plugin and cleanup the queue if required.
+* `kill(system: System, instances=None)` - Guarantees that Beer Garden no longer knows about the plugin. Will attempt to `stop`, but will definitely remove the plugin from the DB and remove the queue.
+* `check_in(instance: Instance)` - Update the last updated time for an instance. Indicates the plugin has responded to a status message.
+
+The monitoring happens as a background process and provides no formal API to the rest of the system. It uses the database as the source of truth and expects the PSM to update the status as responses come from the API.
 
 === Plugin State Manager Dependencies
 
-* TODO: Fill this out
+* Persistence Layer - Will need to create, remove, and update `System` and `Instance` objects.
+* Queue - Will need to create, and remove queues.
+* Request - Will need to request status from plugins
 
 == Queue
 
@@ -137,15 +158,21 @@ The queue subsystem is responsible for:
 * Queue CRUD operations
 * Publishing requests
 
+Much like the persistence layer, the queue subsystem helps keep the rest of the subsystems from understanding anything about the queueing mechanism being used by a particular system. As such, it is responsible for providing an API which is consistent across each queue technology we use.
+
 === Queue API
 
 CAUTION: This API is not finalized. It is just a working copy of where we are so far.
 
-* TODO: Fill this out.
+* `create(instance: Instance)` - Creates a queue for the given instance. Remember queues are unique for an instance/system pair. Guarantees that the queue actually exists, and that we can communicate with it.
+* `put(request: Request, instance: Instance)` - Put the request on the specified instance's queue. If the instance's queue does not exist, will error. If returns successfully, then the plugin will receive this request.
+* `remove(instance: Instance)` - Removes the queue for a specific instance. Guarantees that the queue no longer exists.
+* `clear(instance: Instance)` - Remove all unreceived messages from the given instance's queue.
 
 === Queue Dependencies
 
-* TODO: Fill this out
+* Persistence Layer (?) - It is possible the queue API will need to generate username/passwords for given instances.
+* Event - It will publish events whenever it does any of the 4 main things.
 
 == Event
 
@@ -178,11 +205,15 @@ One note here is that it does *process* monitoring **not** plugin monitoring.
 
 CAUTION: This API is not finalized. It is just a working copy of where we are so far.
 
-* TODO: Fill this out.
+* `scan()` - scans the local plugin directory for new plugins.
+* `start()` - Start the local plugin subsystem.
+* `stop()` - Stop the local plugin subsystem.
+
+The Local Plugin subsystem doesn't have much of an API. Everything it does is in a background process. It will listen to events to determine when it is time to stop caring if a local plugin process is dead.
 
 === Local Plugin Dependencies
 
-* TODO: Fill this out
+* Event - It will listen to events to determine when things should no longer be monitored.
 
 == Request
 
