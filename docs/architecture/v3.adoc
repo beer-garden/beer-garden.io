@@ -171,7 +171,7 @@ CAUTION: This API is not finalized. It is just a working copy of where we are so
 
 === Queue Dependencies
 
-* Persistence Layer (?) - It is possible the queue API will need to generate username/passwords for given instances.
+* Persistence Layer (?) - It is possible the queue API will need to generate username/passwords for given instances and save them to the DB.
 * Event - It will publish events whenever it does any of the 4 main things.
 
 == Event
@@ -219,33 +219,52 @@ The Local Plugin subsystem doesn't have much of an API. Everything it does is in
 
 The request subsystem is responsible for:
 
-* TODO: Fill this out.
+* Validating requests
+* Request routing/delivery
+* Request completion notification
+
+The request subsystem needs to be aware of how to get a request to the given system. Whether that is publishing events for a downstream Beer Garden or using the queue API.
 
 === Request API
 
 CAUTION: This API is not finalized. It is just a working copy of where we are so far.
 
-* TODO: Fill this out.
+* `validate(request: Request)` - Validates that the given request can be made.
+* `execute(request: Request)` - Execute the given request by routing it to the plugin
+
+The request subsystem may expose synchronous and asynchronous versions of the its API. In the async versions, it will respond as quickly as possible, however in the synchronous versions, it will use the event subsystem as its callback for requests finishing.
 
 === Request Dependencies
 
-* TODO: Fill this out
+* Persistence Layer
+* Queue
+* Event
 
 == Scheduler
 
 The scheduler subsystem is responsible for:
 
-* TODO: Fill this out.
+* Creation of new jobs
+* Pausing/Starting jobs
+* Deleting jobs
+* Executing new jobs based on their interval
 
 === Scheduler API
 
 CAUTION: This API is not finalized. It is just a working copy of where we are so far.
 
-* TODO: Fill this out.
+* `create(job: Job)` - Create the given job in the scheduler.
+* `pause(job: Job)` - Pause the given job
+* `start(job: Job)` - Start the given job
+* `delete(job: Job)` - Delete the given job
+
+The Scheduler will have a background thread that is actually responsible for kicking of new requests.
 
 === Scheduler Dependencies
 
-* TODO: Fill this out
+* Persistence Layer
+* Request
+* Marshaler
 
 == SUBSYSTEMNAME
 
