@@ -181,15 +181,18 @@ The event subsystem is responsible for:
 * Internal events
 * Publishing external events
 
+Ultimately, many parts of Beer Garden are going to rely on the event subsystem. There will be an internal event bus that will publish events not intended for external use. There is a second part of the event subsystem that publishes event intended for external use. This portion can be toggled on or off based on configuration settings.
+
 === Event API
 
 CAUTION: This API is not finalized. It is just a working copy of where we are so far.
 
-* TODO: Fill this out.
+* `publish(event: Event)`
+* `subscribe(event_type: str)`
 
 === Event Dependencies
 
-* TODO: Fill this out
+* None
 
 == Local Plugin
 
