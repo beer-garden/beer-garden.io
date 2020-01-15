@@ -1,0 +1,99 @@
+= Beer Garden in 7 minutes
+:page-layout: docs
+:plugin-include-dir: python/_includes
+:install-include-dir: installation-guides/_includes
+:plugin-base-image: bgio/plugins
+
+
+Get up and running with Beer Garden securely!
+
+This guide is designed to provide a secure alternative to the Beer-Garden installation from the Quickstart. If you haven't gone through the Quickstart go ahead and run though that first.
+
+
+== Out with the old
+
+Before we can bring up a secure Beer-Garden we need to bring down the non-secure one:
+
+[source]
+----
+cd beer-garden/docker/docker-compose
+
+docker-compose down
+----
+
+
+== Place your certs
+
+In order to operate securely you MUST be using TLS, which means you'll need a certificate. How to obtain a certificate is outside the scope of this tutorial, but a good place to start is https://letsencrypt.org[Let's Encrypt].
+
+In the `beer-garden/docker/docker-compose/data` directory there's a `certs` directory with several files. These need to be overwritten with your specific files:
+
+- server_key.pem: The private portion of the server certificate
+- server_certificate.pem: The public portion of the server certificate
+- ca_certificate.pem: If your certificate is issued by a non-standard Certificate Authority you'll need to replace this. Otherwise, remove it completely.
+
+
+== Update the compose
+
+To operate in secure mode we need to use a slightly different docker-compose file. The file comes with several defaults that need to be changed in order to be acutally secure, so we need to do that next. Open the docker-compose.yml file that's in the `tls` directory.
+
+Your TLS certificate will be issued for a specific host name. That name needs to be set for these three items (indicated with a `# Replace` comment in the compose file):
+
+- BG_PUBLISH_HOSTNAME
+- BG_AMQ_HOST
+- BG_WEB_HOST
+
+Connecting to RabbitMQ is controlled by a username and password. These have default values in the compose file that need to be changed. Note that the same user/password combination should be used for all three entries:
+
+- BG_AMQ_CONNECTIONS_ADMIN_USER
+- BG_AMQ_CONNECTIONS_ADMIN_PASSWORD
+- BG_AMQ_CONNECTIONS_MESSAGE_USER
+- BG_AMQ_CONNECTIONS_MESSAGE_PASSWORD
+- RABBITMQ_DEFAULT_USER
+- RABBITMQ_DEFAULT_PASS
+
+
+== Start it up
+
+Great! Now you can start up the new docker-compose environment (make sure you're in the `tls` directory):
+
+[source,subs="attributes"]
+----
+cd beer-garden/docker/docker-compose/tls
+
+docker-compose up -d
+----
+
+
+== Tweak your plugin
+
+The plugin you created in the original quickstart needs a slight modification in order to work with this Beer-garden. When you define your `Plugin` class you'll need to  remove the `ssl_enabled` keyword parameter. The default is `True`, which is what we want in this case.
+
+You'll also need to modify the `bg_host` paramter to be the correct hostname according to your TLS certificate.
+
+Finally, if you're using a non-standard Certificate Authority (you replaced ca_certificate.pem instead of removing it) you'll need to add a `ca_cert` keyword parameter with the path to that file.
+
+Your new `Plugin` definition should look like this:
+
+[source,python]
+----
+plugin = Plugin(
+    client,
+    name="hello-world",
+    version="0.0.1.dev0",
+    bg_host='<Hostname>',
+    bg_port=2337,
+    ca_cert='/path/to/ca_certificate.pem',
+)
+----
+
+You run your plugin in the exact same way:
+
+[source,subs="attributes"]
+----
+docker run -v $(pwd):/src --network host {plugin-base-image}
+----
+
+== Use it
+
+At this point the Beer-garden server will be running on port 2337. Point your web browser at it using the domain name on your TLS certificate and you should be good to go!
