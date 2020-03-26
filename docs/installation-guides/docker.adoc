@@ -27,7 +27,7 @@ include::{includedir}/docker-run-app.adoc[]
 == Test your installation
 We have a docker image with a very simple plugin you can use to test out your Beer Garden. Run it with this command:
 
-     docker run bgio/example-plugin --bg-host <IP-ADDRESS> --ssl-disabled
+     docker run bgio/example-plugins echo --bg-host <IP-ADDRESS> --no-ssl-enabled
 
 Where <IP-ADDRESS> is the same value you used during the configuration file step earlier.
 
