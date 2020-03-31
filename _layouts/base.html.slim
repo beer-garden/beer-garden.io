@@ -5,9 +5,9 @@ head
   meta charset='utf-8'
   meta name='viewport' content='width=device-width, initial-scale=1.0'
   meta http-equiv='X-UA-Compatible' content='IE=edge'
-  link rel='stylesheet' href='/stylesheets/styles.css'
-  script src='/javascripts/jquery.js'
-  script src='/javascripts/bootstrap.min.js'
+  link rel='stylesheet' href='#{site.base_url}/stylesheets/styles.css'
+  script src='#{site.base_url}/javascripts/jquery.js'
+  script src='#{site.base_url}/javascripts/bootstrap.min.js'
   script async=true src='https://www.googletagmanager.com/gtag/js?id=#{site.google_analytics_account}'
   title Beer Garden Documentation
 
@@ -29,7 +29,7 @@ body.antialiased
             span.icon-bar
             span.icon-bar
           a.navbar-brand href="/"
-            img src="/images/bg-banner.png" Beer Garden
+            img src="#{site.base_url}/images/bg-banner.png" Beer Garden
 
         .collapse.navbar-collapse id="navbar-collapse-1"
           ul.nav.navbar-nav.navbar-right
