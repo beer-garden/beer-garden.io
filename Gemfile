@@ -37,5 +37,5 @@ gem 'rack-contrib', '< 2'
 
 gem 'tzinfo', '1.2.2', :group => :test
 gem 'git', '1.2.9.1', :group => :test
-gem 'rake', '10.5.0', :group => :test
+gem 'rake', '12.3.3', :group => :test
 gem 'html-proofer', '3.0.2', :group => :test
