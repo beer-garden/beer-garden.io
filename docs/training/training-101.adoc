@@ -44,3 +44,14 @@ include::{includedir}/ui-orientation.adoc[]
 
 
 == Example 5: User Forms
+
+== Now What?
+
+Now that you have a baseline of how to create a Beer Garden plugin, it is now time to experiment,
+go out and create your own plugins. Maybe there is a script you run daily for your job and you want
+to automate it, use Beer Garden. Maybe there is an analytic that you run monthly to generate a report,
+use Beer Garden. We will be here to support the community and provide guidance.
+
+If you want to go the extra mile, have you considered becoming an open source developer yourself?
+Beer Garden and many other projects out there need your support and time. Donate your time to
+improve something that you have a passion in.
