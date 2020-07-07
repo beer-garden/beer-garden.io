@@ -1,0 +1,23 @@
+Now that you have Beer Garden up and running it is time to explore the UI.
+
+=== Systems
+
+At a glance, we try to give the user as much information about what is currently connected
+
+image::complex_system.png[Complex System]
+
+=== Commands
+
+Image
+
+=== Requests
+
+Image
+
+=== Scheduler
+
+Image
+
+=== Administration
+
+Image
