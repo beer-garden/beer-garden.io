@@ -2,6 +2,7 @@
 
 :page-layout: docs
 :includedir: _includes
+:guide_dir: ../python
 
 This course is designed to take a developer who is familiar with Python and
 bring them up to speed on how to create and execute a Plugin on Beer Garden
@@ -30,8 +31,15 @@ include::../what-is-beergarden.adoc[tags=terminology]
 
 include::ui-orientation.adoc[]
 
-== Example 1: Hello Beer Garden
+== Writing Plugins for Beer Garden
 
+This is a guided plugin development that are intended to be deployed against an active Beer Garden
+instance. This only focuses on the developing remote plugins.
+
+link:../local-vs-remote.adoc[Local vs Remote]::
+If you are interested in the difference between Remote and Local plugins, check out our guide
+
+include::hello-beer-garden.adoc[]
 
 == Example 2: Running Console Commands
 
