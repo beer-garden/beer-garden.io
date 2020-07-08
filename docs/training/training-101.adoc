@@ -1,4 +1,5 @@
 = Beer Garden 101
+
 :page-layout: docs
 :includedir: _includes
 

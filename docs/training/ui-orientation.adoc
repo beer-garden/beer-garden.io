@@ -1,10 +1,10 @@
 :includedir: _includes
 
-= UI Orientation
+== UI Orientation
 
 Now that you have Beer Garden up and running it is time to explore the UI.
 
-== Navigation
+=== Navigation
 
 Non-admin users are provided a basic list of areas where they can navigate to.
 
@@ -16,7 +16,7 @@ image::{includedir}/navigation-user.png[Navigation User]
 . Link to page to view all Requests received by Beer Garden
 . Link to the scheduler tool for setup automated requests
 
-=== Admin Only
+==== Admin Only
 
 Admin users have additional areas where they can navigate to.
 
@@ -27,7 +27,7 @@ image::{includedir}/navigation-admin.png[Naviagation Admin]
 . Administrative page to manage user permissions
 . Administrative page to create new roles
 
-== Systems
+=== Systems
 
 As a Developer you have the ability to provide information that will be present to
 the user.
@@ -41,7 +41,7 @@ image::{includedir}/complex_system.png[Complex System]
 . Total number of instances of this System/Version that are running
 . Link the commands page for this System
 
-== Commands
+=== Commands
 
 The base page is the same for both System specific commands and the global command page
 (Commands on Navigation panel). This page will display all of the available commands that
@@ -54,7 +54,7 @@ image::{includedir}/complex_commands.png[Complex Commands Page]
 . Global search of all commands in the table
 . Invokes the command to generate a Request
 
-== Request
+=== Request
 
 When you want to invoke a command it is done through that commands Request page. Once submitted,
 it will be executed through Beer Garden
@@ -71,7 +71,7 @@ execute against.
 . This is a preview of the Request object. If you select the gear next to Preview the user can
 manually change the values here.
 
-== Request View
+=== Request View
 
 After a Request has been submitted to Beer Garden the user is redirected to the Viewer page for
 that request. Here the user can get operational updates on the request.
@@ -88,7 +88,7 @@ image::{includedir}/request-view.png[Request View Example]
 . Selecting this will bring the user back to the Request page with the Request Parameters pre-populated
 . Any comments that were added during the Request creation
 
-== Scheduler
+=== Scheduler
 
 The scheduler tool is a multi-page selection process. The user selects the System and Command that
 should be scheduled for a future or re-occurring job. After the user creates the template request to
