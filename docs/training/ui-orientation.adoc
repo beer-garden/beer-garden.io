@@ -1,0 +1,111 @@
+:includedir: _includes
+
+= UI Orientation
+
+Now that you have Beer Garden up and running it is time to explore the UI.
+
+== Navigation
+
+Non-admin users are provided a basic list of areas where they can navigate to.
+
+image::{includedir}/navigation-user.png[Navigation User]
+
+. Toggle Drop down to view all Systems deployed
+. Links to that specific System
+. Link to page with all deployed commands
+. Link to page to view all Requests received by Beer Garden
+. Link to the scheduler tool for setup automated requests
+
+=== Admin Only
+
+Admin users have additional areas where they can navigate to.
+
+image::{includedir}/navigation-admin.png[Naviagation Admin]
+
+. Administrative page to start/stop/rescan/delete connected systems
+. Administrative page to manage the Queues that Systems are listening to
+. Administrative page to manage user permissions
+. Administrative page to create new roles
+
+== Systems
+
+As a Developer you have the ability to provide information that will be present to
+the user.
+
+image::{includedir}/complex_system.png[Complex System]
+
+. Label of the System (Developer Provided)
+. Version of System (Developer Provided)
+. Brief description of the System (Developer Provided)
+. Total number of commands contained within System
+. Total number of instances of this System/Version that are running
+. Link the commands page for this System
+
+== Commands
+
+The base page is the same for both System specific commands and the global command page
+(Commands on Navigation panel). This page will display all of the available commands that
+can be requested.
+
+image::{includedir}/complex_commands.png[Complex Commands Page]
+
+. Label of the Command (If not provided by developer it is the function name)
+. Description of Command (Developer Provided)
+. Global search of all commands in the table
+. Invokes the command to generate a Request
+
+== Request
+
+When you want to invoke a command it is done through that commands Request page. Once submitted,
+it will be executed through Beer Garden
+
+image::{includedir}/complex_command_request.png[Complex Command Request]
+
+. The form displayed is generated from the annotations a Developer added to the Command function
+. Comments added have no impact to the execution of the Command. The comment will persist with
+the request and can be viewed.
+. This will clear any input entered into the form
+. Executes the request. Once this is clicked the user will be navigated to the Request View page
+. If there are multiple instances of the System/Version running, the user can select which one to
+execute against.
+. This is a preview of the Request object. If you select the gear next to Preview the user can
+manually change the values here.
+
+== Request View
+
+After a Request has been submitted to Beer Garden the user is redirected to the Viewer page for
+that request. Here the user can get operational updates on the request.
+
+image::{includedir}/request-view.png[Request View Example]
+
+. The unique identifier associated with the Request. This can also be seen in the URL
+. The original Request that was submitted
+. Links to any child requests that were generated
+. The output of the Request. This can be HTML, JSON, or String
+. Current status of the Request
+. The original input parameters for the request. (Helpful for debugging child requests)
+. Timestamp when the Request object was last updated
+. Selecting this will bring the user back to the Request page with the Request Parameters pre-populated
+. Any comments that were added during the Request creation
+
+== Scheduler
+
+The scheduler tool is a multi-page selection process. The user selects the System and Command that
+should be scheduled for a future or re-occurring job. After the user creates the template request to
+be submitted the user must add the Job trigger information.
+
+image::{includedir}/scheduler-job.png[Scheduler Job Example]
+
+. Job name that will be displayed
+. Type of trigger that will be utilized. When selected, that tab must be populated.
+. If coalescing is enabled for the job and the scheduler sees one or more queued executions
+for the job, it will only trigger it once.
+. Time in seconds that the job is allowed to miss the the designated run time before being considered to have misfired
+. Maximum number of concurrently running instances allowed for this job
+. Repeats job on with CRON formatting
+. Repeats job on a set time interface for a provided date range (if provided)
+. Runs the job once at a future timestamp
+. Clears the Form
+. Created the Job to be triggered at the registered time
+. Preview of the Job being created
+

@@ -27,9 +27,7 @@ include::../python/_includes/prereqs.adoc[]
 
 include::../what-is-beergarden.adoc[tags=terminology]
 
-== UI Orientation
-
-include::{includedir}/ui-orientation.adoc[]
+include::ui-orientation.adoc[]
 
 == Example 1: Hello Beer Garden
 
