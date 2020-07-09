@@ -39,18 +39,15 @@ instance. This only focuses on the developing remote plugins.
 link:../local-vs-remote.adoc[Local vs Remote]::
 If you are interested in the difference between Remote and Local plugins, check out our guide
 
-include::hello-beer-garden.adoc[]
+include::example-1.adoc[]
 
-== Example 2: Running Console Commands
+include::example-2.adoc[]
 
+include::example-3.adoc[]
 
-== Example 3: Web Scrapping
+include::example-4.adoc[]
 
-
-== Example 4: Connecting to API's
-
-
-== Example 5: User Forms
+include::example-5.adoc[]
 
 == Now What?
 
