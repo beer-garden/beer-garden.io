@@ -5,7 +5,7 @@ For this example we are going to explore kicking off Shell Commands from Beer Ga
 this we have to select a Shell Command that best fits your environment. For this example we will use nslookup
 because it available on most operating systems (Mac OS, Ubuntu, Windows, Centos).
 
-[source, shell script]
+[source, bash]
 .Example
 ----
 nslookup python.org
@@ -14,7 +14,7 @@ nslookup python.org
 Go ahead and run this in the command line somewhere to ensure that it works properly in your environment.
 You should get something like the following
 
-[source, shell script]
+[source, bash]
 .Example
 ----
 Server:     <DNS Server>
@@ -120,7 +120,7 @@ image::{includedir}/nslookup-response.png[NSlookup Response]
 
 We can see in the `Output` field has the raw response from the command we executed.
 
-
+=== Conclusion
 
 This has been a basic example of how you can use Beer Garden to run Shell Script commands. You could
 easily expand this out to running bash files or any other command you have access to in your terminal.
