@@ -1,8 +1,8 @@
-== Example 3: Web Scrapping
+== Example 3: Web Scraping
 
 :includedir: _includes
 
-For this example we are going to explore Web Scrapping. There are many different ways to accomplish
+For this example we are going to explore Web Scraping. There are many different ways to accomplish
 this task in Python. For our examples we are going to use two additional libraries,
 link:https://requests.readthedocs.io/en/master/[Requests] and
 link:https://www.crummy.com/software/BeautifulSoup/[BeautifulSoup].
@@ -22,13 +22,13 @@ class object that can interact with the Python.org website to pull some attribut
 will be pulling the Preamble section of the Beer Garden homepage.
 
 [source,python]
-.web_scrapping_plugin.py
+.web_scraping_plugin.py
 ----
 import requests
 from bs4 import BeautifulSoup
 
 
-class WebScrappingClient:
+class WebScrapingClient:
 
     def download_url(self, url):
         page = requests.get(url)
@@ -41,7 +41,7 @@ class WebScrappingClient:
 
 
 def main():
-    client = WebScrappingClient()
+    client = WebScrapingClient()
     preamble = client.extract_id("https://www.beer-garden.io", "preamble")
     print(preamble)
 
@@ -55,14 +55,14 @@ Just like the previous examples, we now want to convert this Class into a Beer G
 time we want to return the output as an HTML object.
 
 [source,python]
-.web_scrapping_plugin.py
+.web_scraping_plugin.py
 ----
 import requests
 from bs4 import BeautifulSoup
 from brewtils import command, system, parameter, Plugin
 
 @system
-class WebScrappingClient:
+class WebScrapingClient:
 
     def download_url(self, url):
         page = requests.get(url)
@@ -73,7 +73,7 @@ class WebScrappingClient:
     @parameter(
         key="url",
         type="String",
-        description="The URL to be looked up via Web Scrapper",
+        description="The URL to be looked up via Web Scraper",
         default="https://www.beer-garden.io",
     )
     @parameter(
@@ -88,11 +88,11 @@ class WebScrappingClient:
 
 
 def main():
-    client = WebScrappingClient()
+    client = WebScrapingClient()
 
     plugin = Plugin(
         client,
-        name='WebScrapper',
+        name='WebScraper',
         version='1.0.0',
         description='Scraps requested website with BS4',
         bg_host="<HOST>",
@@ -111,7 +111,7 @@ the Output Cell
 
 Now that everything is ready, let's run this and invoke the command in the UI.
 
-    python web_scrapping_plugin.py
+    python web_scraping_plugin.py
 
 Since we changed the output type to HTML, there are two options to view the Output Cell
 
@@ -119,14 +119,14 @@ Since we changed the output type to HTML, there are two options to view the Outp
 
 Beer Garden UI render the HTML in the Output cell if it is valid HTML.
 
-image::{includedir}/webscrapper-response-formatted.png[Web Scrapper Formatted Results]
+image::{includedir}/webscraper-response-formatted.png[Web Scraper Formatted Results]
 
 === Raw
 
 If the user wants to see the raw format of the results, they just have to toggler for `Formatted`
 option to `Raw`
 
-image::{includedir}/webscrapper-response-raw.png[Web Scrapper Raw Results]
+image::{includedir}/webscraper-response-raw.png[Web Scraper Raw Results]
 
 === Conclusion
 
