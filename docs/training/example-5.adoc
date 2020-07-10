@@ -114,7 +114,7 @@ class ComplexBeerStatisticsClient:
         key="year",
         type="Integer",
         description="Enter the year to pull Beer Production Statistics",
-        choices={"type": "command", "value": "valid_year_range"},  # (2)
+        choices={"type": "command", "value": "valid_year_range", "display": "select"},  # (2)
     )
     def test_beer_statistics_client_with_year(self, year):
         results = self.beer_statistics_client.download_year_statistics(year=year)
@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
 <1> We created a new Command that returns back the values we want to use on our form.
 <2> Here we tell the `Parameter` field that it needs to use a `Command` of name `valid_year_range` to
-limit the choices
+limit the choices. By setting the `display` property to `select`, it will display the field as a drop down.
 
 So now lets run this Plugin and see what happens
 
@@ -192,7 +192,7 @@ class ComplexBeerStatisticsClient:
         key="year",
         type="Integer",
         description="Enter the year to pull Beer Production Statistics",
-        choices={"type": "command", "value": "valid_date_ranges"},
+        choices={"type": "command", "value": "valid_date_ranges", "display": "select"},
     )
     def test_beer_statistics_client_with_year(self, year):
         results = self.beer_statistics_client.download_year_statistics(year=year)
@@ -221,7 +221,7 @@ class ComplexBeerStatisticsClient:
         key="field",
         type="String",
         description="Enter the field to pull Beer Production Statistics on",
-        choices={"type": "command", "value": "valid_summary_fields"}, # (2)
+        choices={"type": "command", "value": "valid_summary_fields", "display": "select"}, # (2)
     )
     def test_beer_statistics_client_fields(self, field):
         return field
@@ -293,7 +293,7 @@ class ComplexBeerStatisticsClient:
         key="year",
         type="Integer",
         description="Enter the year to pull Beer Production Statistics",
-        choices={"type": "command", "value": "valid_date_ranges"},
+        choices={"type": "command", "value": "valid_date_ranges", "display": "select"},
     )
     def test_beer_statistics_client_with_year(self, year):
         results = self.beer_statistics_client.download_year_statistics(year=year)
@@ -321,7 +321,7 @@ class ComplexBeerStatisticsClient:
         key="field",
         type="String",
         description="Enter the field to pull Beer Production Statistics on",
-        choices={"type": "command", "value": "valid_summary_fields"},
+        choices={"type": "command", "value": "valid_summary_fields", "display": "select"},
     )
     def test_beer_statistics_client_fields(self, field):
         return field
@@ -331,13 +331,13 @@ class ComplexBeerStatisticsClient:
         key="field",
         type="String",
         description="Enter the field to pull Beer Production Statistics on",
-        choices={"type": "command", "value": "valid_summary_fields"},
+        choices={"type": "command", "value": "valid_summary_fields", "display": "select"},
     )
     @parameter(
         key="year",
         type="Integer",
         description="Enter the year to pull Beer Production Statistics",
-        choices={"type": "command", "value": "valid_date_ranges"},
+        choices={"type": "command", "value": "valid_date_ranges", "display": "select"},
     )
     def test_beer_statistics_client_sum_total(self, field, year):
         results = self.beer_statistics_client.download_year_statistics(year=year)
