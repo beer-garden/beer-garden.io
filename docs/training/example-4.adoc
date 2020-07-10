@@ -149,24 +149,24 @@ class BeerStatisticsClient:
             # Ctype 0 = empty
 
             if row[1].ctype == 0:
-                data["Number_Of_Breweries"] = 0
+                data["Number Of Breweries"] = 0
             else:
-                data["Number_Of_Breweries"] = round(row[1].value, 0)
+                data["Number Of Breweries"] = round(row[1].value, 0)
 
             if row[2].ctype == 0:
-                data["Total_Barrels"] = 0
+                data["Total Barrels"] = 0
             else:
-                data["Total_Barrels"] = round(row[2].value, 2)
+                data["Total Barrels"] = round(row[2].value, 2)
 
             if row[3].ctype == 0:
-                data["Taxable_Removals"] = 0
+                data["Taxable Removals"] = 0
             else:
-                data["Taxable_Removals"] = round(row[3].value, 2)
+                data["Taxable Removals"] = round(row[3].value, 2)
 
             if row[4].ctype == 0:
-                data["Total_Shipped (Exported)"] = 0
+                data["Total Shipped (Exported)"] = 0
             else:
-                data["Total_Shipped (Exported)"] = round(row[4].value, 2)
+                data["Total Shipped (Exported)"] = round(row[4].value, 2)
 
             raw_statistics.append(data)
 
