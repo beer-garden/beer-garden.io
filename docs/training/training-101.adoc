@@ -34,10 +34,7 @@ include::ui-orientation.adoc[]
 == Writing Plugins for Beer Garden
 
 This is a guided plugin development that are intended to be deployed against an active Beer Garden
-instance. This only focuses on the developing remote plugins.
-
-link:../local-vs-remote.adoc[Local vs Remote]::
-If you are interested in the difference between Remote and Local plugins, check out our guide
+instance.
 
 include::example-1.adoc[]
 
