@@ -1,7 +1,7 @@
 == Example 2: Running Shell Commands
 :includedir: _includes
 
-For this example we are going to explore kicking off Shell Commands from Beer Garden plugins. To accomplish
+For this example, we are going to explore kicking off Shell Commands from Beer Garden plugins. To accomplish
 this we have to select a Shell Command that best fits your environment. For this example we will use nslookup
 because it available on most operating systems (Mac OS, Ubuntu, Windows, Centos).
 
@@ -41,7 +41,7 @@ import subprocess
 
 class NSLookupClient:
 
-    def execute_nslookup(self, domain):
+    def request_nslookup(self, domain):
         process = subprocess.Popen(['nslookup', domain],
                      stdout=subprocess.PIPE)
 
@@ -49,7 +49,7 @@ class NSLookupClient:
 
 def main():
 	client = NSLookupClient()
-	client.execute_nslookup("python.org")
+	client.request_nslookup("python.org")
 
 if __name__ == "__main__":
 	main()
@@ -57,8 +57,8 @@ if __name__ == "__main__":
 
 === Convert to Beer Garden Plugin
 
-Instead of converting the function directly into a Beer Garden System Command, let's build a new command
-that will pass in the domain being queried. That way we can expose this new function in the UI.
+Instead of creating a new class, let convert the function directly into a Beer Garden System Command.
+That way we can expose this function in the UI.
 
 [source,python]
 .nslookup_plugin.py
@@ -68,12 +68,6 @@ import subprocess
 
 @system
 class NSLookupClient:
-
-    def execute_nslookup(self, domain):
-        process = subprocess.Popen(['nslookup', domain],
-                     stdout=subprocess.PIPE)
-
-        return process.stdout.readlines()
 
     @command
     #(1)
