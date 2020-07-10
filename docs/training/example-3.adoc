@@ -15,6 +15,8 @@ pip install beautifulsoup4
 pip install requests
 ----
 
+=== Write Base Class
+
 We are going to utilize the Beer-Garden.io website as our source. So like before, let's build up a base
 class object that can interact with the Python.org website to pull some attributes. For our example, we
 will be pulling the Preamble section of the Beer Garden homepage.
@@ -46,6 +48,8 @@ def main():
 if __name__ == "__main__":
 	main()
 ----
+
+=== Convert to Beer Garden Plugin
 
 Just like the previous examples, we now want to convert this Class into a Beer Garden Plugin, but this
 time we want to return the output as an HTML object.
@@ -92,7 +96,7 @@ def main():
         version='1.0.0',
         description='Scraps requested website with BS4',
         bg_host="<HOST>",
-        bg_port="<PORT>",
+        bg_port=<PORT>,
         ssl_enabled=<SSL_ENABLED>,
     )
 
@@ -113,16 +117,16 @@ Since we changed the output type to HTML, there are two options to view the Outp
 
 === Formatted
 
-image::{includedir}/webscrapper-response-formatted.png[Web Scrapper Formatted Results]
-
 Beer Garden UI render the HTML in the Output cell if it is valid HTML.
+
+image::{includedir}/webscrapper-response-formatted.png[Web Scrapper Formatted Results]
 
 === Raw
 
-image::{includedir}/webscrapper-response-raw.png[Web Scrapper Raw Results]
-
 If the user wants to see the raw format of the results, they just have to toggler for `Formatted`
 option to `Raw`
+
+image::{includedir}/webscrapper-response-raw.png[Web Scrapper Raw Results]
 
 === Conclusion
 

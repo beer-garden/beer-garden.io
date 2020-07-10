@@ -195,7 +195,7 @@ def main():
         version='1.0.0',
         description='Parses data from TTB.gov on Brewer Production sizes of Beer',
         bg_host="<HOST>",
-        bg_port="<PORT>",
+        bg_port=<PORT>,
         ssl_enabled=False,
     )
 
@@ -215,17 +215,17 @@ Now that everything is ready, let's run this and invoke the command in the UI.
 
 === Request Form
 
-image::{includedir}/beer-statistics-request.png[Beer Statistics Request]
-
 We can see in the request that we no longer have a free form text field, but a dropdown option with the
 year ranges 2008 to 2019.
 
-=== Request Response
+image::{includedir}/beer-statistics-request.png[Beer Statistics Request]
 
-image::{includedir}/beer-statistics-response.png[Beer Statistics Request]
+=== Request Response
 
 In the Output cell the data is parse in JSON format for easy viewing. Just like the HTML output, this can
 be converted into the RAW output.
+
+image::{includedir}/beer-statistics-response.png[Beer Statistics Request]
 
 === Conclusion
 
