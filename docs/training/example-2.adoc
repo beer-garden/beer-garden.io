@@ -1,5 +1,5 @@
 == Example 2: Running Shell Commands
-:includedir: _includes
+:includedir: ./_includes
 
 For this example, we are going to explore kicking off Shell Commands from Beer Garden plugins. To accomplish
 this we have to select a Shell Command that best fits your environment. For this example we will use nslookup

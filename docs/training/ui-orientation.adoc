@@ -1,4 +1,4 @@
-:includedir: _includes
+:includedir: ./_includes
 
 == UI Orientation
 
