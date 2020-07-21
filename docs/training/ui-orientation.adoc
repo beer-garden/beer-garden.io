@@ -1,4 +1,4 @@
-:imagesdir: {site.base_url}/images/
+//:imagesdir: {site.base_url}/images/
 
 == UI Orientation
 
