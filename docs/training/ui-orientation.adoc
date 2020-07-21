@@ -1,4 +1,15 @@
-:imagesdir: ./images
+:path: training/
+:imagesdir: images/
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
+//:imagesdir: images/
 == UI Orientation
 
 Now that you have Beer Garden up and running it is time to explore the UI.
