@@ -1,6 +1,5 @@
 == Example 4: Connecting to External Data sets
-:imagesdir: ./images/
-
+:imagesdir: ../../images/
 For this example we are going to explore connecting to external API's. There are many different ways to accomplish
 this task in Python. For our examples we are going to use two additional libraries,
 link:https://requests.readthedocs.io/en/master/[Requests] and
