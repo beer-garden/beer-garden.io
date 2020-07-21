@@ -1,6 +1,7 @@
 == Example 3: Web Scraping
 :imagesdir: {site.base_url}/images/
 
+
 For this example we are going to explore Web Scraping. There are many different ways to accomplish
 this task in Python. For our examples we are going to use two additional libraries,
 link:https://requests.readthedocs.io/en/master/[Requests] and
