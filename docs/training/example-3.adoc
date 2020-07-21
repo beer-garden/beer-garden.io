@@ -1,17 +1,6 @@
 == Example 3: Web Scraping
 
-:path: training/
-:imagesdir: images/
-
-ifdef::rootpath[]
-:imagesdir: {rootpath}{path}{imagesdir}
-endif::rootpath[]
-
-ifndef::rootpath[]
-:rootpath: ./../
-endif::rootpath[]
-
-//:imagesdir: images/
+:imagesdir: ../../images/
 
 For this example we are going to explore Web Scraping. There are many different ways to accomplish
 this task in Python. For our examples we are going to use two additional libraries,
