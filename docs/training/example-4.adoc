@@ -1,5 +1,5 @@
 == Example 4: Connecting to External Data sets
-:imagesdir: {site.base_url}/images/
+//:imagesdir: {site.base_url}/images/
 
 For this example we are going to explore connecting to external API's. There are many different ways to accomplish
 this task in Python. For our examples we are going to use two additional libraries,

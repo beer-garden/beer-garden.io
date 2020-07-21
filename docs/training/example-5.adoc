@@ -1,5 +1,5 @@
 == Example 5: User Forms and Advanced Features
-:imagesdir: {site.base_url}/images/
+//:imagesdir: {site.base_url}/images/
 
 We have now covered the basics of how to create Beer Garden Plugins with a variety of Input Types and Output Types.
 This Example will merge these concepts together while creating more complex User Forms.
