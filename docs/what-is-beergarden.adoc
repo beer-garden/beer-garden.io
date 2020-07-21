@@ -8,7 +8,7 @@ In this introduction we'll cover what Beer Garden is, some basic terminology, an
 
 Beer Garden is a plugin framework that provides a simple home for any type of system you can imagine. It's incredibly flexible in the workloads it can execute, though it excels in command-and-control.
 
-
+// tag::terminology[]
 == Terminology
 
 To really understand Beer Garden, we need to start speaking the same language. Beer Garden has four fundamental building blocks. Quick definitions are given below along with how each would be used if you were to use Beer Garden to define a calculator.
@@ -24,7 +24,7 @@ Parameters::
 
 Requests::
 	An actual action that is performed, analogous to calling a function. The act of adding two numbers using the addition operation.
-
+// end::terminology[]
 
 == An Example
 
@@ -49,7 +49,7 @@ Now when the end user wants to add 1 and 2, they'll issue a Request to Beer Gard
 
 NOTE: There are other ways to create a Request. Check out link:/docs/api-users-guide/#requests[Requests] to learn more.
 
-
+// tag::how-can-it-help[]
 == How can it help?
 Beer Garden aims to bridge several gaps. Here are some scenarios where it can be helpful:
 
@@ -64,3 +64,5 @@ Beer Garden provides a standardized interface for exercising disparate services 
 
 "__I have lots of useful scripts and I'd like to make them discoverable__"::
 Beer Garden exposes all these functions and makes them programatically discoverable for very little cost. It allows you the flexibility to continue making your plugins to do whatever small thing you want, but also allows other people to build on top of your plugins making more complex plugins that are dynamic and easy-to-use.
+
+// end::how-can-it-help[]

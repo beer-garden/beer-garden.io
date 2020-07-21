@@ -1,0 +1,234 @@
+== Example 4: Connecting to External Data sets
+:includedir: _includes
+
+For this example we are going to explore connecting to external API's. There are many different ways to accomplish
+this task in Python. For our examples we are going to use two additional libraries,
+link:https://requests.readthedocs.io/en/master/[Requests] and
+link:https://xlrd.readthedocs.io/en/latest/[xlrd]
+
+Before we start, please ensure these libraries are installed:
+
+[source,bash,subs="attributes"]
+----
+pip install requests
+pip install xlrd
+----
+
+There are many public data sets available for developers to interact with. One amazing resource is
+link:https://catalog.data.gov/dataset[Data.gov]. There is a wide range of data provided by Federal and
+State governments. For this example, we are going to use the
+link:https://www.ttb.gov/beer/statistics[Beer Statistics]. To accomplish this we must download the XLS
+file and then parse it to JSON.
+
+To ensure this guide has continuity, we will be looking at the Number of Brewers by Production Size. This
+data set currently has years 2008-2019 available. The Aggregate Data is an interesting dataset, but is
+subject to change format once the 2020 data set is released.
+
+Before we can start, we first must understand how to reference each year. This is the basic breakdown
+of the download link
+
+    https://www.ttb.gov/images/pdfs/statistics/production_size/<YEAR>_brew_prod_size_ttb_gov.xlsx
+
+A couple things to know before parsing the data. The start line of the statistics does change
+but they keep that same naming convention. So we know that the statistics always starts two lines after
+`Production Size - CY <YEAR>` and ends one line before `Total`. So we can use that when parsing the Excel
+file to our benefit. So let's go ahead and build a basic parser for these statistics.
+
+[source,python]
+.beer_statistics_plugin.py
+----
+import xlrd
+import requests
+
+
+class BeerStatisticsClient:
+
+    def download_raw_stats(self, year):
+        year_statistics_file = requests.get(
+            'https://www.ttb.gov/images/pdfs/statistics/production_size/%s_brew_prod_size_ttb_gov.xlsx' % year)
+        year_statistics_book = xlrd.open_workbook(file_contents=year_statistics_file.content)
+        return year_statistics_book.sheet_by_index(0)
+
+    def parse_sheet(self, sheet):
+        start_line = 0
+        end_line = 0
+
+        for x in range(0, sheet.nrows):
+            if str(sheet.row(x)[0].value).startswith("Production Size - CY"):
+                start_line = x + 2
+            elif str(sheet.row(x)[0].value) == "Total":
+                end_line = x
+                break
+
+        raw_statistics = list()
+
+        for x in range(start_line, end_line):
+            row = sheet.row(x)
+            data = dict()
+            data["Barrels (31 Gallons)"] = row[0].value
+
+            # This is additional formatting to ensure all of the data looks good
+            # Ctype 0 = empty, if it is empty lets just return zero
+
+            if row[1].ctype == 0:
+                data["Number Of Breweries"] = 0
+            else:
+                data["Number Of Breweries"] = round(row[1].value, 0)
+
+            if row[2].ctype == 0:
+                data["Total Barrels"] = 0
+            else:
+                data["Total Barrels"] = round(row[2].value, 2)
+
+            if row[3].ctype == 0:
+                data["Taxable Removals"] = 0
+            else:
+                data["Taxable Removals"] = round(row[3].value, 2)
+
+            if row[4].ctype == 0:
+                data["Total Shipped (Exported)"] = 0
+            else:
+                data["Total Shipped (Exported)"] = round(row[4].value, 2)
+
+            raw_statistics.append(data)
+
+        return raw_statistics
+
+    def download_year_statistics(self, year):
+
+        sheet = self.download_raw_stats(year)
+        data = self.parse_sheet(sheet)
+        return data
+
+
+def main():
+    client = BeerStatisticsClient()
+    stats = client.download_year_statistics(2019)
+    print(stats)
+----
+
+Now that the hard work is done, let's see how we can convert this into a Beer Garden Plugin. We want
+to only accept years within the current Year range (2008-2019). We also want to return this back as a JSON
+object.
+
+[source,python]
+.beer_statistics_plugin.py
+----
+import xlrd
+import requests
+from brewtils import command, system, parameter, Plugin
+
+@system
+class BeerStatisticsClient:
+
+    def download_raw_stats(self, year):
+        year_statistics_file = requests.get(
+            'https://www.ttb.gov/images/pdfs/statistics/production_size/%s_brew_prod_size_ttb_gov.xlsx' % year)
+        year_statistics_book = xlrd.open_workbook(file_contents=year_statistics_file.content)
+        return year_statistics_book.sheet_by_index(0)
+
+    def parse_sheet(self, sheet):
+        start_line = 0
+        end_line = 0
+
+        for x in range(0, sheet.nrows):
+            if str(sheet.row(x)[0].value).startswith("Production Size - CY"):
+                start_line = x + 2
+            elif str(sheet.row(x)[0].value) == "Total":
+                end_line = x
+                break
+
+        raw_statistics = list()
+
+        for x in range(start_line, end_line):
+            row = sheet.row(x)
+            data = dict()
+            data["Barrels (31 Gallons)"] = row[0].value
+
+            # This is additional formatting to ensure all of the data looks good
+            # Ctype 0 = empty
+
+            if row[1].ctype == 0:
+                data["Number Of Breweries"] = 0
+            else:
+                data["Number Of Breweries"] = round(row[1].value, 0)
+
+            if row[2].ctype == 0:
+                data["Total Barrels"] = 0
+            else:
+                data["Total Barrels"] = round(row[2].value, 2)
+
+            if row[3].ctype == 0:
+                data["Taxable Removals"] = 0
+            else:
+                data["Taxable Removals"] = round(row[3].value, 2)
+
+            if row[4].ctype == 0:
+                data["Total Shipped (Exported)"] = 0
+            else:
+                data["Total Shipped (Exported)"] = round(row[4].value, 2)
+
+            raw_statistics.append(data)
+
+        return raw_statistics
+
+    @command(output_type="JSON")  # (1)
+    @parameter(
+        key="year",
+        type="Integer", # (2)
+        description="Select the year to pull Beer Production Statistics",
+        choices=list(range(2008, 2019)), # (3)
+    )
+    def download_year_statistics(self, year):
+
+        sheet = self.download_raw_stats(year)
+        data = self.parse_sheet(sheet)
+        return data
+
+
+def main():
+    client = BeerStatisticsClient()
+
+    plugin = Plugin(
+        client,
+        name='BeerStatistics',
+        version='1.0.0',
+        description='Parses data from TTB.gov on Brewer Production sizes of Beer',
+        bg_host="<HOST>",
+        bg_port=<PORT>,
+        ssl_enabled=False,
+    )
+
+    plugin.run()
+
+if __name__ == "__main__":
+    main()
+----
+<1> The `output_type` field can be set to HTML, JSON, or STRING. These will alter how the UI renders
+the Output Cell
+<2> The `type` field limits valid input types to `Integer` types
+<3> The `choices` field allows a developer to provide a list of valid input values
+
+Now that everything is ready, let's run this and invoke the command in the UI.
+
+    python beer_statistics_plugin.py
+
+=== Request Form
+
+We can see in the request that we no longer have a free form text field, but a dropdown option with the
+year ranges 2008 to 2019.
+
+image::{includedir}/beer-statistics-request.png[Beer Statistics Request]
+
+=== Request Response
+
+In the Output cell the data is parse in JSON format for easy viewing. Just like the HTML output, this can
+be converted into the RAW output.
+
+image::{includedir}/beer-statistics-response.png[Beer Statistics Request]
+
+=== Conclusion
+
+This has been a basic example of how you can use Beer Garden to pull a data set and display it to your user.
+We would challenge you to try extracting the other data sets on Beer Production, or checkout a different dataset
+available through link:https://catalog.data.gov/dataset[Data.gov], or use your own data sets.

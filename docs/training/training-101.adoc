@@ -1,0 +1,58 @@
+= Beer Garden 101
+
+:page-layout: docs
+:includedir: _includes
+:guide_dir: ../python
+
+This course is designed to take a developer who is familiar with Python and
+bring them up to speed on how to create and execute a Plugin on Beer Garden.
+
+== Overview of Beer Garden
+
+Beer Garden is targeted to help developers break that barrier between python
+scripts and software. So much of software development is tangled in the weeds
+of standing up services, getting messages from one component to another,
+creating UIs, writing documentation, and concurrently supporting multiple
+versions. We wanted to change that. Beer Garden makes it as easy as running
+the main method.
+
+Development of the Beer Garden framework is written in Python for Python. This has been a
+multi-year effort to bring Beer Garden to that state it is today. It is constantly
+evolving as we learn new and innovative techniques. It also evolves with the each new
+contributor because everyone brings their own unique skills and passions.
+
+include::../what-is-beergarden.adoc[tags=how-can-it-help]
+
+== Before we Start
+
+include::../python/_includes/prereqs.adoc[]
+
+include::../what-is-beergarden.adoc[tags=terminology]
+
+include::ui-orientation.adoc[]
+
+== Writing Plugins for Beer Garden
+
+This is a guided plugin development that are intended to be deployed against an active Beer Garden
+instance.
+
+include::example-1.adoc[]
+
+include::example-2.adoc[]
+
+include::example-3.adoc[]
+
+include::example-4.adoc[]
+
+include::example-5.adoc[]
+
+== Now What?
+
+Now that you have a baseline of how to create a Beer Garden plugin, it is now time to experiment,
+go out and create your own plugins. Maybe there is a script you run daily for your job and you want
+to automate it, use Beer Garden. Maybe there is an analytic that you run monthly to generate a report,
+use Beer Garden. We will be here to support the community and provide guidance.
+
+If you want to go the extra mile, have you considered becoming an open source developer yourself?
+Beer Garden and many other projects out there need your support and time. Donate your time to
+improve something that you have a passion in.
