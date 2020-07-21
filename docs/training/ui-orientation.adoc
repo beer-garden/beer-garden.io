@@ -1,4 +1,4 @@
-:imagesdir: ./images
+:imagesdir: ../training/images
 == UI Orientation
 
 Now that you have Beer Garden up and running it is time to explore the UI.
