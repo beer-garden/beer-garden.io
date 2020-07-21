@@ -1,5 +1,5 @@
 == Example 5: User Forms and Advanced Features
-:includedir: ./_includes
+:imagesdir: ./images
 
 We have now covered the basics of how to create Beer Garden Plugins with a variety of Input Types and Output Types.
 This Example will merge these concepts together while creating more complex User Forms.
@@ -77,7 +77,7 @@ So now lets run this Plugin and see what happens
 
     python complex_beer_statistics_plugin.py
 
-image::{includedir}/complex-beer-statistics-test.png[Complex Beer Statistics Results]
+image:complex-beer-statistics-test.png[Complex Beer Statistics Results]
 
 We can see that a child request was spawned when invoking this command. If you clicked on the hyperlink
 for `download_year_statistics` then you can see the input/output for that command.
@@ -154,12 +154,12 @@ So now lets run this Plugin and see what happens
 When the Form is loaded it doesn't have the Choices list, so it is rendered as a standard input field,
 once the command is executed the options are populated and limit input to those values.
 
-image::{includedir}/complex-beer-statistics-years.png[Complex Beer Statistics Years]
+image:complex-beer-statistics-years.png[Complex Beer Statistics Years]
 
 We can then go to the `Requests` page and see that the `Request` was submitted to invoke that command
 to populate the form.
 
-image::{includedir}/complex-beer-statistics-years-request.png[Complex Beer Statistics Years Request]
+image:complex-beer-statistics-years-request.png[Complex Beer Statistics Years Request]
 
 === Building Dynamic Dropdown List off Plugin Results
 
@@ -260,7 +260,7 @@ So now lets run this Plugin and see what happens
 Just like before, this kicked off a `Command` in the background to pull back the valid list of Fields
 that be entered into the `Request`.
 
-image::{includedir}/complex-beer-statistics-fields.png[Complex Beer Statistics Fields]
+image:complex-beer-statistics-fields.png[Complex Beer Statistics Fields]
 
 === Building Sum Total Function
 
@@ -383,12 +383,12 @@ So now lets run this Plugin and see what happens
 The form for the Request has two dynamic fields that are required to be populated with valid input
 for the command to execute. Try inputting something incorrect here and see what happens.
 
-image::{includedir}/complex-beer-statistics-final-request.png[Complex Beer Statistics Fields]
+image:complex-beer-statistics-final-request.png[Complex Beer Statistics Fields]
 
 After we execute the request we can see that it spawned a Child Request and return back just the
 Sum Total of the field. If you want to verify, go into the child Request and count up the values.
 
-image::{includedir}/complex-beer-statistics-final-response.png[Complex Beer Statistics Fields]
+image:complex-beer-statistics-final-response.png[Complex Beer Statistics Fields]
 
 === Conclusion
 
