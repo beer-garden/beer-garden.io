@@ -1,4 +1,5 @@
-:imagesdir: ../../images/
+:imagesdir: {site.base_url}/images/
+
 == UI Orientation
 
 Now that you have Beer Garden up and running it is time to explore the UI.
