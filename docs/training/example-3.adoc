@@ -1,6 +1,6 @@
 == Example 3: Web Scraping
 
-:imagesdir: ../training/images
+:imagesdir: ./images
 
 For this example we are going to explore Web Scraping. There are many different ways to accomplish
 this task in Python. For our examples we are going to use two additional libraries,
@@ -118,14 +118,14 @@ Since we changed the output type to HTML, there are two options to view the Outp
 
 Beer Garden UI render the HTML in the Output cell if it is valid HTML.
 
-image:webscraper-response-formatted.png[Web Scraper Formatted Results]
+image::webscraper-response-formatted.png[Web Scraper Formatted Results]
 
 === Raw
 
 If the user wants to see the raw format of the results, they just have to toggler for `Formatted`
 option to `Raw`
 
-image:webscraper-response-raw.png[Web Scraper Raw Results]
+image::webscraper-response-raw.png[Web Scraper Raw Results]
 
 === Conclusion
 
