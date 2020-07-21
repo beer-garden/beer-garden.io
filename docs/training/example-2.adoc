@@ -1,5 +1,16 @@
 == Example 2: Running Shell Commands
-:imagesdir: ./images
+:path: training/
+:imagesdir: images/
+
+ifdef::rootpath[]
+:imagesdir: {rootpath}{path}{imagesdir}
+endif::rootpath[]
+
+ifndef::rootpath[]
+:rootpath: ./../
+endif::rootpath[]
+
+//:imagesdir: images/
 
 For this example, we are going to explore kicking off Shell Commands from Beer Garden plugins. To accomplish
 this we have to select a Shell Command that best fits your environment. For this example we will use nslookup
