@@ -9,16 +9,16 @@ bring them up to speed on how to create and execute a Plugin on Beer Garden.
 
 == Overview of Beer Garden
 
-Beer Garden is targeted to help developers break that barrier between python
+Beer Garden is targeted to help developers break the barrier between python
 scripts and software. So much of software development is tangled in the weeds
 of standing up services, getting messages from one component to another,
 creating UIs, writing documentation, and concurrently supporting multiple
 versions. We wanted to change that. Beer Garden makes it as easy as running
 the main method.
 
-Development of the Beer Garden framework is written in Python for Python. This has been a
-multi-year effort to bring Beer Garden to that state it is today. It is constantly
-evolving as we learn new and innovative techniques. It also evolves with the each new
+Development of the Beer Garden framework is written in Python for Python. It has been a
+multi-year effort to bring Beer Garden to the state it is today. It is constantly
+evolving as we learn new and innovative techniques. It also evolves with each new
 contributor because everyone brings their own unique skills and passions.
 
 include::../what-is-beergarden.adoc[tags=how-can-it-help]
@@ -33,8 +33,8 @@ include::ui-orientation.adoc[]
 
 == Writing Plugins for Beer Garden
 
-This is a guided plugin development that are intended to be deployed against an active Beer Garden
-instance.
+After completing this section you will have created a Beer Garden plugin that can be
+deployed against an active Beer Garden instance.
 
 include::example-1.adoc[]
 

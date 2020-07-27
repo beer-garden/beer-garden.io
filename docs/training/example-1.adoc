@@ -1,11 +1,12 @@
 == Example 1: Hello Beer Garden
 :includedir: ../python/_includes
 
-This section will take you through setting up a simple Hello, World example.
+This section will walk you through creating a simple Hello, World example.
 
 === Write the code
 
-Plugins are basically just classes that you would like to expose over the network. So let's create a simple, and classic "Hello, World!" example. Use your favorite text editor and open up a file called `plugin.py` and write your basic Hello World example:
+Plugins are basically just classes that you would like to expose over the network. So let's create a simple, and classic "Hello, World!" example.
+Use your favorite text editor and open up a file called `plugin.py` and write your basic Hello World example:
 
 [source,python]
 .plugin.py
@@ -37,13 +38,80 @@ if __name__ == "__main__":
 	main()
 ----
 
-The next step is to integrate Beer Garden Annotations onto your class object.
+The next step is to integrate Beer Garden Annotations into your class object.
 
-include::{includedir}/hello-world-client.adoc[]
+[source,python]
+.plugin.py
+----
+from brewtils import command, system
+
+@system # <1>
+class HelloWorldClient(object):
+
+    @command <2>
+    def hello_world(self):
+        greeting = "Hello, World!"
+
+        print(greeting)
+
+        return greeting
+----
+<1> The `@system` decorator marks this class as a Beer Garden plugin.
+<2> The `@command` decorator marks this method as a Command that's part of the enclosing System.
+
 
 Once we have the client, we now need to create our entry point.
 
-include::{includedir}/hello-world-remote-entry-point.adoc[]
+[source,python]
+.plugin.py
+----
+from brewtils import command, system, Plugin
+
+
+@system
+class HelloWorldClient(object):
+
+    @command
+    def hello_world(self):
+        greeting = "Hello, World!"
+
+        print(greeting)
+
+        return greeting
+
+
+def main():
+    client = HelloWorldClient() # <1>
+
+    plugin = Plugin(
+        client, # <2>
+        name='hello-world', # <3>
+        version='1.0.0', # <4>
+        description='My First Plugin', # <5>
+        bg_host="<HOST>", # <6>
+        bg_port="<PORT>", # <7>
+        ssl_enabled=<SSL_ENABLED>, # <8>
+    )
+
+    plugin.run() * <8>
+
+
+if __name__ == "__main__":
+    main()
+----
+
+<1> Initializes the HelloWorldClient
+<2> Passes the HelloWorldClient as the target Client class for the Plugin Library
+<3> The name utilized when referencing the plugin for routing and display
+<4> The version utilized when reference the plugin for routing and display
+<5> The description displayed when viewing the plugin in the UI
+<6> The hostname or IP of the target Beer Garden instance
+<7> The port that Beer Garden is listening on (Default is 2337)
+<8> If SSL is enabled, if TRUE then additional fields are required.
+
+
+To review what's happening here: we added an import `Plugin` at the top of our file and created a standard main method. In that method we created a `HelloWorldClient` object and a `Plugin` object. Notice that when we create the `Plugin` we pass it the client and some additional parameters.
+
 
 That's all the code you need!
 
@@ -59,20 +127,20 @@ It will start up and print some logging showing the plugin registering with Beer
 
 At this point you should see your plugin on the `Available Systems` page in `Brew View`. Click the big blue `Explore hello_world commands` button to see a list of all commands available for the Plugin you made.
 
-Since we only defined one command as part of this tutorial the only command listed should be the `say_hello` command. Click the `Make it Happen!` button to go to the page for that command.
+As part of this tutorial the only command listed should be the `say_hello` command because we only defined one command. Click the `Make it Happen!` button to go to the page for that command.
 
-The command page is where you can specify options and customization for individual executions of that command. Since we didn't define any options (this command always prints 'Hello World!') the only customization available is the comment field. You can add free-form text here and it will be included as part of the request you're about to generate.
+The command page is where you can specify options and customization for individual executions of that command. Since we didn't define any options (this command always prints 'Hello World!') the only customization available is the comment field. You can add free-form text here and it will be included as part of the request you're generating.
 
-Are you ready? Click the `Make Request` button once you're ready.
+Are you ready? Click the `Make Request` button when you're ready.
 
 Making a request takes you to the Request page for the request you just generated. You can see the unique ID as part of the page title. You should see the status start as `IN PROGRESS` and then change to `SUCCESS` once the request completes. Also notice that the output changes when the request is finished.
 
-If you didn't catch those changes on the first try, don't worry. Use the `Pour it Again` button in the top-right corner to go back to the command screen you just left. From here you can use the `Make Request` button to make another request.
+If you didn't catch those changes on the first try, don't worry. Use the `Pour it Again` button in the top-right corner to go back to the command screen you just left. From there you can use the `Make Request` button to make another request.
 
 NOTE: This command doesn't have any parameters, but for commands that do the `Pour it Again` button will default them to exactly how they were for the original request.
 
 === Stop the code
-The best way to stop a plugin is to use the Systems Management page to send a stop message. In `Brew View` find the `Systems Management` option under the `Administration` menu. Then click the stop icon next to the `hello-world` listing.
+The best way to stop a plugin is to use the 'Systems Management' page to send a stop message. In `Brew View` find the `Systems Management` option under the `Administration` menu. Then click the stop icon next to the `hello-world` listing.
 
 You should see your plugin log that it has terminated and stop executing, and if you go to the main page in `Brew View` you should see the `hello-world` plugin is 'STOPPED'.
 
