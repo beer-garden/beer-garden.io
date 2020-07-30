@@ -15,7 +15,6 @@ asciidoctor:
         idprefix: ''
         idseparator: '-'
         sectanchors: ''
-#        imagesdir: ./images
         attribute-missing: 'warn'
         source-highlighter: 'coderay'
         relfileprefix: '../'

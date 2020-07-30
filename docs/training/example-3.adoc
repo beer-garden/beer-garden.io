@@ -18,7 +18,7 @@ pip install beautifulsoup4 requests
 
 We are going to utilize the Beer-Garden.io website as our source. So like before, let's build up a base
 class object that can interact with the Python.org website to pull some attributes. For our example, we
-will be pulling the Preamble section of the Beer Garden homepage.
+will be scraping the Preamble section of the Beer Garden homepage.
 
 [source,python]
 .web_scraping_plugin.py
@@ -105,30 +105,29 @@ if __name__ == "__main__":
 	main()
 ----
 
-<1> The `output_type` field can be set to HTML, JSON, or STRING. These will alter how the UI renders
+<1> The `output_type` field can be set to HTML, JSON, or STRING. This field alters how the UI renders
 the Output Cell
 
 Now that everything is ready, let's run this and invoke the command in the UI.
 
     python web_scraping_plugin.py
 
-Since we changed the output type to HTML, there are two options to view the Output Cell
+Since we changed the output type to HTML, the UI provides two options for viewing the Output Cell
 
 === Formatted
 
-Beer Garden UI render the HTML in the Output cell if it is valid HTML.
+Beer Garden UI renders the HTML from the Output cell if it is valid HTML.
 
 image::webscraper-response-formatted.png[Web Scraper Formatted Results]
 
 === Raw
 
-If the user wants to see the raw format of the results, they just have to toggler for `Formatted`
+If the user wants to see the raw format of the results, they just have to toggle the `Formatted`
 option to `Raw`
 
 image::webscraper-response-raw.png[Web Scraper Raw Results]
 
 === Conclusion
 
-This has been a basic example of how you can use Beer Garden to scrape web pages for data. You could
- expand this out to do daily dumps of data sets that are only published via static HTML pages or any
-other use case you might have for extracting HTML.
+This was a basic example of how you can use Beer Garden to scrape data from web pages. You might
+expand upon this example to perform daily dumps of data sets that are only published via static HTML pages.

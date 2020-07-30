@@ -4,7 +4,7 @@
 
 For this example, we are going to explore kicking off Shell Commands from Beer Garden plugins. To accomplish
 this we have to select a Shell Command that best fits your environment. For this example we will use nslookup
-because it available on most operating systems (Mac OS, Ubuntu, Windows, Centos).
+because it is available on most operating systems (Mac OS, Ubuntu, Windows, Centos).
 
 === Execute Locally
 
@@ -14,7 +14,7 @@ because it available on most operating systems (Mac OS, Ubuntu, Windows, Centos)
 nslookup python.org
 ----
 
-Go ahead and run this in the command line somewhere to ensure that it works properly in your environment.
+Go ahead and run this in the command line to ensure that it works properly in your environment.
 You should get something like the following
 
 [source, bash]
@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
 === Convert to Beer Garden Plugin
 
-Instead of creating a new class, let convert the function directly into a Beer Garden System Command.
+Instead of creating a new class, let convert the function directly into a Beer Garden system command.
 That way we can expose this function in the UI.
 
 [source,python]
@@ -100,29 +100,29 @@ if __name__ == "__main__":
 	main()
 ----
 
-<1> The `@parameter` decorator marks this command has input parameters
+<1> The `@parameter` decorator identifies that the command has input parameters
 <2> The `key` field marks the input variable to map to
 <3> the `type` field marks the valid input type
 <4> The `description` field marks what will be displayed on the UI under the parameter
 <5> The `default` field will pre-populate the UI as the default input parameter
 
-We will go over more complex Forms in Example 5 to review the various input types.
+We will go over more complex forms in Example 5 to review the various input types.
 
 Now let's run the code and check it out on the Beer Garden UI.
 
     python nslookup_plugin.py
 
-We can see that a field is now populated on the Request Page for the command and that `python.org` is
+We can see that a field is now populated on the `Request Page` for the command and that `python.org` is
 pre-populated in the form. When you click `Make Request` you should get a similar result to the following.
 
 image::nslookup-request.png[NSlookup Request]
 
-We can see in the `Output` field has the raw response from the command we executed.
+We can see the raw response from the command we executed in the `Output` field.
 
 image::nslookup-response.png[NSlookup Response]
 
 === Conclusion
 
-This has been a basic example of how you can use Beer Garden to run Shell Script commands. You could
-easily expand this out to running bash files or any other command you have access to in your terminal.
+This has been a basic example of how you can use Beer Garden to run Shell Script commands. You can
+expand on this exampled to run bash files or any other command you have access to in your terminal.
 

@@ -15,13 +15,13 @@ pip install xlrd
 
 There are many public data sets available for developers to interact with. One amazing resource is
 link:https://catalog.data.gov/dataset[Data.gov]. There is a wide range of data provided by Federal and
-State governments. For this example, we are going to use the
-link:https://www.ttb.gov/beer/statistics[Beer Statistics]. To accomplish this we must download the XLS
+State governments. For this example, we will use the
+link:https://www.ttb.gov/beer/statistics[Beer Statistics] data set. To accomplish this we must download the XLS
 file and then parse it to JSON.
 
 To ensure this guide has continuity, we will be looking at the Number of Brewers by Production Size. This
 data set currently has years 2008-2019 available. The Aggregate Data is an interesting dataset, but is
-subject to change format once the 2020 data set is released.
+subject to change once the 2020 data set is released.
 
 Before we can start, we first must understand how to reference each year. This is the basic breakdown
 of the download link
@@ -30,8 +30,8 @@ of the download link
 
 A couple things to know before parsing the data. The start line of the statistics does change
 but they keep that same naming convention. So we know that the statistics always starts two lines after
-`Production Size - CY <YEAR>` and ends one line before `Total`. So we can use that when parsing the Excel
-file to our benefit. So let's go ahead and build a basic parser for these statistics.
+`Production Size - CY <YEAR>` and ends one line before `Total`. So we can use that to our benefit when parsing the Excel
+file. Let's go ahead and build a basic parser for these statistics.
 
 [source,python]
 .beer_statistics_plugin.py
@@ -106,8 +106,8 @@ def main():
     print(stats)
 ----
 
-Now that the hard work is done, let's see how we can convert this into a Beer Garden Plugin. We want
-to only accept years within the current Year range (2008-2019). We also want to return this back as a JSON
+Now that the hard work is done, let's see how we can convert this into a Beer Garden Plugin. We only want
+to accept years within the current Year range (2008-2019). We also want to return this back as a JSON
 object.
 
 [source,python]
@@ -221,13 +221,13 @@ image::beer-statistics-request.png[Beer Statistics Request]
 
 === Request Response
 
-In the Output cell the data is parse in JSON format for easy viewing. Just like the HTML output, this can
-be converted into the RAW output.
+In the Output cell the data is parsed in JSON format for easy viewing. Just like the HTML output, this can
+be converted to RAW output.
 
 image::beer-statistics-response.png[Beer Statistics Request]
 
 === Conclusion
 
 This has been a basic example of how you can use Beer Garden to pull a data set and display it to your user.
-We would challenge you to try extracting the other data sets on Beer Production, or checkout a different dataset
-available through link:https://catalog.data.gov/dataset[Data.gov], or use your own data sets.
+We challenge you to try extracting the other data sets on Beer Production, or another dataset
+available through link:https://catalog.data.gov/dataset[Data.gov], or your own data sets.
