@@ -79,7 +79,9 @@ class NSLookupClient:
         default="python.org", #(5)
     )
     def request_nslookup(self, domain):
-        return self.execute_nslookup(domain)
+        process = subprocess.Popen(['nslookup', domain],
+                     stdout=subprocess.PIPE)
+        return process.stdout.readlines()
 
 def main():
 	client = NSLookupClient()
