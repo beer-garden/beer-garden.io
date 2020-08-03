@@ -1,5 +1,7 @@
 == Example 4: Connecting to External Data sets
 :imagesdir: ../../images/
+:uri-doc-repo: {git_group_uri}/beer-garden.io
+
 For this example we are going to explore connecting to external API's. There are many different ways to accomplish
 this task in Python. For our examples we are going to use two additional libraries,
 link:https://requests.readthedocs.io/en/master/[Requests] and
@@ -27,6 +29,10 @@ Before we can start, we first must understand how to reference each year. This i
 of the download link
 
     https://www.ttb.gov/images/pdfs/statistics/production_size/<YEAR>_brew_prod_size_ttb_gov.xlsx
+
+If this link does not work, we have a backup.
+
+    {sitename}/docs/training/datasets/<YEAR>_brew_prod_size_ttb_gov.xlsx
 
 A couple things to know before parsing the data. The start line of the statistics does change
 but they keep that same naming convention. So we know that the statistics always starts two lines after
