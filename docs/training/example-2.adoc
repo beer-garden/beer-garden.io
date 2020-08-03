@@ -71,12 +71,12 @@ import subprocess
 class NSLookupClient:
 
     @command
-    #(1)
+    # <1>
     @parameter(
-        key="domain", #(2)
-        type="String", #(3)
-        description="The domain to be looked up via NSLookup", #(4)
-        default="python.org", #(5)
+        key="domain", # <2>
+        type="String", # <3>
+        description="The domain to be looked up via NSLookup", # <4>
+        default="python.org", # <5>
     )
     def request_nslookup(self, domain):
         process = subprocess.Popen(['nslookup', domain],

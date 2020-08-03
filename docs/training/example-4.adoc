@@ -177,12 +177,12 @@ class BeerStatisticsClient:
 
         return raw_statistics
 
-    @command(output_type="JSON")  # (1)
+    @command(output_type="JSON")  # <1>
     @parameter(
         key="year",
-        type="Integer", # (2)
+        type="Integer", # <2>
         description="Select the year to pull Beer Production Statistics",
-        choices=list(range(2008, 2019)), # (3)
+        choices=list(range(2008, 2019)), # <3>
     )
     def download_year_statistics(self, year):
 

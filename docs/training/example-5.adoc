@@ -104,7 +104,7 @@ class ComplexBeerStatisticsClient:
         results = self.beer_statistics_client.download_year_statistics(2010)
         return results.output
 
-    # (1)
+    # <1>
     @command()
     def valid_year_range(self):
         return list(range(2008, 2019))
@@ -114,7 +114,7 @@ class ComplexBeerStatisticsClient:
         key="year",
         type="Integer",
         description="Enter the year to pull Beer Production Statistics",
-        choices={"type": "command", "value": "valid_year_range", "display": "select"},  # (2)
+        choices={"type": "command", "value": "valid_year_range", "display": "select"},  # <2>
     )
     def test_beer_statistics_client_with_year(self, year):
         results = self.beer_statistics_client.download_year_statistics(year=year)
@@ -198,7 +198,7 @@ class ComplexBeerStatisticsClient:
         results = self.beer_statistics_client.download_year_statistics(year=year)
         return results.output
 
-    # (1)
+    # <1>
     @command()
     def valid_summary_fields(self):
         # Grabbing a random Statistic
@@ -221,7 +221,7 @@ class ComplexBeerStatisticsClient:
         key="field",
         type="String",
         description="Enter the field to pull Beer Production Statistics on",
-        choices={"type": "command", "value": "valid_summary_fields", "display": "select"}, # (2)
+        choices={"type": "command", "value": "valid_summary_fields", "display": "select"}, # <2>
     )
     def test_beer_statistics_client_fields(self, field):
         return field
