@@ -1,8 +1,8 @@
 == Example 5: User Forms and Advanced Features
 :imagesdir: ../../images/
 
-We have covered the basics of how to create Beer Garden Plugins with a variety of Input and Output Types.
-This Example will merge these concepts together while creating more complex User Forms.
+We have covered the basics of how to create Beer Garden Plugins with a variety of input and output types.
+This example will merge these concepts together while creating more complex user forms.
 
 For this example you will need the Beer Statistics Plugin running from the last example.
 
@@ -19,7 +19,7 @@ We are going to work down this list in order for creating our new plugin.
 
 === Connect to Another Client
 
-In this snippet we are going to create a System Client connection with to allow access
+In this snippet we are going to create a `System Client` connection with to allow access
 to remote commands within the Beer Statistics Plugin.
 
 [source,python]
@@ -84,8 +84,8 @@ for `download_year_statistics` you can see the input/output for that command.
 
 === Building Dynamic Dropdown List
 
-In this snippet we want to use the `valid_year_range` command output at the input to the Choices list that will be
-used to render the Form. This is helpful when variables are Environment specific or Static Lists.
+In this snippet we want to use the `valid_year_range` command output at the input to the choices list that will be
+used to render the form. This is helpful when variables are environment specific or static lists.
 
 [source,python]
 .complex_beer_statistics_plugin.py
@@ -156,14 +156,14 @@ once the command is executed the options are populated and limit input to the ou
 
 image::complex-beer-statistics-years.png[Complex Beer Statistics Years]
 
-We can then go to the `Requests` page and see that the `Request` was submitted to invoke that command
+We can then go to the `Requests` page and see that the request was submitted to invoke that command
 to populate the form.
 
 image::complex-beer-statistics-years-request.png[Complex Beer Statistics Years Request]
 
 === Building Dynamic Dropdown List off Plugin Results
 
-In this update to the snippet we are going to use the `Choices` field to specify another Command for
+In this update to the snippet we are going to use the `Choices` field to specify another command for
 the choices list. This is helpful when variables are managed remotely.
 
 [source,python]
@@ -253,11 +253,11 @@ if __name__ == "__main__":
 of the fields we can run a Sum Total Summary on.
 <2> We will set the `Command` as the choices like we did in the previous example.
 
-Now lets run this Plugin and see what happens
+Now lets run this plugin and see what happens
 
     python complex_beer_statistics_plugin.py
 
-Just like before, this kicked off a `Command` in the background to pull back the valid list of Fields
+Just like before, this kicked off a `Command` in the background to pull back the valid list of fields
 to be entered into the `Request`.
 
 image::complex-beer-statistics-fields.png[Complex Beer Statistics Fields]
@@ -376,26 +376,26 @@ if __name__ == "__main__":
 
 ----
 
-Now lets run this Plugin and see what happens
+Now lets run this plugin and see what happens
 
     python complex_beer_statistics_plugin.py
 
-The form for the Request has two dynamic fields that are required to be populated with valid input
+The form for the request has two dynamic fields that are required to be populated with valid input
 for the command to execute. Try inputting something incorrect here and see what happens.
 
 image::complex-beer-statistics-final-request.png[Complex Beer Statistics Fields]
 
-After we execute the request we can see that it spawned a Child Request and only returned the
-Sum Total of the field. If you want to verify this, you can go into the child Request and count the values.
+After we execute the request we can see that it spawned a child request and only returned the
+Sum Total of the field. If you want to verify this, you can go into the child request and count the values.
 
 image::complex-beer-statistics-final-response.png[Complex Beer Statistics Fields]
 
 === Conclusion
 
-This has been a basic example of how you can use Beer Garden to dynamically generate Forms and invoke other Plugins
+This has been a basic example of how you can use Beer Garden to dynamically generate forms and invoke other plugins
 for results. Similar to our example, we recommend you start by creating your own plugins that accomplish  single
 objectives. Then add more complex logic and orchestration on top of those basic function plugins. This will make it
-easier to debug your code from the UI and manage incremental releases of your Plugins.
+easier to debug your code from the UI and manage incremental releases of your plugins.
 
 
 
