@@ -17,7 +17,7 @@ pip install beautifulsoup4 requests
 === Write Base Class
 
 We are going to utilize the Beer-Garden.io website as our source. So like before, let's build up a base
-class object that can interact with the Python.org website to pull some attributes. For our example, we
+class object that can interact with the Beer-Garden.io website to pull some attributes. For our example, we
 will be scraping the Preamble section of the Beer Garden homepage.
 
 [source,python]
