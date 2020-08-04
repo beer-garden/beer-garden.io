@@ -19,8 +19,8 @@ We are going to work down this list in order for creating our new plugin.
 
 === Connect to Another Client
 
-In this snippet we are going to create a System Client connection with the Plugin to allow access
-to remote commands.
+In this snippet we are going to create a System Client connection with to allow access
+to remote commands within the Beer Statistics Plugin.
 
 [source,python]
 .complex_beer_statistics_plugin.py
@@ -151,8 +151,8 @@ So now lets run this Plugin and see what happens
 
     python complex_beer_statistics_plugin.py
 
-When the Form is loaded it doesn't have the Choices list, so it is rendered as a standard input field,
-once the command is executed the options are populated and limit input to those values.
+When the Form is loaded it doesn't have the Choices list,
+once the command is executed the options are populated and limit input to the output of `valid_year_range`.
 
 image::complex-beer-statistics-years.png[Complex Beer Statistics Years]
 
@@ -251,14 +251,14 @@ if __name__ == "__main__":
 
 <1> We are going to call the `SystemClient` for Beer Statistics and pull back a single record, then find all
 of the fields we can run a Sum Total Summary on.
-<2> Here we set that `Command` as the choices just like the previous step
+<2> We will set the `Command` as the choices like we did in the previous example.
 
-So now lets run this Plugin and see what happens
+Now lets run this Plugin and see what happens
 
     python complex_beer_statistics_plugin.py
 
 Just like before, this kicked off a `Command` in the background to pull back the valid list of Fields
-that be entered into the `Request`.
+to be entered into the `Request`.
 
 image::complex-beer-statistics-fields.png[Complex Beer Statistics Fields]
 
@@ -376,7 +376,7 @@ if __name__ == "__main__":
 
 ----
 
-So now lets run this Plugin and see what happens
+Now lets run this Plugin and see what happens
 
     python complex_beer_statistics_plugin.py
 
@@ -385,16 +385,19 @@ for the command to execute. Try inputting something incorrect here and see what 
 
 image::complex-beer-statistics-final-request.png[Complex Beer Statistics Fields]
 
-After we execute the request we can see that it spawned a Child Request and return back just the
-Sum Total of the field. If you want to verify, go into the child Request and count up the values.
+After we execute the request we can see that it spawned a Child Request and only returned the
+Sum Total of the field. If you want to verify this, you can go into the child Request and count the values.
 
 image::complex-beer-statistics-final-response.png[Complex Beer Statistics Fields]
 
 === Conclusion
 
-This has been a basic example of how you can use Beer Garden to dynamically generate Forms and invoke
-other Plugins for results. We would challenge you to writing your plugins with a single objective in place.
-Then develop your complex logic and orchestration on top of those basic function plugins. that way it is
-easier to debug your code from the UI and manage incremental release of Plugins.
+This has been a basic example of how you can use Beer Garden to dynamically generate Forms and invoke other Plugins
+for results. Similar to our example, we recommend you start by creating your own plugins that accomplish  single
+objectives. Then add more complex logic and orchestration on top of those basic function plugins. This will make it
+easier to debug your code from the UI and manage incremental releases of your Plugins.
+
+
+
 
 
