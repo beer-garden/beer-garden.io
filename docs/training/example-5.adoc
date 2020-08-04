@@ -27,6 +27,7 @@ to remote commands within the Beer Statistics Plugin.
 ----
 
 from brewtils import parameter, command, system, SystemClient, Plugin
+import json
 
 @system
 class ComplexBeerStatisticsClient:
@@ -38,7 +39,7 @@ class ComplexBeerStatisticsClient:
     @command(output_type="JSON")
     def test_beer_statistics_client(self):
         # (2)
-        results = self.beer_statistics_client.download_year_statistics(2010)
+        results = self.beer_statistics_client.download_year_statistics(year=2010)
         # (3)
         return results.output
 
@@ -92,6 +93,7 @@ used to render the form. This is helpful when variables are environment specific
 ----
 
 from brewtils import parameter, command, system, SystemClient, Plugin
+import json
 
 @system
 class ComplexBeerStatisticsClient:
@@ -101,7 +103,7 @@ class ComplexBeerStatisticsClient:
 
     @command(output_type="JSON")
     def test_beer_statistics_client(self):
-        results = self.beer_statistics_client.download_year_statistics(2010)
+        results = self.beer_statistics_client.download_year_statistics(year=2010)
         return results.output
 
     # <1>
@@ -170,6 +172,7 @@ the choices list. This is helpful when variables are managed remotely.
 .complex_beer_statistics_plugin.py
 ----
 from brewtils import parameter, command, system, SystemClient, Plugin
+import json
 
 @system
 class ComplexBeerStatisticsClient:
