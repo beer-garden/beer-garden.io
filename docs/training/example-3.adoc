@@ -68,7 +68,7 @@ class WebScrapingClient:
         soup = BeautifulSoup(page.content, 'html.parser')
         return soup
 
-    @command(output_type="HTML") #(1)
+    @command(output_type="HTML") # <1>
     @parameter(
         key="url",
         type="String",
@@ -112,11 +112,11 @@ Now that everything is ready, let's run this and invoke the command in the UI.
 
     python web_scraping_plugin.py
 
-Since we changed the output type to HTML, the UI provides two options for viewing the Output Cell
+Since we changed the output type to HTML, the UI provides two options for viewing the output cell
 
 === Formatted
 
-Beer Garden UI renders the HTML from the Output cell if it is valid HTML.
+Beer Garden UI renders the HTML from the output cell if it is valid HTML.
 
 image::webscraper-response-formatted.png[Web Scraper Formatted Results]
 
