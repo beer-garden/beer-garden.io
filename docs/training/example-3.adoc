@@ -118,14 +118,14 @@ Since we changed the output type to HTML, the UI provides two options for viewin
 
 Beer Garden UI renders the HTML from the output cell if it is valid HTML.
 
-image::webscraper-response-formatted.png[Web Scraper Formatted Results]
+image:webscraper-response-formatted.png[Web Scraper Formatted Results, title=Web Scraper Formatted Results]
 
 === Raw
 
 If the user wants to see the raw format of the results, they just have to toggle the `Formatted`
 option to `Raw`
 
-image::webscraper-response-raw.png[Web Scraper Raw Results]
+image:webscraper-response-raw.png[Web Scraper Raw Results, title=Web Scraper Raw Results]
 
 === Conclusion
 

@@ -223,14 +223,14 @@ Now that everything is ready, let's run this and invoke the command in the UI.
 We can see in the request that we no longer have a free form text field, but a dropdown option with the
 year ranges 2008 to 2019.
 
-image::beer-statistics-request.png[Beer Statistics Request]
+image:beer-statistics-request.png[Beer Statistics Request, title=Beer Statistics Request]
 
 === Request Response
 
 In the Output cell the data is parsed in JSON format for easy viewing. Just like the HTML output, this can
 be converted to RAW output.
 
-image::beer-statistics-response.png[Beer Statistics Request]
+image:beer-statistics-response.png[Beer Statistics Response, title=Beer Statistics Response]
 
 === Conclusion
 
