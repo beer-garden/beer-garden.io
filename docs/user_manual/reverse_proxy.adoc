@@ -5,7 +5,7 @@ Beer Garden tries to make running its webserver component (Brew-view) as easy as
 
 [NOTE]
 ====
-The examples below are for https://www.nginx.com/[Nginx]. Other webservers are lovely, the Beer Garden team just has less experience with them.
+The examples below are for https://www.nginx.com/[Nginx, title=Nginx]. Other webservers are lovely, the Beer Garden team just has less experience with them.
 ====
 
 == URL Prefix

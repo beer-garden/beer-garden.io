@@ -47,7 +47,7 @@ class Calculator: <1>
 
 Now when the end user wants to add 1 and 2, they'll issue a Request to Beer Garden. The most common way to do that is to use the web UI that Beer Garden creates for this command. There will be input fields for "x" and "y", and a big "Make Request" button. Clicking that will take the user to a page where they'll be shown the result of their Request.
 
-NOTE: There are other ways to create a Request. Check out link:/docs/api-users-guide/#requests[Requests] to learn more.
+NOTE: There are other ways to create a Request. Check out link:/docs/api-users-guide/#requests[Requests, title=Requests] to learn more.
 
 // tag::how-can-it-help[]
 == How can it help?

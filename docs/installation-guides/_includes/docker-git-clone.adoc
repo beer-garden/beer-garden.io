@@ -4,7 +4,7 @@ The first step is to clone the git repository that contains the `docker-compose.
 
 [source,subs="attributes"]
 ----
-git clone {git_ssh_uri}
+git clone {git_ssh_uri}[title=git ssh clone]
 
 cd beer-garden/docker/docker-compose
 ----

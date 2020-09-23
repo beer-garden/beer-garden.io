@@ -126,7 +126,7 @@ sudo systemctl enable mongod
 
 == Installing Beer Garden
 
-CAUTION: We are working on getting a yum repository hosted through https://packagecloud.io/[Package cloud], so hopefully we can point you at a yum repo sometime soon! For now you'll have to download an RPM from our GitHub releases section.
+CAUTION: We are working on getting a yum repository hosted through https://packagecloud.io/[Package cloud, title=Package cloud], so hopefully we can point you at a yum repo sometime soon! For now you'll have to download an RPM from our GitHub releases section.
 
 You'll have to download our latest RPM. Then install with yum:
 
@@ -135,7 +135,7 @@ You'll have to download our latest RPM. Then install with yum:
 sudo yum install beer-garden
 ----
 
-All Beer Garden configuration files are located in `/opt/beer-garden/conf`. Feel free to adjust the configuration as necessary. For more information on configuration see link:../../configuration/[Configuring Beer Garden].
+All Beer Garden configuration files are located in `/opt/beer-garden/conf`. Feel free to adjust the configuration as necessary. For more information on configuration see link:../../configuration/[Configuring Beer Garden, title=Configuring Beer Garden].
 
 Next we just need to start the service and make sure it's running by default:
 

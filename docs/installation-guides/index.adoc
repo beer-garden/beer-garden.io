@@ -4,14 +4,14 @@
 
 There are several different ways to install Beer Garden, each with its own benefits and drawbacks. Which one we recommend depends on how you intend to use Beer Garden.
 
-## link:docker/[Docker / Docker Compose]
-If you're already familiar with Docker this is the easiest and fastest way to get up and running. If you're not familiar with Docker you should https://www.docker.com[check it out].
+## link:docker/[Docker / Docker Compose, title=Docker / Docker Compose]
+If you're already familiar with Docker this is the easiest and fastest way to get up and running. If you're not familiar with Docker you should https://www.docker.com[check it out, title=check it out].
 
-## link:python/[Python Packages]
+## link:python/[Python Packages, title=Python Packages]
 If you don't want to mess with Docker and you already have Python you can install Beer Garden as Python distributions. But be warned: you'll also need to set up RabbitMQ and Mongo yourself.
 
-## link:rhel/[Native Fedora / CentOS / RHEL]
+## link:rhel/[Native Fedora / CentOS / RHEL, title=Native Fedora / CentOS / RHEL]
 Install using an RPM. Again you'll have to setup RabbitMQ and Mongo yourself.
 
-## link:git/[Development Setup]
+## link:git/[Development Setup, title=Development Setup]
 This is for developers that want to hack on Beer Garden. Clone the repositories, install dependencies, try things out etc.

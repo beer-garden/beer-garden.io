@@ -1,6 +1,6 @@
-In order to build a plugin you'll need a functioning Python environment. Setting that up is outside the scope of this tutorial; we recommend https://github.com/pyenv/pyenv[pyenv]. You'll also need access to a functioning Beer Garden. Check out the link:{uri-install-guides}[installation instructions] for ways to stand up your own Beer Garden.
+In order to build a plugin you'll need a functioning Python environment. Setting that up is outside the scope of this tutorial; we recommend https://github.com/pyenv/pyenv[pyenv]. You'll also need access to a functioning Beer Garden. Check out the link:{uri-install-guides}[installation instructions, title=installation instructions] for ways to stand up your own Beer Garden.
 
-The simplest way to get started is to use the utility package we've created to make plugin building as easy as possible. The package is called `brewtils` and lives on PyPI. You can find link:{brewtils_docs_uri}[Brewtils API Documentation here]. Add it to your environment like this:
+The simplest way to get started is to use the utility package we've created to make plugin building as easy as possible. The package is called `brewtils` and lives on PyPI. You can find link:{brewtils_docs_uri}[Brewtils API Documentation here, title=Brewtils API Documentation here]. Add it to your environment like this:
 
 [source,bash,subs="attributes"]
 ----

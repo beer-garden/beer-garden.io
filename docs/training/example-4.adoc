@@ -4,8 +4,8 @@
 
 For this example we are going to explore connecting to external API's. There are many different ways to accomplish
 this task in Python. For our examples we are going to use two additional libraries,
-link:https://requests.readthedocs.io/en/master/[Requests] and
-link:https://xlrd.readthedocs.io/en/latest/[xlrd]
+link:https://requests.readthedocs.io/en/master/[Requests, title=Requests] and
+link:https://xlrd.readthedocs.io/en/latest/[xlrd, title=xlrd]
 
 Before we start, please ensure these libraries are installed:
 
@@ -16,9 +16,9 @@ pip install xlrd
 ----
 
 There are many public data sets available for developers to interact with. One amazing resource is
-link:https://catalog.data.gov/dataset[Data.gov]. There is a wide range of data provided by Federal and
+link:https://catalog.data.gov/dataset[Data.gov, title=Data.gov]. There is a wide range of data provided by Federal and
 State governments. For this example, we will use the
-link:https://www.ttb.gov/beer/statistics[Beer Statistics] data set. To accomplish this we must download the XLS
+link:https://www.ttb.gov/beer/statistics[Beer Statistics, title=Beer Statistics] data set. To accomplish this we must download the XLS
 file and then parse it to JSON.
 
 To ensure this guide has continuity, we will be looking at the Number of Brewers by Production Size. This
@@ -236,4 +236,4 @@ image::beer-statistics-response.png[Beer Statistics Request]
 
 This has been a basic example of how you can use Beer Garden to pull a data set and display it to your user.
 We challenge you to try extracting the other data sets on Beer Production, or another dataset
-available through link:https://catalog.data.gov/dataset[Data.gov], or your own data sets.
+available through link:https://catalog.data.gov/dataset[Data.gov, title=Data.gov], or your own data sets.
