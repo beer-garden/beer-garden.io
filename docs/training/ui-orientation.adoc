@@ -8,7 +8,7 @@ Now that you have Beer Garden up and running it is time to explore the UI.
 
 Non-admin users are provided a basic list of areas where they can navigate to.
 
-image:navigation-user.png[Navigation User, title=Navigation User]
+image::navigation-user.png[Navigation User]
 
 . `Systems` - Toggles the drop down to view all systems deployed
 . `complex` - Links to that specific system
@@ -20,7 +20,7 @@ image:navigation-user.png[Navigation User, title=Navigation User]
 
 Admin users have additional areas where they can navigate to.
 
-image:navigation-admin.png[Naviagation Admin, title=Naviagation Admin]
+image::navigation-admin.png[Naviagation Admin]
 
 . `System Management` - Administrative page to start/stop/rescan/delete connected systems
 . `Queue Management` - Administrative page to manage the queues that systems are listening to
@@ -32,7 +32,7 @@ image:navigation-admin.png[Naviagation Admin, title=Naviagation Admin]
 As a developer you have the ability to provide information that will be present to
 the user.
 
-image:complex_system.png[Complex System, title=Complex System]
+image::complex_system.png[Complex System]
 
 . Label of the system (Developer Provided)
 . Version of system (Developer Provided)
@@ -47,7 +47,7 @@ The base page is the same for both system specific commands and the global comma
 (commands on navigation panel). This page will display all of the available commands that
 can be requested.
 
-image:complex_commands.png[Complex Commands Page, title=Complex Commands Page]
+image::complex_commands.png[Complex Commands Page]
 
 . Label of the command (If not provided by developer it is the function name)
 . Description of command (Developer Provided)
@@ -59,7 +59,7 @@ image:complex_commands.png[Complex Commands Page, title=Complex Commands Page]
 When you want to invoke a command it is done through that commands request page. Once submitted,
 it will be executed by Beer Garden
 
-image:complex_command_request.png[Complex Command Request, title=Complex Commands Request]
+image::complex_command_request.png[Complex Command Request]
 
 . The form displayed is generated from the annotations a developer added to the command function
 . Comments added have no impact to the execution of the command. The comment will persist with
@@ -76,7 +76,7 @@ manually change the values here.
 After a Request has been submitted to Beer Garden the user is redirected to the Viewer page for
 that request. Here the user can get operational updates on the request.
 
-image:request-view.png[Request View Example, title=Request View Example]
+image::request-view.png[Request View Example]
 
 . The unique identifier associated with the request. This can also be seen in the URL
 . The original request that was submitted
@@ -94,7 +94,7 @@ The scheduler tool is a multi-page selection process. The user selects the syste
 should be scheduled for a future or re-occurring job. After the user creates the template request to
 be submitted the user must add the job trigger information.
 
-image:scheduler-job.png[Scheduler Job Example, title=Scheduler Job Example]
+image::scheduler-job.png[Scheduler Job Example]
 
 . Job name that will be displayed
 . Type of trigger that will be utilized. When selected, that tab must be populated.

@@ -14,7 +14,7 @@ include::{includedir}/docker-git-clone.adoc[]
 
 In this directory you will see a `docker-compose.yml` file that describes the different components of Beer Garden and how they fit together. Before we can run Beer Garden we need to make one change to the configuration.
 
-TIP: You can checkout all the options for configuration in the link:../../configuration/[Configuration section, title=Configuration section]
+TIP: You can checkout all the options for configuration in the link:../../configuration/[Configuration section]
 
 include::{includedir}/docker-config-change.adoc[]
 

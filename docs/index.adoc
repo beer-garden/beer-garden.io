@@ -5,53 +5,53 @@ Logan Jones <https://github.com/loganasherjones> @loganasherjones
 
 Follow the links on this page to learn about Beer Garden or plugin development. You'll also find tips on how to be troubleshoot Beer Garden and how to write effective, composable plugins with Beer Garden syntax.
 
-TIP: Can't find the information you need? Reach out to project members and users via {chat_uri}[Gitter, title=Chat Room]
+TIP: Can't find the information you need? Reach out to project members and users via {chat_uri}[Gitter]
 
 == The Basics
 
 Discover Beer Garden and how it can help you.
 
-link:what-is-beergarden/[What is Beer Garden?, title=What is Beer Garden?]::
+link:what-is-beergarden/[What is Beer Garden?]::
   A high-level overview of what Beer Garden is exactly and when you should use it
 
-link:user-manual[Beer Garden User Manual, title=Beer Garden User Manual]::
+link:user-manual[Beer Garden User Manual]::
   The A to Z guide of Beer Garden
 
-link:api-users-guide/[API User's Guide, title=API User's Guide]::
+link:api-users-guide/[API User's Guide]::
     If you aren't writing plugins, but rather using them, this guide is for you
 
 == Get Started with Beer Garden
 
-link:installation-guides/[Installation Guides, title=Installation Guides]::
+link:installation-guides/[Installation Guides]::
   Ready to Install Beer Garden? Pick your favorite guide and get started!
 
-link:quickstart/[Quickstart, title=Quickstart]::
+link:quickstart/[Quickstart]::
   A short 5-minute tutorial for getting Beer Garden and a plugin up and running
 
 == Write Plugins with Beer Garden
 
-link:plugin-syntax-quick-reference/[Plugin Syntax Quick Reference Guide, title=Plugin Syntax Quick Reference Guide]::
+link:plugin-syntax-quick-reference/[Plugin Syntax Quick Reference Guide]::
   An overview of the plugin syntax you'll likely need to write a useful plugins
 
-link:plugin-developer-guide/[Plugin Developer's Guide, title=Plugin Developer's Guide]::
+link:plugin-developer-guide/[Plugin Developer's Guide]::
   A comprehensive tutorial with examples that show you how to write plugins
 
 == Beer Garden Architecture
 
-link:architecture/[Beer Garden Architecture, title=Beer Garden Architecture]::
+link:architecture/[Beer Garden Architecture]::
   Learn how Beer Garden internals works
 
 == Contributing to Beer Garden
 
-link:contributing/#submitting-an-issue[How do I report a bug?, title=How do I report a bug?]::
+link:contributing/#submitting-an-issue[How do I report a bug?]::
   Did you find a bug somewhere in Beer Garden? Checkout how to tell us.
 
-link:contributing/#submitting-an-issue[How do I request a feature?, title=How do I request a feature?]::
+link:contributing/#submitting-an-issue[How do I request a feature?]::
   Do you have the next cool idea for Beer Garden to implement? Tell us about it!
 
-link:contributing/#submitting-a-pull-request[How do I submit code to the project?, title=How do I submit code to the project?]::
+link:contributing/#submitting-a-pull-request[How do I submit code to the project?]::
   If you have code you'd like to contribute, create a pull request!
 
 == Reference and Developer Resources
 
-* {brewtils_docs_uri}[Brewtils (Python) API Documentation, title=Brewtils (Python) API Documentation]
+* {brewtils_docs_uri}[Brewtils (Python) API Documentation]

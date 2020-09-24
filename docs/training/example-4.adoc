@@ -4,8 +4,8 @@
 
 For this example we are going to explore connecting to external API's. There are many different ways to accomplish
 this task in Python. For our examples we are going to use two additional libraries,
-link:https://requests.readthedocs.io/en/master/[Requests, title=Requests] and
-link:https://xlrd.readthedocs.io/en/latest/[xlrd, title=xlrd]
+link:https://requests.readthedocs.io/en/master/[Requests] and
+link:https://xlrd.readthedocs.io/en/latest/[xlrd]
 
 Before we start, please ensure these libraries are installed:
 
@@ -16,9 +16,9 @@ pip install xlrd
 ----
 
 There are many public data sets available for developers to interact with. One amazing resource is
-link:https://catalog.data.gov/dataset[Data.gov, title=Data.gov]. There is a wide range of data provided by Federal and
+link:https://catalog.data.gov/dataset[Data.gov]. There is a wide range of data provided by Federal and
 State governments. For this example, we will use the
-link:https://www.ttb.gov/beer/statistics[Beer Statistics, title=Beer Statistics] data set. To accomplish this we must download the XLS
+link:https://www.ttb.gov/beer/statistics[Beer Statistics] data set. To accomplish this we must download the XLS
 file and then parse it to JSON.
 
 To ensure this guide has continuity, we will be looking at the Number of Brewers by Production Size. This
@@ -223,17 +223,17 @@ Now that everything is ready, let's run this and invoke the command in the UI.
 We can see in the request that we no longer have a free form text field, but a dropdown option with the
 year ranges 2008 to 2019.
 
-image:beer-statistics-request.png[Beer Statistics Request, title=Beer Statistics Request]
+image::beer-statistics-request.png[Beer Statistics Request]
 
 === Request Response
 
 In the Output cell the data is parsed in JSON format for easy viewing. Just like the HTML output, this can
 be converted to RAW output.
 
-image:beer-statistics-response.png[Beer Statistics Response, title=Beer Statistics Response]
+image::beer-statistics-response.png[Beer Statistics Request]
 
 === Conclusion
 
 This has been a basic example of how you can use Beer Garden to pull a data set and display it to your user.
 We challenge you to try extracting the other data sets on Beer Production, or another dataset
-available through link:https://catalog.data.gov/dataset[Data.gov, title=Data.gov], or your own data sets.
+available through link:https://catalog.data.gov/dataset[Data.gov], or your own data sets.

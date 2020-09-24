@@ -146,7 +146,7 @@ The `setup.py` file should be very standard. Customize this as you would customi
 
 === my_plugin/*
 
-Everything in the `my_plugin/` directory is specific module level code you would like to include in your distribution. You can organize your library however makes sense to you. The code underneath here has little if anything to do with Beer Garden.  The only thing that you'll see that Beer Garden requires is some type of client that has been decorated with utilities from {brewtils_docs_uri}[brewtils., title=Brewtils]
+Everything in the `my_plugin/` directory is specific module level code you would like to include in your distribution. You can organize your library however makes sense to you. The code underneath here has little if anything to do with Beer Garden.  The only thing that you'll see that Beer Garden requires is some type of client that has been decorated with utilities from {brewtils_docs_uri}[brewtils.]
 
 That's all there is to plugin layouts!
 
