@@ -1,13 +1,13 @@
 = beer-garden.io
 
 The documentation for
-https://github.com/beer-garden/beer-garden/[beer-garden]
+https://github.com/beer-garden/beer-garden/[beer-garden, title=beer-garden]
 project. Composed in AsciiDoc, styled by Bootstrap, baked with Awestruct and
 published by Github Pages.
 
 
-For instructions on how to install Awestruct and its dependencies, refer to
-the section xref:install-awestruct[Install Awestruct] below.
+For instructions on how to install Awestruct and dependencies, refer to
+the section xref:install-awestruct[Install Awestruct, title=Install Awestruct] below.
 
 == Preview the site locally
 
@@ -74,7 +74,7 @@ Just run
 
 == Install Awestruct
 
-First, install https://rvm.io/rvm/install[RVM].
+First, install https://rvm.io/rvm/install[RVM, title=RVM].
 
 Next, simply `cd` into this directory.
 

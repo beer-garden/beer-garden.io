@@ -111,7 +111,7 @@ def get_choices(self):
     ]
 ----
 
-NOTE: Currently you must use a command from the same system (this restriction will be removed in a future release - see {issues_uri}/269[issue 269]).
+NOTE: Currently you must use a command from the same system (this restriction will be removed in a future release - see {issues_uri}/269[issue 269, title=issue 269]).
 
 
 ==== Choice parameters

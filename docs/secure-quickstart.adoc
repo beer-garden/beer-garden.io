@@ -24,7 +24,7 @@ docker-compose down
 
 == Place your certs
 
-In order to operate securely you MUST be using TLS, which means you'll need a certificate. How to obtain a certificate is outside the scope of this tutorial, but a good place to start is https://letsencrypt.org[Let's Encrypt].
+In order to operate securely you MUST be using TLS, which means you'll need a certificate. How to obtain a certificate is outside the scope of this tutorial, but a good place to start is https://letsencrypt.org[Let's Encrypt, title=Let's Encrypt].
 
 In the `beer-garden/docker/docker-compose/data` directory there's a `certs` directory with several files. These need to be overwritten with your specific files:
 
