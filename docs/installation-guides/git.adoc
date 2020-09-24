@@ -28,8 +28,8 @@ There are two main repositories you'll need: `beer-garden` and `bindings`. Both 
 
 [source,subs="attributes"]
 ----
-git clone --recurse-submodules {git_group_uri}/beer-garden.git[title=Beer-Garden git clone]
-git clone {git_group_uri}/brewtils.git[title=Brewtils git clone]
+git clone --recurse-submodules {git_group_uri}/beer-garden.git
+git clone {git_group_uri}/brewtils.git
 ----
 
 === Install Dependencies
