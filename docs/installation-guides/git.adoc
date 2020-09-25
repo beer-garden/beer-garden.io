@@ -12,7 +12,7 @@ You will absolutely need these things:
 * Python 2.7.9+ or 3.4+. You'll need a full environment (with pip).
 * Connectivity to MongoDB 3.2+
 * Connectivity to RabbitMQ
-* Git, correctly configured to talk to https://github.com[GitHub, title=GitHub]
+* Git, correctly configured to talk to https://github.com[GitHub]
 
 {empty} +
 These things are nice to have:
@@ -24,7 +24,7 @@ Installing these is outside the scope of this documentation, so please refer to 
 
 == Install and Setup
 === Clone the Repos
-There are two main repositories you'll need: `beer-garden` and `bindings`. Both are part of the {git_group_uri}[beer-garden GitHub group, title=beer-garden GitHub group]. Clone them:
+There are two main repositories you'll need: `beer-garden` and `bindings`. Both are part of the {git_group_uri}[beer-garden GitHub group]. Clone them:
 
 [source,subs="attributes"]
 ----

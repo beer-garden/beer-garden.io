@@ -23,7 +23,7 @@ Local plugins refer to plugins that are managed by Beer Garden itself. Local plu
 
 What you get as a result of being on the same server, is that Beer Garden can easily manage maintenance of your plugin. If the process dies, Beer Garden will restart it. Beer Garden has "tight" control over your plugin, in that it knows more-or-less what it's doing.
 
-If you are running your own Beer Garden, then the local plugin will probably just work for you. If so, you can start looking at the link:../python/local-guide/[writing local plugins, title=writing local plugins] section.
+If you are running your own Beer Garden, then the local plugin will probably just work for you. If so, you can start looking at the link:../python/local-guide/[writing local plugins] section.
 
 == Remote Plugins
 Here is a quick breakdown:
@@ -43,4 +43,4 @@ Remote plugins refer to plugins that are not managed by Beer Garden itself. Remo
 
 This does mean that the plugin developer is responsible for keeping the plugin process up and running. If the process dies for whatever reason, Beer Garden will not know how to restart it.
 
-If your Beer Garden is being run by someone else, or if you don't want to worry about getting access to the Beer Garden server, or if you want to write your plugin in something other than the python running Beer Garden, then a remote plugin is for you. In which case, you should start looking at the link:../python/remote-guide[writing remote plugins, title=writing remote plugins] section.
+If your Beer Garden is being run by someone else, or if you don't want to worry about getting access to the Beer Garden server, or if you want to write your plugin in something other than the python running Beer Garden, then a remote plugin is for you. In which case, you should start looking at the link:../python/remote-guide[writing remote plugins] section.

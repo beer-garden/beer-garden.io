@@ -1,5 +1,5 @@
 = Beer Garden
-Logan Jones <https://github.com/loganasherjones[@loganasherjones, title=@loganasherjones]>;
+Logan Jones <https://github.com/loganasherjones[@loganasherjones]>;
 :idprefix:
 :page-layout: about
 // URIs:
@@ -18,45 +18,45 @@ That's the main idea behind Beer Garden. So much of software development is tang
 
 Beer Garden makes it easy to turn your functions into REST interfaces that are ready for production use, in a way that's accessible to anyone that can write a function. It creates all the boilerplate and infrastructure needed to turn that function into a type-safe, discoverable REST interface and an easy-to-use webform-based UI.
 
-If that sounds interesting go ahead and check out the link:docs/quickstart[Quickstart section, title=Quickstart section]!
+If that sounds interesting go ahead and check out the link:docs/quickstart[Quickstart section]!
 
 
 == Look at me!
-video::demo.webm[alt="Preview Plugin to HTML Form Screenshot",width=100%, options="autoplay, loop"]
+image:demo.gif["Preview Plugin to HTML Form Screenshot"]
 
 
 == Further Reading
 
-* If you're still not quite sure what Beer Garden is or what it can do for you there's more information in link:docs/what-is-beergarden[What is Beer Garden?, title=What is Beer Garden?]
+* If you're still not quite sure what Beer Garden is or what it can do for you there's more information in link:docs/what-is-beergarden[What is Beer Garden?]
 
-* If you're trying to get up and running as quickly as possible then the link:docs/quickstart[Quickstart section, title=Quickstart section] is for you
+* If you're trying to get up and running as quickly as possible then the link:docs/quickstart[Quickstart section] is for you
 
-* If you're interested in administering a Beer Garden the link:docs/installation-guides/[Installation Guides, title=Installation Guides] will be helpful in getting started, and the link:docs/configuration[Configuration Guide, title=Configuration Guide] will help with configuration
+* If you're interested in administering a Beer Garden the link:docs/installation-guides/[Installation Guides] will be helpful in getting started, and the link:docs/configuration[Configuration Guide] will help with configuration
 
-* If you're looking for guidance on writing plugins check out the link:docs/plugin-developer-guide[Plugin Developer Guide, title=Plugin Developer Guide] for a detailed rundown
+* If you're looking for guidance on writing plugins check out the link:docs/plugin-developer-guide[Plugin Developer Guide] for a detailed rundown
 
-* If you'd like to better understand how to interact with Beer Garden (and learn the magic behind the Python bindings) take a look at the link:docs/api-users-guide[API Guide, title=API Guide]
+* If you'd like to better understand how to interact with Beer Garden (and learn the magic behind the Python bindings) take a look at the link:docs/api-users-guide[API Guide]
 
-* If you want to understand how the different components of Beer Garden work and interact then the link:docs/architecture[Architecture Guide, title=Architecture Guide] is the place to look
+* If you want to understand how the different components of Beer Garden work and interact then the link:docs/architecture[Architecture Guide] is the place to look
 
-* To learn about additional cool things Beer Garden can do explore the link:docs/user_manual[User Manual, title=User Manual]
+* To learn about additional cool things Beer Garden can do explore the link:docs/user_manual[User Manual]
 
-* For documentation on the Python bindings head over to {brewtils_docs_uri}[Read the Docs, title=Read the Docs]
+* For documentation on the Python bindings head over to {brewtils_docs_uri}[Read the Docs]
 
 
 == Getting Help
 
 We want Beer Garden to make your life easier. If there's anything that's unclear or difficult (or broken!) we want to know about it! Here are the best ways to get in touch with us:
 
-* Talk to us in {chat_uri}[Gitter, title=Chat Room]
-* Submit an issue to the {issues_uri}[Issue Tracker, title=Issue Tracker]
+* Talk to us in {chat_uri}[Gitter]
+* Submit an issue to the {issues_uri}[Issue Tracker]
 
 
 == Contributing
 
 Beer Garden is open-source, and in the spirit of open-source software _everyone_ is encouraged to help improve this project. If you discover errors or omissions in the source code, documentation, or website content please don't hesitate to submit an issue or open a merge request. New contributors are always welcome!
 
-Check out the link:docs/contributing/[Contributing, title=Contributing] guide to get started.
+Check out the link:docs/contributing/[Contributing] guide to get started.
 
 Here are some ways __you__ can contribute:
 
@@ -75,11 +75,11 @@ Here are some ways __you__ can contribute:
 
 == Credits
 
-A huge shout-out to https://asciidoctor.org[the Asciidoctor Project, title=the Asciidoctor Project]. This website is built with AsciiDoctor and was heavily influenced by the Asciidoctor website. It really is the best way to write documentation and we highly recommend you check it out!
+A huge shout-out to https://asciidoctor.org[the Asciidoctor Project]. This website is built with AsciiDoctor and was heavily influenced by the Asciidoctor website. It really is the best way to write documentation and we highly recommend you check it out!
 
-This website is hosted by https://pages.github.com/[GitHub Pages, title=GitHub Pages]. It makes deployment easy and cheap. You can use it for blogs or documentation like this. Definitely take a look!
+This website is hosted by https://pages.github.com/[GitHub Pages]. It makes deployment easy and cheap. You can use it for blogs or documentation like this. Definitely take a look!
 
 
 == Copyright and Licensing
 
-Free use of this software is granted under the terms of the MIT License. See the {uri-license}[LICENSE, title=LICENSE] file for details.
+Free use of this software is granted under the terms of the MIT License. See the {uri-license}[LICENSE] file for details.

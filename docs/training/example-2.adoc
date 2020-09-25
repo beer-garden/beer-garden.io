@@ -117,11 +117,11 @@ Now let's run the code and check it out on the Beer Garden UI.
 We can see that a field is now populated on the `Request Page` for the command and that `python.org` is
 pre-populated in the form. When you click `Make Request` you should get a similar result to the following.
 
-image:nslookup-request.png[NSlookup Request, title=NSlookup Request]
+image::nslookup-request.png[NSlookup Request]
 
 We can see the raw response from the command we executed in the `Output` field.
 
-image:nslookup-response.png[NSlookup Response, title=NSlookup Response]
+image::nslookup-response.png[NSlookup Response]
 
 === Conclusion
 

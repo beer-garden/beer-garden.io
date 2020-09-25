@@ -78,7 +78,7 @@ Let's run this Plugin and see what happens
 
     python complex_beer_statistics_plugin.py
 
-image:complex-beer-statistics-test.png[Complex Beer Statistics Results, title=Complex Beer Statistics Results]
+image::complex-beer-statistics-test.png[Complex Beer Statistics Results]
 
 We can see that a child request is spawned when invoking this command. If you click on the hyperlink
 for `download_year_statistics` you can see the input/output for that command.
@@ -156,12 +156,12 @@ So now lets run this Plugin and see what happens
 When the Form is loaded it doesn't have the Choices list,
 once the command is executed the options are populated and limit input to the output of `valid_year_range`.
 
-image:complex-beer-statistics-years.png[Complex Beer Statistics Years, title=Complex Beer Statistics Years]
+image::complex-beer-statistics-years.png[Complex Beer Statistics Years]
 
 We can then go to the `Requests` page and see that the request was submitted to invoke that command
 to populate the form.
 
-image:complex-beer-statistics-years-request.png[Complex Beer Statistics Years Request, title=Complex Beer Statistics Years Request]
+image::complex-beer-statistics-years-request.png[Complex Beer Statistics Years Request]
 
 === Building Dynamic Dropdown List off Plugin Results
 
@@ -263,7 +263,7 @@ Now lets run this plugin and see what happens
 Just like before, this kicked off a `Command` in the background to pull back the valid list of fields
 to be entered into the `Request`.
 
-image:complex-beer-statistics-fields.png[Complex Beer Statistics Fields, title=Complex Beer Statistics Fields]
+image::complex-beer-statistics-fields.png[Complex Beer Statistics Fields]
 
 === Building Sum Total Function
 
@@ -386,12 +386,12 @@ Now lets run this plugin and see what happens
 The form for the request has two dynamic fields that are required to be populated with valid input
 for the command to execute. Try inputting something incorrect here and see what happens.
 
-image:complex-beer-statistics-final-request.png[Complex Beer Statistics Final Request, title=Complex Beer Statistics Final Request]
+image::complex-beer-statistics-final-request.png[Complex Beer Statistics Fields]
 
 After we execute the request we can see that it spawned a child request and only returned the
 Sum Total of the field. If you want to verify this, you can go into the child request and count the values.
 
-image:complex-beer-statistics-final-response.png[Complex Beer Statistics Final Response, title=Complex Beer Statistics Final Response]
+image::complex-beer-statistics-final-response.png[Complex Beer Statistics Fields]
 
 === Conclusion
 

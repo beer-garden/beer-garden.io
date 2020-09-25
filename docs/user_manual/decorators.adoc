@@ -23,7 +23,7 @@ If you're familiar with Python decorators you probably know that decorators are 
 
 All that to say: Python decorators are very powerful and flexible. When using them it's important to remember that and take steps to ensure that all important metadata is preserved.
 
-Beer Garden decorators use the https://wrapt.readthedocs.io/en/latest/[wrapt, title=wrapt] library to ensure that decorated functions remain accurate. Wrapt is an object proxy library with a focus on ensuring correctness above and beyond what standard decorators provide. This is important because Beer Garden depends heavily on function attributes being correct.
+Beer Garden decorators use the https://wrapt.readthedocs.io/en/latest/[wrapt] library to ensure that decorated functions remain accurate. Wrapt is an object proxy library with a focus on ensuring correctness above and beyond what standard decorators provide. This is important because Beer Garden depends heavily on function attributes being correct.
 
 
 == Classmethod
@@ -45,7 +45,7 @@ class TimeClient(object):
 
 == Staticmethod
 
-Right now `@staticmethod` decorators don't work at all. We're https://github.com/beer-garden/beer-garden/issues/281[working on it, title=working on it]!
+Right now `@staticmethod` decorators don't work at all. We're https://github.com/beer-garden/beer-garden/issues/281[working on it]!
 
 
 == Custom Decorators
