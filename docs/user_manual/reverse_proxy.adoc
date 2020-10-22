@@ -1,0 +1,50 @@
+= Reverse Proxy
+:page-layout: docs
+
+Beer Garden tries to make running its webserver component (Brew-view) as easy as possible. However, sometimes it makes a lot of sense to run behind a reverse proxy. A full discussion of the costs and benefits of this approach are beyond the scope of this user manual, but here are some things to keep in mind if you want to run behind a proxy.
+
+[NOTE]
+====
+The examples below are for https://www.nginx.com/[Nginx]. Other webservers are lovely, the Beer Garden team just has less experience with them.
+====
+
+== URL Prefix
+First, you'll want to be aware of the `web.url_prefix` configuration option in both Bartender and Brew-view configs. This value tells Brew-view how to listen for incoming requests and tells Bartender what path to use when talking to Brew-view. If they don't match, you'll probably have a bad time. Note that this can be set even if you're not using a reverse proxy, it's just generally less useful if you aren't. For example, setting
+
+[source,yaml]
+.brew-view-config.yaml
+----
+web:
+  url_prefix: beer
+----
+
+will tell Brew-view to adjust the URL mappings to include a leading "/beer/". Whatever value is given is normalized to have a single leading and trailing slash, which is what Beer Garden expects. So where you would normally access the systems API with:
+
+[source,bash]
+----
+curl http://localhost:2337/api/v1/systems
+----
+
+With the `web.url_prefix` set to `beer` you would request:
+
+[source,bash]
+----
+curl http://localhost:2337/beer/api/v1/systems/
+----
+
+
+== Websockets
+Beer Garden publishes events to a websocket (/api/v1/socket/events/). The UI uses this to display changes that occur but a reverse proxy will generally not work correctly without passing the correct headers. Add the headers to the location block like this:
+
+[source]
+----
+location /beer/ {
+    proxy_pass http://localhost:2337;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "Upgrade";
+}
+
+This assumes Nginx is running on some port besides 2337 and that your Beer Garden is running on the same server on port 2337. Note that both Bartener and Brew-view should be configured with "beer" as their `url_prefix` here.
+
+While it's also possible to use rewrite rules to prevent having to set the `url_prefix`, that generally doesn't work as well. Beer Garden uses the `url_prefix` when passing out URLs describing how to connect to it (like in published events), so those will be incorrect.

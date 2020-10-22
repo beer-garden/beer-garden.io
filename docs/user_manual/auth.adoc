@@ -1,0 +1,131 @@
+= Authentication and Authorization
+:page-layout: docs
+
+Beer Garden authorization exists to allow different users different levels of access to the system. It does this by using the concepts of Users, Roles, and Permissions.
+
+== Models
+The first thing to discuss is how Beer Garden organizes auth objects:
+
+Permissions::
+	Represent the ability to execute a specific action. For example, the `REQUEST_CREATE` permission controls the ability to create new Beer Garden Requests.
+
+Roles::
+  Groups of permissions. They exist to make it easy to define standard sets of permissions that make sense for your environment and assign them to Users.
+
+Users::
+  Represent an entity interacting with Beer Garden. They can be an end user, a remote plugin, or some external system that wants to use the Beer Garden API.
+
+
+== Configuration
+Let's talk about how to set up authorization. First, you'll want to enable it in the Brew-view configuration file:
+
+[source,yaml]
+.brew-view-config.yaml
+----
+auth:
+  enabled: true
+  guest_login_enabled: true
+  token:
+    algorithm: HS256
+    lifetime: 1200
+    secret: CHANGE THIS!!
+----
+
+Two things to note here:
+1. `enabled` has been set to `true`
+2. `guest_login_enabled` is `true`
+3. `secret` has been changed. THIS IS SUPER IMPORTANT.
+
+Please, please, change the secret value. Beer Garden uses that to sign and verify all authentication tokens. If it has not been changed from the default value your data won't be secure.
+
+Setting `guest_login_enabled` to `true` allows unauthenticated users basic access to the system. We'll cover that more later.
+
+== Default Users / Roles
+When you start Beer Garden for the first time some default roles and users are created for your convenience.
+
+=== Roles
+==== `bg-readonly`
+This role allows read access to everything, but only read access. This role is good for users who should be able to look but not touch.
+
+* `bg-command-read`
+
+* `bg-event-read`
+
+* `bg-instance-read`
+
+* `bg-job-read`
+
+* `bg-queue-read`
+
+* `bg-request-read`
+
+* `bg-system-read`
+
+==== `bg-operator`
+This role is the normal roll for a non-administrator Beer Garden user. It allows read access to everything, but it also allows Request creation, which means that anyone with this role can initiate requests.
+
+* `bg-command-read`
+
+* `bg-event-read`
+
+* `bg-instance-read`
+
+* `bg-job-read`
+
+* `bg-queue-read`
+
+* `bg-request-read`
+
+* `bg-system-read`
+
+* `bg-request-create`
+
+==== `bg-anonymous`
+This role is special in that it's used by the anonymous user. That is, users that have not authenticated will have this role. By default it's identical to the read-only role, but it's separate to allow for customization.
+
+* `bg-command-read`
+
+* `bg-event-read`
+
+* `bg-instance-read`
+
+* `bg-job-read`
+
+* `bg-queue-read`
+
+* `bg-request-read`
+
+* `bg-system-read`
+
+==== `bg-admin`
+This role permits everything and is intended for super users.
+
+* `bg-all`
+
+==== `bg-plugin`
+This role has all the permissions necessary for plugins to do their jobs. All plugins should have these permissions, or a superset of them or things are going to go sideways.
+
+* `bg-instance-update`
+
+* `bg-job-create`
+
+* `bg-job-update`
+
+* `bg-request-create`
+
+* `bg-request-update`
+
+* `bg-system-create`
+
+* `bg-system-read`
+
+* `bg-system-update`
+
+=== Users
+These users are managed by Beer Garden.
+
+==== `admin`
+This user can do everything since it has the `bg-admin` role. It's created on startup if it doesn't already exist and there are no other users (if you've created other users Beer Garden assumes that you removed the admin user on purpose and won't fight with you). It's recommended you change the password for this user if you want to keep it around.
+
+==== `anonymous`
+This user is a little special. It's created or removed based on the `guest_login_enabled` configuration value. It's always given the `bg-anonymous` role, so if you want to control what unauthenticated users can do just modify the permissions for that role.

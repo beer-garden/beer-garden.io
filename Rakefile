@@ -103,10 +103,13 @@ desc 'An alias to the preview task'
 task :serve => :preview
 
 desc 'Generate the site using the specified profile (default: development)'
-task :gen, [:profile] => :check do |task, args|
+task :gen, [:profile, :output_dir] => :check do |task, args|
   profile = args[:profile] || 'development'
   profile = 'production' if profile == 'prod'
-  run_awestruct %(-P #{profile} -g --force)
+
+  output_dir = args[:output_dir] || '_site'
+
+  run_awestruct %(-P #{profile} --output-dir #{output_dir} -g --force)
 end
 
 desc 'Push local commits to origin/master'

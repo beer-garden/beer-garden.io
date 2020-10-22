@@ -15,7 +15,6 @@ asciidoctor:
         idprefix: ''
         idseparator: '-'
         sectanchors: ''
-        imagesdir: ./images
         attribute-missing: 'warn'
         source-highlighter: 'coderay'
         relfileprefix: '../'
@@ -40,7 +39,7 @@ slim|html:
     :format: :html
 profiles:
     production:
-        base_url: 'https://beer-garden.io'
+        base_url: ''
         disqus_developer: false
         google_analytics_account: UA-113442079-2
         google_analytics:
