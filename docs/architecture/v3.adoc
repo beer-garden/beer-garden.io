@@ -23,7 +23,7 @@ Each subsystem will have its own section with the following information:
 
 These are rules that we have come up with during the design process that have fairly large implications. We use them as guiding elements when making additional design decisions. They are **not** set in stone, but should be carefully considered before change.
 
-1. System + Instance has a one-to-one mapping with a queue.
+1. Namespace + System + System Version + Instance has a one-to-one mapping with a queue.
 2. Entries in the database are supposed to be there, we may need to add additional information based on monitoring, but we should not need to remove it.
 
 
@@ -60,6 +60,7 @@ CAUTION: This API is not finalized. It is just a working copy of where we are so
 * `migrate(filename: str)` - Migrate a previous configuration file to the new configuration specification.
 * `get(key: str)` - Get a specific configuration value for the given key. All defaults should be specified in the specification and not in calling code.
 
+////
 === Configuration Dependencies
 
 None.
@@ -85,6 +86,8 @@ CAUTION: This API is not finalized. It is just a working copy of where we are so
 
 * Persistence Layer - Will need to query the database to determine permissions/users.
 * Marshaler - Will need to convert users into the internal user objects.
+
+////
 
 == Persistence Layer
 

@@ -1,0 +1,85 @@
+=== Connecting Gardens
+
+Beer Garden has the ability to connect other Beer Gardens in a Parent-Child relationship. The approach Beer Garden takes
+for command and control is Parents can only send Operations to Children, and Children can only send Events to Parents.
+
+Another design approach is that Children have no true concept of Parents, only a location to publish events. Child Beer
+Gardens do not know what plugins are deployed on the Parent and can not create a System Client connection to Parents.
+
+Another design approach is that Parents have no concept of Grand Children. Beer Garden promotes all Systems that it can
+execute against, not what systems are connected to itself and children. So if a Child has 3 Beer Gardens connected, the
+child tells the Parent it has the ability to route to all of the systems. The Parent will trust the Child Beer Garden to
+the routing appropriately.
+
+////
+parent config
+
+===== How to filter events
+
+If there are concerns with emitting all events to a Parent, either due to bandwidth concern or operational use case. These
+events can be filtered through the configuration of the parent connection object.
+
+[source,yaml]
+.config.yaml
+----
+parent:
+  http:
+    skip_events:
+    - INSTANCE_INITIALIZED
+    - REQUEST_STARTED
+----
+
+ui config
+
+
+
+////
+
+=== Internal Routing
+
+The Router requires all objects to utilize the new standard Operation class.
+
+Operations that can be forwarded include:
+
+    INSTANCE_START
+    INSTANCE_STOP
+    REQUEST_CREATE
+    SYSTEM_DELETE
+    GARDENS_SYNC
+
+
+==== How to determine where to route
+
+Before any Operation is executed, Beer Garden has to determine if this is an Operation that it can fulfill. For all requests
+the Targeted Garden must be identified. If the Operation is not be forwarded, and is not for the local Beer Garden, then
+the Operation can not be routed. Each route-able Brewtils class has a different approach to determining the Target Beer Garden.
+
+==== Local Only Operations
+
+There are a handful of Operations that will always be handled by the Local Beer Garden. The criteria utilized to determine
+this is:
+
+- Is the Operation a READ from the database?
+- Is the Operation managing scheduled jobs?
+- Is the Operation managing Gardens?
+- Is the Operation kicking off Local Garden Actions?
+- Is the Operation managing local only resources?
+
+===== Systems and Instances
+
+The combination of Namespace/System/Version is tied to a hosting Beer Garden. This information is stored within the Garden
+object. For System and Instance based Operations, this is a quick look up against the cached Garden information in the
+Router class.
+
+===== Requests
+
+Operations to CREATE requests must first identify the Namespace/System/Version. Then that information is utilized to
+determine the Target Beer Garden, same as the Systems and Instances is looked up.
+
+
+=== What does a Child emit to the Parent?
+
+Children forward all internal events to their Parents. If there are events that should not be forwarded, then that can
+be configured in the configuration of Beer Garden.
+
+

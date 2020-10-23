@@ -8,13 +8,11 @@ If you'd like to work on Beer Garden itself, or want to get a better understandi
 == Components
 Beer Garden is actually a collection of several different components. In this section we'll discuss each one individually and how each fit into the larger picture.
 
-=== Brew View
-Brew View is the Beer Garden server. It's a Tornado server whose main job is to expose the Beer Garden REST interface, but it also does double-duty in that it also serves the frontend javascript application.
+=== Frontend
+The Beer Garden frontend is an AngularJS application. It's built with ``yarn`` and ``webpack`` and served by any hosting platform. We have examples on hosting the Frontend through NGINX and NPM.
 
-Brew View sends instructions to Bartender over a thrift interface. In certain cases it will update Mongo. For GET requests it will query Mongo without involving Bartender. Brew-view will publish event notifications to RabbitMQ without Bartender, but actual Beer Garden requests are passed to Bartender for publication.
-
-=== Bartender
-Bartender is the Beer Garden backend. It's responsible for several things:
+=== Backend
+The Beer Garden backend. It's responsible for several things:
 
 - Routing requests to plugins
 - RabbitMQ communication
@@ -22,7 +20,7 @@ Bartender is the Beer Garden backend. It's responsible for several things:
 - Removing old requests
 - Controlling local plugins
 
-Bartender receives instructions from Brew View over the thrift interface. In certain cases it interacts with Mongo directly. It's the main RabbitMQ client.
+Beer Garden receives instructions through it's Entry Points (REST). It will always be between UI and Mongo/RabbitMQ interactions.
 
 
 === Mongo
@@ -33,9 +31,6 @@ RabbitMQ is the Beer Garden message queue. After requests are created and valida
 
 RabbitMQ can also be used for event notification delivery.
 
-=== Frontend
-The Beer Garden frontend is an AngularJS application. It's built with ``yarn`` and ``webpack`` and served by Brew View.
-
 
 == Lifecycles
 Beer Garden has two main lifecycles - the request lifecycle and the plugin lifecycle.
@@ -43,9 +38,13 @@ Beer Garden has two main lifecycles - the request lifecycle and the plugin lifec
 === Request
 Requests are created by POSTing to the ``/api/v1/requests/`` endpoint. The HTTP request body will be used to construct the Beer Garden request. The body needs to be either ``application/json`` (preferred) or ``application/x-www-form-urlencoded``. Both the Beer Garden frontend and the brewtils ``SystemClient`` are making a POST to this endpoint under the hood.
 
-Brew View takes the request body and attempts to parse it into a valid Beer Garden request and save it to Mongo. These steps require passing the first-level validation check. This ensures that the request is syntatically valid and meets certain basic requirements (such as the ``status`` field being a valid value).  If it fails at this it will return a 400 status code, otherwise the request ID is passed to Bartender for processing.
+Beer Garden takes the request body and attempts to transform it into the `Operation` object to determine routing.
+After the object is evaluated, if it is determined to be forwarded to a child Beer Garden the forwarding logic is invoked,
+else it is passed for local processing.
 
-Bartender then pulls the completed request out of the database and *validates* it. This validation is significatly more involved than the preliminary validation done by Brew View. Here are some of the validation steps:
+Beer Garden takes the request body and attempts to parse it into a valid Beer Garden request and save it to Mongo. These steps require passing the first-level validation check. This ensures that the request is syntatically valid and meets certain basic requirements (such as the ``status`` field being a valid value).  If it fails at this it will return a 400 status code, otherwise the request ID is passed to Bartender for processing.
+
+Beer Garden then  *validates* the request (either locally or on child Beer Garden). This validation is significatly more involved than the preliminary validation done by Brew View. Here are some of the validation steps:
 
 - Ensure that a system (which the correct version) exists that can service the request
 - That system has an instance matching the instance the request is addressed to
