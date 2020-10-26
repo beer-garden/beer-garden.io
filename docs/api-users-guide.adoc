@@ -36,6 +36,7 @@ The `SystemClient` is a nice abstraction, but it can be useful to know what's ha
 ----
 $ curl -X POST -H 'Content-Type: application/json' -d \
 '{
+  "namespace": "default"
   "system": "echo",
   "system_version": "1.0.0.dev",
   "instance_name": "default",
