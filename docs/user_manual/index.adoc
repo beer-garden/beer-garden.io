@@ -4,11 +4,16 @@
 
 Beer Garden has a lot more to offer than just plugins. Check these out:
 
+////
 ## link:auth/[Authentication / Authorization]
 Auth Overview
+////
 
 ## link:mongo_pruner/[Mongo Pruner]
 How to manage completed Requests.
 
 ## link:reverse_proxy/[Reverse Proxy]
 If you want to run Beer Garden behind a reverse proxy, this is for you!
+
+## link:config_yaml/[Managing your Config]
+If you want to learn more about the config.yaml properties, check this out.
