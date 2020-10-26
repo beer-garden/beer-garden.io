@@ -1,77 +1,63 @@
 = Releasing Beergarden
 :page-layout: docs
 
-This is intended as a guide / checklist for releasing a new versions of Beergarden things. It's aimed at the Beergarden maintainers.
+This is intended as a guide / checklist for releasing a new versions of Beergarden things. It's aimed at the Beergarden
+maintainers.
+
+Next MAKE SURE YOU UPDATED THE CHANGELOG.
 
 == Libraries
 This one is pretty easy. Applies to these:
-- brewtils
-- bg-utils
-- brew-view
-- bartender
 
-Bump the version in `_version.py`. Make a new commit with a message that's *only* the new version (this commit message shows up on the Github releases page). Then create and push a new tag with the version number (*only* the version number - get that extra 'v' out of here).
+- brewtils
+- beer-garden
+
+Bump the version in `_version.py`. Make a new commit with a message that's *only* the new version (this commit message
+shows up on the Github releases page). Then create and push a new tag with the version number (*only* the version
+number - get that extra 'v' out of here).
 
 Travis will run the tests and then build and deploy the source and wheel distributions to pypi.org.
 
 That's it!
 
 == Docker
-This is a little more involved at the moment. Hopefully this'll get automated more soon.
+This works just like the Libraries. Applies to the following to Brewtils, Beer Garden, or Example Plugins repositories.
 
-=== Example plugins
-... except this one is actually super easy. Just push to Github master branch. The docker image is built and deployed every time.
+* bgio/beer-garden
+* bgio/ui
+* bgio/example-plugins
+* bgio/plugins
+** bgio/plugins:python2
+** bgio/plugins:python3
+** bgio/plugins:python2-onbuild
+** bgio/plugins:python3-onbuild
 
+Bump the version in `_version.py`. Make a new commit with a message that's *only* the new version (this commit message
+shows up on the Github releases page). Then create and push a new tag with the version number (*only* the version
+number - get that extra 'v' out of here).
 
-// TODO We need to update this
-=== Brew-view / Bartender
-This requires some effort. We need to build and tag versions for Python 2 and Python 3 and update the `latest` tags. Adjust this for your specific version and then push all the images:
+Travis will run the tests and then build and deploy the source and wheel distributions to hub.docker.com.
 
-[source,subs="attributes"]
+That's it!
+
+== RPM
+This requires some effort. We currently don't have a hosting location for RPMs, so this is manually created each time.
+
+[source,shell script]
 ----
-docker build -t bgio/brew-view:2.3.6 --build-arg VERSION=2.3.6 -f Dockerfile .
-docker tag bgio/brew-view:2.3.6 bgio/brew-view:latest
+mkdir rpm-builder;
+git clone --branch v3 https://github.com/beer-garden/beer-garden.git rpm-builder/;
 
-docker build -t bgio/brew-view:2.3.6-python2 --build-arg VERSION=2.3.6 -f Dockerfile.2 .
-docker tag bgio/brew-view:2.3.6-python2 bgio/brew-view:latest-python2
+mkdir rpm-builder-brewtils;
+git clone --branch v3 https://github.com/beer-garden/brewtils.git rpm-builder-brewtils;
+
+mkdir rpm-builder/src/brewtils;
+mv rpm-builder-brewtils/* rpm-builder/src/brewtils;
+
+npm --prefix ./rpm-builder/src/ui/ install ./rpm-builder/src/ui/;
+
+rm rpm-builder/src/ui/package-lock.json;
+cd rpm-builder/rpm/bin/;
+
+python3 build.py --local --python 3.7 --distribution centos7 rpm 3.0.0;
 ----
-
-=== Beer-garden
-This is the most labor-intensive.
-
-First, UPDATE THE CHANGELOG.
-
-In the `beer-garden/beer-garden` repo bump the version in `resources/version`.
-
-Then you need to update the submodule commits to the new tags. So if there's a new bartender and brew-view do this, starting at the beer-garden repo root:
-
-[source,subs="attributes"]
-----
-cd bartender
-git pull <newest bartender tag>
-
-cd ../brew-view
-git pull <newest brew-view tag>
-
-git add bartender brew-view
-----
-
-Do that for:
-- brewtils
-- bg-utils
-- brew-view
-- bartender
-
-Next MAKE SURE YOU UPDATED THE CHANGELOG.
-
-At this point you should have the new commits and version file staged. Make a commit with a message that's only the new version. Then make a tag with the same message and push both to Github.
-
-Finally, you'll need to build the RPMs. Currently we only care about building the Python 2 version, but you'll need to build for Centos 6 and 7:
-
-[source,subs="attributes"]
-----
-python bin/build.py --distribution centos6 --python python2
-python bin/build.py --distribution centos7 --python python2
-----
-
-We don't have a good place to put these right now. If you want to make a real 'Release' on Github you can add them as assets there.
