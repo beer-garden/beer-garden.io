@@ -22,6 +22,8 @@ This is a little more involved at the moment. Hopefully this'll get automated mo
 === Example plugins
 ... except this one is actually super easy. Just push to Github master branch. The docker image is built and deployed every time.
 
+
+// TODO We need to update this
 === Brew-view / Bartender
 This requires some effort. We need to build and tag versions for Python 2 and Python 3 and update the `latest` tags. Adjust this for your specific version and then push all the images:
 

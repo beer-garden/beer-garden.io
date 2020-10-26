@@ -12,7 +12,7 @@ A Beer Garden Python installation requires a few things to work:
 * Connectivity to RabbitMQ
 
 Installing these is outside the scope of this documentation, so please refer to their installation instructions for detailed installation instructions/configuration.
-
+// TODO This needs to changed
 == Installing Brew View
 
 We host `brew-view` on PyPi server. You can install it via:

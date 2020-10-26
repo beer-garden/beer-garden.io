@@ -46,6 +46,7 @@ If you have a local plugin, then this Beer Garden is ready to deploy it. Simply 
 
 You should see your plugin appear!
 
+// TODO This needs to changed
 TIP: If your plugin does not appear, be sure to checkout the logs using:
 `docker-compose logs -f bartender`
 
