@@ -39,16 +39,16 @@ To operate in secure mode we need to use a slightly different docker-compose fil
 
 Your TLS certificate will be issued for a specific host name. That name needs to be set for these three items (indicated with a `# Replace` comment in the compose file):
 
-- BG_PUBLISH_HOSTNAME
-- BG_AMQ_HOST
+- BG_HOSTNAME
+- BG_MQ_HOST
 - BG_WEB_HOST
 
 Connecting to RabbitMQ is controlled by a username and password. These have default values in the compose file that need to be changed. Note that the same user/password combination should be used for all three entries:
 
-- BG_AMQ_CONNECTIONS_ADMIN_USER
-- BG_AMQ_CONNECTIONS_ADMIN_PASSWORD
-- BG_AMQ_CONNECTIONS_MESSAGE_USER
-- BG_AMQ_CONNECTIONS_MESSAGE_PASSWORD
+- BG_MQ_CONNECTIONS_ADMIN_USER
+- BG_MQ_CONNECTIONS_ADMIN_PASSWORD
+- BG_MQ_CONNECTIONS_MESSAGE_USER
+- BG_MQ_CONNECTIONS_MESSAGE_PASSWORD
 - RABBITMQ_DEFAULT_USER
 - RABBITMQ_DEFAULT_PASS
 
