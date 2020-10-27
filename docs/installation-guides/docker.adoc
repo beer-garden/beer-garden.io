@@ -47,7 +47,6 @@ then navigate to `http://<IP-ADDRESS>:80` then:
 
 You should see your plugin appear!
 
-// TODO This needs to changed
 TIP: If your plugin does not appear, be sure to checkout the logs using:
 `docker-compose logs -f beer-garden`
 

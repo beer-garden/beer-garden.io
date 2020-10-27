@@ -25,7 +25,7 @@ Installing these is outside the scope of this documentation, so please refer to 
 need help with them.
 
 == Install and Setup
-// TODO This needs to changed
+
 === Clone the Repos
 There are two main repositories you'll need: `beer-garden` and `bindings`. Both are part of the
 {git_group_uri}[beer-garden GitHub group]. Clone them:
