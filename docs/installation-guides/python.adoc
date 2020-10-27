@@ -7,11 +7,12 @@ This guide will take you through step-by-step installation instructions via pyth
 
 A Beer Garden Python installation requires a few things to work:
 
-* Python 2.7.9+ or 3.4+
+* Python 3.7+
 * Connectivity to MongoDB 3.2+
 * Connectivity to RabbitMQ
 
-Installing these is outside the scope of this documentation, so please refer to their installation instructions for detailed installation instructions/configuration.
+Installing these is outside the scope of this documentation, so please refer to their installation instructions for
+detailed installation instructions/configuration.
 // TODO This needs to changed
 == Installing Brew View
 

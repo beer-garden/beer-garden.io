@@ -38,7 +38,8 @@ doesn't have a valid server certificate.
 If you have a remote plugin, you simply need to start it and point it to the host you just stood up!
 
 == Start a Local Plugin
-If you have a local plugin, then this Beer Garden is ready to deploy it. Simply copy your plugin into the `./plugins/` then navigate to `http://<IP-ADDRESS>:2337` then:
+If you have a local plugin, then this Beer Garden is ready to deploy it. Simply copy your plugin into the `./plugins/`
+then navigate to `http://<IP-ADDRESS>:80` then:
 
 1. Click on Administration on the left side of the page
 2. Click on System Administration
@@ -48,7 +49,7 @@ You should see your plugin appear!
 
 // TODO This needs to changed
 TIP: If your plugin does not appear, be sure to checkout the logs using:
-`docker-compose logs -f bartender`
+`docker-compose logs -f beer-garden`
 
 == Stop
 Run this command to stop Beer Garden.

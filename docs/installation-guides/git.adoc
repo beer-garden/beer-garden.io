@@ -1,18 +1,19 @@
 = Installing from Source
 :page-layout: docs
-:uri-brew-view: {git_group_uri}/brew-view/tree/master
-:uri-bartender: {git_group_uri}/bartender/tree/master
+:uri-beer-garden: {git_group_uri}/beer-garden/tree/v3
 
-This guide will show you how to install Beer Garden for development. When you're done you should be able to make changes to Beer Garden, run the tests, and push up your changes.
+This guide will show you how to install Beer Garden for development. When you're done you should be able to make changes
+to Beer Garden, run the tests, and push up your changes.
 
 == Prerequisites
 
 You will absolutely need these things:
 
-* Python 2.7.9+ or 3.4+. You'll need a full environment (with pip).
+* Python 3.7+. You'll need a full environment (with pip).
 * Connectivity to MongoDB 3.2+
 * Connectivity to RabbitMQ
 * Git, correctly configured to talk to https://github.com[GitHub]
+* https://docs.npmjs.com/cli/v6/commands/npm-install[NPM Install]
 
 {empty} +
 These things are nice to have:
@@ -20,28 +21,29 @@ These things are nice to have:
 * Some sort of virtualenv setup, virtualenvwrapper is nice
 * A Python IDE (e.g. PyCharm)
 
-Installing these is outside the scope of this documentation, so please refer to their installation instructions if you need help with them.
+Installing these is outside the scope of this documentation, so please refer to their installation instructions if you
+need help with them.
 
 == Install and Setup
 // TODO This needs to changed
 === Clone the Repos
-There are two main repositories you'll need: `beer-garden` and `bindings`. Both are part of the {git_group_uri}[beer-garden GitHub group]. Clone them:
+There are two main repositories you'll need: `beer-garden` and `bindings`. Both are part of the
+{git_group_uri}[beer-garden GitHub group]. Clone them:
 
 [source,subs="attributes"]
 ----
-git clone --recurse-submodules {git_group_uri}/beer-garden.git
+git clone {git_group_uri}/beer-garden.git
 git clone {git_group_uri}/brewtils.git
 ----
 
 === Install Dependencies
-This is where `virtualenvwrapper` is helpful. Even though there are only two repositories, there are actually four separate projects (beer-garden/bartender, beer-garden/brew-view, beer-garden/bg-utils, and brewtils) that each have their own dependencies. There's a .venv file in each of them, so make a virtualenv for each of them:
+This is where `virtualenvwrapper` is helpful. There are two repositories that have their own dependencies
+(beer-garden & brewtils). There's a .venv file in each of them, so make a virtualenv for each of them:
 
 [source]
 ----
 mkvirtualenv brewtils
-mkvirtualenv bg-utils
-mkvirtualenv brew-view
-mkvirtualenv bartender
+mkvirtualenv beer-garden
 ----
 
 Sweet. Now for each of the projects you can install the dependencies:
@@ -51,26 +53,36 @@ Sweet. Now for each of the projects you can install the dependencies:
 make deps
 ----
 
-At this point we need a little sidebar about how beer-garden is structured. Brew-view and Bartender are the two pieces of the application that actually run, and bg-utils and brewtils are libraries. Real quick:
+At this point we need a little sidebar about how beer-garden is structured. Beer-Garden is the application that
+actually run, and bg-utils and brewtils are libraries. Real quick:
 
 * Brewtils is the library plugin developers use to create plugins. It has things like our models and decorators.
-* Bg-utils is our 'internal' library with things that both bartender and brew-view need. It has things like our model-database mappings.
-* Brew-view is the REST server that also serves the static frontend.
-* Bartender is basically all the application logic.
+* Beer-Garden is our 'internal' library with things like our model-database mappings.
+* Beer-Garden is the REST server that also serves the static frontend.
+* Beer-Garden is basically all the application logic.
 
-So, as you can probably guess, bartender and brew-view have a compile-time dependency on bg-utils, and bg-utils has a compile-time dependency on brewtils.
+So, as you can probably guess, beer-garden has a compile-time dependency on brewtils.
 
-When you ran `make deps` earlier pip grabbed the latest brewtils and bg-utils from GitHub. So if you make changes to those projects they won't actually show up when you run brew-view or bartender. We need to tell our virtualenvs to install those distributions in 'editable' mode. From the beer-garden root directory:
+When you ran `make deps` earlier pip grabbed the latest brewtils from GitHub. So if you make changes to
+those projects they won't actually show up when you run beer-garden. We need to tell our virtualenvs to install those
+distributions in 'editable' mode. From the beer-garden root directory:
 
 [source]
 ----
-cd bg-utils; pip uninstall -y brewtils; pip install -e ../../brewtils
-cd bartender; pip uninstall -y brewtils bg-utils; pip install -e ../../brewtils -e ../bg-utils
-cd brew-view; pip uninstall -y brewtils bg-utils; pip install -e ../../brewtils -e ../bg-utils
+cd beer-garden; pip uninstall -y brewtils; pip install -e ../../brewtils
+----
+
+The Beer Garden UI utilizes NPM to install Javascript dependencies.
+
+[source]
+----
+cd beer-garden/src/ui;
+npm install;
 ----
 
 === Run the Tests
-To make sure everything is working you can run the Python tests. Each project has a `Makefile` to help run the tests and more. To generate coverage:
+To make sure everything is working you can run the Python tests. Each project has a `Makefile` to help run the tests
+and more. To generate coverage:
 
 [source]
 ----
@@ -80,14 +92,34 @@ make coverage
 And you should see all the tests pass.
 
 === Run the Application
-The repositories come with configuration settings that make sense for development (these are in the dev_conf directories), so you should just be able to start the application.
+The repositories come with configuration settings that make sense for development (these are in the dev_conf
+directories), so you should just be able to start the application.
 
-NOTE: Both of these commands will run until you stop them, so you'll either need to use two shells or run them in the background. Use Ctrl-C to kill them.
+NOTE: Both of these commands will run until you stop them, so you'll either need to use two shells or run them in the
+background. Use Ctrl-C to kill them.
 
 [source]
 ----
-cd brew-view; bin/app.sh
-cd bartender; bin/app.sh
+cd beer-garden; bin/app.sh
 ----
 
-You should see logs as the application starts up. Then you can visit http://localhost:2337 to see the application!
+If you are utilizng NPM to server the website
+
+[source]
+----
+cd beer-garden/src/ui;
+npm run serve;
+----
+
+You should see logs as the application starts up. Then you can visit http://localhost:8080 to see the application!
+
+If you are going to utilize a different hosting platform:
+
+[source]
+----
+cd beer-garden/src/ui;
+npm run build;
+----
+
+You should see the static files hosted in `beer-garden/src/ui/dist` and any hosting platform just needs to point to that
+directory, or copy that to their hosting directory. For example, you can host via NGINX.
