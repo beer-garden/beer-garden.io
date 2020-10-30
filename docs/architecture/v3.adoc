@@ -54,18 +54,20 @@ The configuration subsystem is responsible for:
 
 === Configuration API
 
-CAUTION: This API is not finalized. It is just a working copy of where we are so far.
-
 * `load(args: List[str])` - Called once on startup. Args are command-line arguments. Loads configuration from environment variables, command-line arguments and configuration file.
 * `migrate(filename: str)` - Migrate a previous configuration file to the new configuration specification.
 * `get(key: str)` - Get a specific configuration value for the given key. All defaults should be specified in the specification and not in calling code.
+* `generate_app_logging(args: Sequence[str]):` - Generate and save application logging configuration file.
+* `generate_plugin_logging(args: Sequence[str])` - Generate and save plugin logging configuration file.
+* `assign(new_config: Box, force: bool = False)` - This methods sets the global configuration to the given Box object. This method is
+    only intended to be used in a subprocess context where reconstructing the
+    configuration using ``load`` would be inadvisable.
 
-////
 === Configuration Dependencies
 
 None.
 
-
+////
 == Auth[nz]
 
 The auth service is responsible for authentication and authorization. Essentially, it is responsible for providing a yes or no answer to the question, "Can User X do Action Y on Resource Z?". In all likelihood, this subsystem will actually be broken down into additional subsystems. As a result, it will probably need its own section describing the internals of the Auth[nz] service.
@@ -95,7 +97,6 @@ The persistence layer is responsible for:
 
 * Querying the database
 * Create, Update, and Delete operations on the database
-* Publishing events whenever *anything* in the database changes
 
 This layer should allow us to swap out databases without the rest of the system knowing/caring. Objects coming out of the persistence layer should have nothing to do with the underlying data store. Access to the persistence layer assumes you have already authenticated/authorized a user.
 
@@ -105,15 +106,17 @@ The persistence layer is also responsible for saving/retrieving files.
 
 CAUTION: This API is not finalized. It is just a working copy of where we are so far.
 
-* `query(???)` - Not sure on this API. It might be worth looking at GraphQL for this solution. We are essentially looking for a DB agnostic query language and I think GraphQL provides that. I'm just not sure how difficult that will be to actually implement
-* `create(obj: Any)` - Create the object given. The object's class will be inspected to determine the correct place to save it.
-* `delete(obj_or_id: Union[str, object])` - Delete the resource identified by the ID. Could also be the actual object.
-* `update(obj: Any)` - Update the given object such that all attributes on the obj replace the current values in the database.
+* `query(model_class: ModelType, **kwargs)` - Query a collection
+* `query_unique(model_class: ModelType, raise_missing=False, **kwargs)` - Query a collection for a unique item
+* `create(obj: ModelItem)` - Create the object given. The object's class will be inspected to determine the correct place to save it.
+* `delete(obj: ModelItem)` - Delete an item from the database
+* `update(obj: ModelItem)` - Update the given object such that all attributes on the obj replace the current values in the database.
+* `modify(obj: ModelItem, query=None, **kwargs)` - Modify an item in the database based on the kwargs provided
+* `count(model_class: ModelType, **kwargs)` - Count the number of items matching a query
 
 === Persistence Layer Dependencies
 
 * Marshaler - Will need to convert internal models into database representations and back.
-* Event Engine - Will need to publish events on `create`, `update`, and `delete`
 
 == Plugin State Manager
 
@@ -137,14 +140,15 @@ Here are some additional notes:
 
 === Plugin State Manager API
 
-CAUTION: This API is not finalized. It is just a working copy of where we are so far.
+CAUTION: The target input values for this API is `system` and `instance`. If System is not provided, it will be derived from
+`instance` or `instance_id`. If `instance` is not provided, it will be derived from `system` + `instance_name`
 
-* `register(system: System)` - Create a queue if required, Update DB. All the information we need to create the system should be on the system class itself.
-* `start(system: System, instances=None)` - Attempt to start a plugin. Only guarantees that we attempted, not that the plugin will actually start. In `start`, `stop`, and `kill`, if `instances` is specified, the action will only be applied to those specific instances. If it not provided, it will apply to all `instances` on the `System` object passed in.
-* `stop(system: System, instances=None)` - Attempt to stop a plugin. Only guarantees that we attempted, not that the plugin is actually stopped.
+* `initialize(instance_id: str = None, instance: Instance = None, system: System = None, runner_id: str = None, **_,)` - Create a queue if required, Update DB.
+* `start(instance_id: str = None, instance: Instance = None, system: System = None)` - Attempt to start a plugin. Only guarantees that we attempted, not that the plugin will actually start. In `start`, `stop`, and `kill`, if `instances` is specified, the action will only be applied to those specific instances. If it not provided, it will apply to all `instances` on the `System` object passed in.
+* `stop(instance_id: str = None, instance: Instance = None, system: System = None)` - Attempt to stop a plugin. Only guarantees that we attempted, not that the plugin is actually stopped.
+* `update(instance_id: str = None, instance: Instance = None, system: System = None, new_status: str = None, metadata: dict = None, update_heartbeat: bool = True,**_,)` - When updating an instance, has the flag to update the heartbeat to the current timestamp.
 * `remove(system: System, instances=None)` - Called for instance removal or system removal. Will attempt to `stop`, if this is not successful, it will not remove the plugin, if it is successful, then it will also remove the plugin and cleanup the queue if required.
-* `kill(system: System, instances=None)` - Guarantees that Beer Garden no longer knows about the plugin. Will attempt to `stop`, but will definitely remove the plugin from the DB and remove the queue.
-* `check_in(instance: Instance)` - Update the last updated time for an instance. Indicates the plugin has responded to a status message.
+* `heartbeat(instance_id: str = None,instance: Instance = None,system: System = None,**_,)` - Update the last updated time for an instance. Indicates the plugin has responded to a status message.
 
 The monitoring happens as a background process and provides no formal API to the rest of the system. It uses the database as the source of truth and expects the PSM to update the status as responses come from the API.
 
