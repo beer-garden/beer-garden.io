@@ -22,7 +22,7 @@ If that sounds interesting go ahead and check out the link:docs/quickstart[Quick
 
 
 == Look at me!
-image:demo.gif["Preview Plugin to HTML Form Screenshot"]
+video::demo.webm[alt="Preview Plugin to HTML Form Screenshot",width=100%, options="autoplay, loop"]
 
 
 == Further Reading
