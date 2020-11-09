@@ -26,6 +26,7 @@ This table outlines the valid `type` options.
 |Date       |                         |Form control will not have 'time' option
 |DateTime   |                         |
 |Dictionary |                         |JSON Object
+|Base64     |                         |Allows the user to upload a file as a parameter. The file MUST be ASCII compliant.
 |Any        |                         |Valid JSON (Object, Array, String), number, literal `null`, `true`, `false`
 |===
 
