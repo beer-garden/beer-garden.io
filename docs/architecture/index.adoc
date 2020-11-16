@@ -8,11 +8,11 @@ If you'd like to work on Beer Garden itself, or want to get a better understandi
 == Components
 Beer Garden is actually a collection of several different components. In this section we'll discuss each one individually and how each fit into the larger picture.
 
-=== Frontend
-The Beer Garden frontend is an AngularJS application. It's built with ``yarn`` and ``webpack`` and served by any hosting platform. We have examples on hosting the Frontend through NGINX and NPM.
+=== UI
+The Beer Garden user interface frontend is an AngularJS application. It's built with ``webpack`` and can be served by any static resource serving platform. We recommend using ``nginx`` in a production setting and ``webpack-dev-server`` for development.
 
-=== Backend
-The Beer Garden backend. It's responsible for several things:
+=== Application
+The Beer Garden application is responsible for several things:
 
 - Routing requests to plugins
 - RabbitMQ communication
@@ -20,16 +20,13 @@ The Beer Garden backend. It's responsible for several things:
 - Removing old requests
 - Controlling local plugins
 
-Beer Garden receives instructions through it's Entry Points (REST). It will always be between UI and Mongo/RabbitMQ interactions.
+The application receives instructions through Entry Points (more on that later). You can think of the application as the brains of Beer Garden.
 
+=== Database
+MongoDB is the Beer Garden database. You'll need to tell the application where the database lives, but Beer Garden will do most admin-type tasks (creating collections, adding indexes, etc.) for you.
 
-=== Mongo
-Mongo is the Beer Garden database. It has ``command``, ``instance``, ``request``, and ``systems`` (and optionally ``event``) collections.
-
-=== RabbitMQ
-RabbitMQ is the Beer Garden message queue. After requests are created and validated they're passed to RabbitMQ for delivery to a plugin.
-
-RabbitMQ can also be used for event notification delivery.
+=== Message Broker
+Beer Garden uses a message broker to get messages from the application to the plugins. Currently Beer Garden only supports RabbitMQ as the message broker implementation.
 
 
 == Lifecycles
@@ -42,9 +39,9 @@ Beer Garden takes the request body and attempts to transform it into the `Operat
 After the object is evaluated, if it is determined to be forwarded to a child Beer Garden the forwarding logic is invoked,
 else it is passed for local processing.
 
-Beer Garden takes the request body and attempts to parse it into a valid Beer Garden request and save it to Mongo. These steps require passing the first-level validation check. This ensures that the request is syntatically valid and meets certain basic requirements (such as the ``status`` field being a valid value).  If it fails at this it will return a 400 status code, otherwise the request ID is passed to Bartender for processing.
+Beer Garden takes the request body and attempts to parse it into a valid Beer Garden request and save it to Mongo. These steps require passing the first-level validation check. This ensures that the request is syntactically valid and meets certain basic requirements (such as the ``status`` field being a valid value).  If it fails at this it will return a 400 status code, otherwise the request ID is passed to Bartender for processing.
 
-Beer Garden then  *validates* the request (either locally or on child Beer Garden). This validation is significatly more involved than the preliminary validation done by Brew View. Here are some of the validation steps:
+Beer Garden then  *validates* the request (either locally or on child Beer Garden). This validation is significantly more involved than the preliminary validation done by Brew View. Here are some of the validation steps:
 
 - Ensure that a system (which the correct version) exists that can service the request
 - That system has an instance matching the instance the request is addressed to
@@ -58,7 +55,7 @@ RabbitMQ will place the request in the specified plugin's request queue.
 
 Plugins maintain a consumer connection to RabbitMQ awaiting messages. When a new message is placed in their queue the plugin does several things. First, it attempts to parse the message into a valid Beer Garden request. If that's successful then it checks that the request is correctly addressed. If either of those checks fail the message is discarded.
 
-If the requests passes those checks then the plugin is able to process the request. The first step is to send an update to Beer Garden setting the status for that request to ``IN_PROGRESS``. The plugin then invokes the actual command method and captures the return value. The plugin then sends an update to Beer Garden with the results and output of the method invokation.
+If the requests passes those checks then the plugin is able to process the request. The first step is to send an update to Beer Garden setting the status for that request to ``IN_PROGRESS``. The plugin then invokes the actual command method and captures the return value. The plugin then sends an update to Beer Garden with the results and output of the method invocation.
 
 If the 'final' update fails then the completed request is placed back on the RabbitMQ queue. This is to take advantage of RabbitMQ's message durability - if the plugin goes down at this point the request completion and output will be preserved. The request will be read from the queue and placed into a periodic retry loop. The plugin will reattempt to update the request status up to a maximum of ``max_attempts`` times, waiting an increasing amount of time between attempts (up to ``max_timeout``). Requests that fail to update before reaching ``max_attempts`` will be discarded. Note that a request in this state does not prevent processing of additional requests.
 
@@ -79,7 +76,7 @@ When a plugin is started it will immediately try to register itself with Beer Ga
 - The plugin will make sure an instance with its name exists on the system. If it's unsuccessful due to a max_instance constraint the plugin will error.
 - The plugin will then send an initialization request to Beer Garden.
 
-When Beer Garden receives an initializion request it:
+When Beer Garden receives an initialization request it:
 - Verifies that the plugin exists in the database
 - Creates the message queue for the plugin if it doesn't already exist
 - Creates an admin queue for the plugin
@@ -91,13 +88,13 @@ Beer Garden then returns a description of the plugin that was just initialized. 
 The plugin then continues listening on its queues until it receives a stop message on its admin queue, the plugin process receives a SIGINT (Ctrl-c), or it encounters a fatal exception.
 
 ==== Local
-Local plugins use the same underlying implementation as remote plugins. The difference is that local plugins are packaged with some additional metadata that allows Bartender to manage the plugin process for you.
+Local plugins use the same underlying implementation as remote plugins. The difference is that local plugins are packaged with some additional metadata that allows Beer Garden to manage the plugin process for you.
 
-When Bartender starts it will attempt to start all the plugins in its configured plugins directory. Since Bartender is the one starting the process you don't need to worry about providing Beer Garden connection information - Bartender already knows how to talk to Brew View and will pass that information to the plugin by setting the correct environment variables. Bartender will read a special file named ``beer.conf`` and use it to pass additional parameter to the plugin as well.
+When Beer Garden starts it will attempt to start all the plugins in its configured plugins directory. Since Beer Garden is the one starting the process you don't need to worry about providing Beer Garden connection information - Beer Garden already knows how to talk to Brew View and will pass that information to the plugin by setting the correct environment variables. Beer Garden will read a special file named ``beer.conf`` and use it to pass additional parameter to the plugin as well.
 
-The actual implementation of starting, initialization, running, and stopping is exactly the same for local plugins as it is for remote plugins. The difference is how the Python process is created. With remote plugins starting the plugin process is the plugin developer's responsiblity, but with local plugins Bartender assumes that responsibility.
+The actual implementation of starting, initialization, running, and stopping is exactly the same for local plugins as it is for remote plugins. The difference is how the Python process is created. With remote plugins starting the plugin process is the plugin developer's responsibility, but with local plugins Beer Garden assumes that responsibility.
 
-Since Bartender knows how to start the plugin process it's possible to use the ``start`` feature on the administration page. With remote plugins, once the plugin is stopped Beer Garden has no way to start it again.  Bartender will also monitor the plugin process and will attempt to restart the plugin if it dies unexpectedly.
+Since Beer Garden knows how to start the plugin process it's possible to use the ``start`` feature on the administration page. With remote plugins, once the plugin is stopped Beer Garden has no way to start it again.  Beer Garden will also monitor the plugin process and will attempt to restart the plugin if it dies unexpectedly.
 
 
 == Event Notifications
