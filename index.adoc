@@ -28,18 +28,6 @@ On the other hand, if you're still unsure of exactly what Beer Garden is and wha
 
 Finally, if you're looking for specific info, trying to figure out how to do something, or wondering if Beer Garden can do the neat thing you thought of the best place to look is the link:docs/user_manual[User Manual].
 
-////
-* If you're interested in administering a Beer Garden the link:docs/installation-guides/[Installation Guides] will be helpful in getting started, and the link:docs/configuration[Configuration Guide] will help with configuration
-
-* If you're looking for guidance on writing plugins check out the link:docs/plugin-developer-guide[Plugin Developer Guide] for a detailed rundown
-
-* If you'd like to better understand how to interact with Beer Garden (and learn the magic behind the Python bindings) take a look at the link:docs/api-users-guide[API Guide]
-
-* If you want to understand how the different components of Beer Garden work and interact then the link:docs/architecture[Architecture Guide] is the place to look
-
-* For documentation on the Python bindings head over to {brewtils_docs_uri}[Read the Docs]
-////
-
 == Getting Help
 
 We want Beer Garden to make your life easier. If there's anything that's unclear or difficult (or broken!) we want to know about it! Here are the best ways to get in touch with us:
