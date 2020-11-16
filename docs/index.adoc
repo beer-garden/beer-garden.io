@@ -22,23 +22,23 @@ link:installation-guides/[Installation Guides]::
 
 All about Beer Garden plugins.
 
-link:plugin-developer-guide/[Plugin Developer's Guide]::
+link:plugins/plugin-developer-guide/[Plugin Developer's Guide]::
   A comprehensive tutorial with examples that show you how to write plugins
 
-link:plugin-syntax-quick-reference/[Plugin Syntax Quick Reference Guide]::
+link:plugins/plugin-syntax-quick-reference/[Plugin Syntax Quick Reference Guide]::
   An overview of the plugin syntax you'll likely need to write a useful plugins
 
 == Application
 
 Information about the Beer Garden application and how it works.
 
-link:architecture/[Architecture]::
+link:app/architecture/[Architecture]::
   Learn how Beer Garden internals works
 
-link:docs/configuration[Configuration Guide]::
+link:app/configuration[Configuration Guide]::
   Help with Application configuration
 
-link:api-users-guide/[API Guide]::
+link:app/api-users-guide/[API Guide]::
     If you aren't writing plugins, but rather using them, this guide is for you
 
 == Contributing
