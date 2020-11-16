@@ -95,7 +95,3 @@ When Beer Garden starts it will attempt to start all the plugins in its configur
 The actual implementation of starting, initialization, running, and stopping is exactly the same for local plugins as it is for remote plugins. The difference is how the Python process is created. With remote plugins starting the plugin process is the plugin developer's responsibility, but with local plugins Beer Garden assumes that responsibility.
 
 Since Beer Garden knows how to start the plugin process it's possible to use the ``start`` feature on the administration page. With remote plugins, once the plugin is stopped Beer Garden has no way to start it again.  Beer Garden will also monitor the plugin process and will attempt to restart the plugin if it dies unexpectedly.
-
-
-== Event Notifications
-include::events.adoc[]
