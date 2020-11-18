@@ -1,9 +1,7 @@
-Beer Garden needs to inform remote plugins the hostname of the RabbitMQ instance that they should connect to for
-message. This value is set as the `BG_MQ_HOST` in the environment or `mq_host` in config/command-line
-arguments. By default in the `docker-compose.yml` it will be `rabbitmq`. This will work for containers running on the
-same network, but if a truly remote plugin exists, you may need to change the value to a resolvable hostname or IP
-address on the network.
+Beer Garden needs to tell plugins the hostname of a RabbitMQ broker where they'll listen for messages. This value is set as `BG_PLUGIN_MQ_HOST` in the environment or `--plugin-mq-host` on the command line. The default value in `docker-compose.yml` is `localhost` - this allows containers running outside of the compose network with `--network host` (as in the quickstart) to work. However, running this way is not really appropriate in most cases.
 
-CAUTION: Make sure to use a real IP address and not 'localhost' or '0.0.0.0'.
+To allow Beer Garden to work in **all** cases you'll need to set this value to something that will resolve to the machine you're currently using. Ideally this will be a fully-qualified name, but an IP address would work as well.
 
-TIP: You can also use a fully-qualified domain name instead of an IP address.
+To change the value open `docker-compose.yml` and find the line near the top that says `BG_PLUGIN_MQ_HOST: localhost`. Change "localhost" to whatever value makes sense for your specific setup.
+
+CAUTION: If you intend for plugins to connect to this Beer Garden from a different machine make sure you use a name or IP address that's resolvable from the plugin's perspective.
