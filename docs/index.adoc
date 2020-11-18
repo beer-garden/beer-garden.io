@@ -9,13 +9,13 @@ TIP: Can't find the information you need? Reach out to project members and users
 
 Discover Beer Garden and how it can help you.
 
-link:what-is-beergarden/[What is Beer Garden?]::
+link:startup/what-is-beergarden/[What is Beer Garden?]::
   A high-level overview of what Beer Garden is exactly and when you should use it
 
-link:quickstart/[Quickstart]::
+link:startup/quickstart/[Quickstart]::
   A short 5-minute tutorial for getting Beer Garden and a plugin up and running
 
-link:installation-guides/[Installation Guides]::
+link:startup/installation-guides/[Installation Guides]::
   Ready to Install Beer Garden? Pick your favorite guide and get started!
 
 == Plugins
