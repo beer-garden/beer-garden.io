@@ -1,0 +1,6 @@
+For this guide we assume you have the following:
+
+* Docker (https://docs.docker.com/install/[Install instructions])
+* Docker Compose (https://docs.docker.com/compose/install/[Install instructions])
+* Git (https://git-scm.com/downloads/[Download])
+* Access to https://github.com[GitHub] (An account is helpful, but not required)

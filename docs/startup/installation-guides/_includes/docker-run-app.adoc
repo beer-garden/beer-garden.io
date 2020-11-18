@@ -1,0 +1,8 @@
+Then run this command to start Beer Garden:
+
+[source]
+----
+docker-compose up -d
+----
+
+That's it! Once that finishes Beer Garden will be running in the background. Point a browser at `http://localhost` and you'll see a message letting you know that Beer Garden couldn't find any systems. That's OK - you're about to add one!

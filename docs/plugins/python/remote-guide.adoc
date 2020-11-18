@@ -3,6 +3,8 @@
 :includedir: _includes
 :uri-install-guides: ../../installation-guides/
 
+// TODO Should we update this to include Namespaces?
+
 The goal of this section is to help you write a remote plugin from scratch. In order to write remote plugins there are a few things that you need.
 
 == Prerequisites

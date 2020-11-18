@@ -3,6 +3,8 @@
 :includedir: _includes
 :uri-install-guides: ../../installation-guides/
 
+// TODO Should we update this to include Namespace?
+
 The goal of this section is to help you write a local plugin from scratch. In order to write local plugins there are a few things that you need.
 
 == Prerequisites

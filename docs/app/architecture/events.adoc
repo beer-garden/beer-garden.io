@@ -1,0 +1,100 @@
+
+=== Event Notifications
+
+Sometimes, particularly if you're integrating with Beer Garden, it can be helpful to know when certain things happen.
+
+Events are generated whenever any of the following events occur:
+
+==== Request Based Events
+    REQUEST_CREATED
+    REQUEST_STARTED
+    REQUEST_UPDATED
+    REQUEST_COMPLETED
+    REQUEST_CANCELED
+
+==== Instance Based Events
+    INSTANCE_INITIALIZED
+    INSTANCE_STARTED
+    INSTANCE_UPDATED
+    INSTANCE_STOPPED
+    INSTANCE_STOP_REQUESTED
+    INSTANCE_START_REQUESTED
+
+==== System Based Events
+    SYSTEM_CREATED
+    SYSTEM_UPDATED
+    SYSTEM_REMOVED
+    SYSTEM_RESCAN_REQUESTED
+    SYSTEM_RELOAD_REQUESTED
+
+==== RabbitMQ Based Events
+    QUEUE_CLEARED
+    ALL_QUEUES_CLEARED
+
+==== Garden Based Events
+    GARDEN_CREATED
+    GARDEN_UPDATED
+    GARDEN_REMOVED
+    GARDEN_STARTED
+    GARDEN_STOPPED
+    GARDEN_UNREACHABLE
+    GARDEN_ERROR
+    GARDEN_NOT_CONFIGURED
+    GARDEN_SYNC
+
+==== Entry Point Based Events
+    ENTRY_STARTED
+    ENTRY_STOPPED
+
+==== Job Based Events
+    JOB_CREATED
+    JOB_DELETED
+    JOB_PAUSED
+    JOB_RESUMED
+
+==== Environment Based Events
+    PLUGIN_LOGGER_FILE_CHANGE
+
+
+==== Event Structure
+
+Events will always be well-formed JSON. Here's an example of an event:
+
+[source,json]
+.event.json
+----
+{
+    "name": "REQUEST_CREATED", <1>
+    "garden": "default", <2>
+    "timestamp": 1521126132897, <3>
+    "error": None, <4>
+    "error_message": None, <5>
+    "metadata": { <6>
+        "entity_url": "https://this.is.beergarden:443/api/v1/requests/5aaa8af45991735bf1a6c123",
+        "public_url": "https://this.is.beergarden:443/"
+    },
+    "payload": { <7>
+        "id": "5aaa8af45991735bf1a6c123",
+        "command": "say",
+        "system": "echo",
+        "system_version": "1.0.0",
+        "instance_name": "default"
+    },
+    "payload_type": "Request" <8>
+}
+
+----
+<1> All events will have a name
+<2> All events will have the Garden name that it is coming from
+<3> All events will have a timestamp (milliseconds since the epoch)
+<4> All events will have an error flag (boolean, None being equivalent to False)
+<5> All events that have an error flag set will have an Error Message as a String
+<6> Events may have a metadata field. This will contain 'extra' useful information, but will normally include at least the the public url of the Beer Garden that generated the Event. Events that relate to a specific entity will also include a url that can be used to retrieve the full entity definition.
+<7> Events may have a payload. The specific data included will vary based on event type.
+<8> Events may have a payload. This field will define what type model to utilize to parse the JSON.
+
+==== Publishing Custom Events
+
+WARNING: This is a beta capability
+
+It's possible to publish your own events. Just POST a valid Event to the ``/api/vbeta/events`` endpoint. The brewtils EasyClient ``publish_event`` method can help with this.

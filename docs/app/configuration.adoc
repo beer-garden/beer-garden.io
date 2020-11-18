@@ -1,0 +1,136 @@
+= Beer Garden Configuration
+:page-layout: docs
+:rpm-config-home: /opt/beer-garden/conf
+:bg-config: config.yaml
+:app-log-config: app-logging.yaml
+:plugin-log-config: plugin-logging.yaml
+
+
+In this guide, we will go over the configuration options in Beer Garden and how they affect the application. We will
+talk about the configuration at a high level, but we assume you have installed Beer Garden somehow.
+
+If you would like to jump straight to the definitions of `{bg-config}`, please redirect to
+link:user_manual/config_yaml.adoc[Config User Manual]
+
+== Configuration Files ==
+
+There are 3 configuration files that come installed with Beer Garden. If you installed an RPM, you will find these in
+`{rpm-config-home}`.
+//otherwise you can generate them through the commands `brew-view` and `bartender` provide.
+The default names are:
+
+* `{bg-config}`
+* `{app-log-config}`
+* `{plugin-log-config}`
+
+////
+== Logging Configuration ==
+
+The logging configuration uses the standard python logging information. This can be edited as you see fit. If nothing is specified, Beer Garden will fall back to some basic defaults. You can generate a logging file through:
+
+[source,subs="attributes"]
+----
+generate_bartender_log_config -l {bt-log-config}
+generate_brew_view_log_config -l {bv-log-config}
+----
+////
+
+== Beer Garden Configuration ==
+
+If you do not have a `{bg-config}` file, then you can generate one via:
+
+[source,subs="attributes"]
+----
+generate_bartender_config -c {bg-config}
+----
+
+If you already have a `{bg-config}` file, then you can upgrade it to the latest version via:
+
+[source,subs="attributes"]
+----
+migrate_bartender_config -c {bg-config}
+----
+
+To see all of the definitions of `{bg-config}`, please checkout our link:user_manual/config_yaml.adoc[Config User Manual]
+
+== Beer Garden Logging Configuration ==
+
+As of Beer Garden 3.0.0, there is a new configuration file for plugin logging configurations. If this file is not
+included, a logging configuration is inferred from the logging configuration defined in {bg-config}.
+This logging configuration specifies how you would like plugins to log. A valid logging configuration can be found in
+`{rpm-config-home}/{app-log-config}`. Let's examine what is allowed to go into this configuration.
+
+=== Level
+You may specify a default level that you would like all plugins to log at. This can be overwritten by `handlers`, or
+`loggers` entries. The supported levels are:
+
+* `DEBUG`
+* `INFO`
+* `WARN`
+* `ERROR`
+
+===  Handlers
+
+The `handlers` section is a dictionary which may contain one of the following keys:
+
+* `stdout`
+* `file`
+* `logstash`
+
+== Plugin Logging Configuration ==
+
+As of Beer Garden 3.0.0, there is a new configuration file for plugin logging configurations. If this file is not
+included, a logging configuration is inferred from the logging configuration defined in `{bg-config}`.
+This logging configuration specifies how you would like plugins to log. A valid logging configuration can be found in
+`{rpm-config-home}/{plugin-log-config}`. Let's examine what is allowed to go into this configuration.
+
+=== Level
+You may specify a default level that you would like all plugins to log at. This can be overwritten by `handlers`, or
+`loggers` entries. The supported levels are:
+
+* `DEBUG`
+* `INFO`
+* `WARN`
+* `ERROR`
+
+===  Handlers
+
+The `handlers` section is a dictionary which may contain one of the following keys:
+
+* `stdout`
+* `file`
+* `logstash`
+
+Each of these keys can have their own configuration and can be overwritten in the `loggers` section. Other handlers are
+not yet supported.
+
+=== Beer Garden Plugin Logger Values
+
+Beer Garden provides additional variables that can be injected into the handlers. The primary use case we provide is
+creating custom logs in a common directory for all plugins.
+
+* `namespace`
+* `system_name`
+* `system_version`
+* `instance_name`
+
+.{plugin-log-config}
+[source,yaml]
+----
+handlers:
+  file:
+    backupCount: 5
+    class: "logging.handlers.RotatingFileHandler"
+    encoding: utf8
+    formatter: default
+    level: INFO
+    maxBytes: 10485760
+    filename: "logs/%(instance_name)s.log"
+----
+
+=== Formatters
+
+The `formatters` section is also a dictionary. Its keys must match up with a specific handler name or the name
+`default`. Here you can setup a special formatter for each of the individual handlers. The `handlers` should specify
+which `formatter` they would like to use.
+

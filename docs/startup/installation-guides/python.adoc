@@ -7,12 +7,13 @@ This guide will take you through step-by-step installation instructions via pyth
 
 A Beer Garden Python installation requires a few things to work:
 
-* Python 2.7.9+ or 3.4+
+* Python 3.7+
 * Connectivity to MongoDB 3.2+
 * Connectivity to RabbitMQ
 
-Installing these is outside the scope of this documentation, so please refer to their installation instructions for detailed installation instructions/configuration.
-
+Installing these is outside the scope of this documentation, so please refer to their installation instructions for
+detailed installation instructions/configuration.
+// TODO We need to add NPM UI installer
 == Installing Brew View
 
 We host `brew-view` on PyPi server. You can install it via:
@@ -53,36 +54,39 @@ brew-view --help
 ----
 
 
-== Installing Bartender ==
+== Installing Beer Garden ==
 
-We host `bartender` on PyPi. You can install it via:
+We host `beer-garden` on PyPi. You can install it via:
 
 [source,subs="attributes"]
 ----
-pip install bartender
+pip install beer-garden
 ----
 
 You can then start the application:
 
 [source]
 ----
-bartender
+beer-garden
 ----
 
-That's it! Bartender is up and running.
+That's it! Beer-Garden is up and running.
 
 If you would like to configure the application differently, you can generate your own configuration:
 
+// TODO: Update config generation comment
 [source]
 ----
 generate_bartender_config -c config.json
 ----
 
-This will place a config file in `config.json`. Feel free to edit this file however you would like. Read more about the bartender configuration in the link:../../configuration[configuration section.] Then you can startup the application and point to that configuration.
+This will place a config file in `config.json`. Feel free to edit this file however you would like. Read more about
+the bartender configuration in the link:../../configuration[configuration section.] Then you can startup the
+application and point to that configuration.
 
 [source]
 ----
-bartender -c config.json
+beergarden -c config.json
 ----
 
 Everything that is in the `config.json` can be overriden from the command-line. See more information with:

@@ -1,0 +1,293 @@
+= V3 Architecture Work
+:page-layout: docs
+
+In addition to some cool new features, version 3 of Beer Garden aims to create formalized internal APIs. We have found that as the application has grown, we've needed some more formal structure to define the subsystems that make up Beer Garden. This is a living document as we formalize the internal components of Beer Garden.
+
+This document is intended more for Beer Garden developers than just users. It attempts to explain the main design concepts of Beer Garden rather than the external facing API. These APIs may change from version to version but they should not represent an interruption to our main APIs. For more information on the actual API, checkout that documentation.
+
+== Overview
+
+The end-goal of this overview section is to provide a high-level picture of the breakdown of Beer Garden into its subsystems. Essentially, it should be an architecture diagram.
+
+There are some words in this document that are worth defining formally to avoid any confusion.
+
+Subsystem:: While we figure out what (if anything) needs to live in a separate process, this is the word we are using to describe a function that Beer Garden needs to provide. It does not insinuate *anything* about the code.
+
+Each subsystem will have its own section with the following information:
+
+1. A high level description of the reason the subsystem exists.
+2. A formal API contract
+3. A list of subsystem dependencies
+
+== Golden Rules
+
+These are rules that we have come up with during the design process that have fairly large implications. We use them as guiding elements when making additional design decisions. They are **not** set in stone, but should be carefully considered before change.
+
+1. Namespace + System + System Version + Instance has a one-to-one mapping with a queue.
+2. Entries in the database are supposed to be there, we may need to add additional information based on monitoring, but we should not need to remove it.
+
+
+== Marshaler
+
+The marshaler subsystem is in charge of object serialization and deserialization. It is in charge of taking storage or transmission versions of an object (e.g. JSON), converting it into an internal representation of the same object and vice versa.
+
+=== Marshaler API
+
+CAUTION: This API is not finalized. It is just a working copy of where we are so far.
+
+* `marshal(obj: Any, output_format="json": str)` - Take the object and return a serialized version of it. If the output is a non-binary format (e.g. JSON) then the output will be a utf-8 encoded string. The default format is JSON.
+* `unmarshal(data: Any, klazz: Union[str,object])` - Take the storage/transmission data representation and turn it into an instance of the klazz. 
+
+If the data is invalid for any reason, the marshaler is responsible for raising an error indicating what the underlying problem was.
+
+=== Marshaler Dependencies
+
+None.
+
+== Configuration
+
+The configuration subsystem is responsible for:
+
+* Loading configuration files
+* Migration configuration files between Beer Garden versions
+* Getting configuration values
+
+=== Configuration API
+
+* `load(args: List[str])` - Called once on startup. Args are command-line arguments. Loads configuration from environment variables, command-line arguments and configuration file.
+* `migrate(filename: str)` - Migrate a previous configuration file to the new configuration specification.
+* `get(key: str)` - Get a specific configuration value for the given key. All defaults should be specified in the specification and not in calling code.
+* `generate_app_logging(args: Sequence[str]):` - Generate and save application logging configuration file.
+* `generate_plugin_logging(args: Sequence[str])` - Generate and save plugin logging configuration file.
+* `assign(new_config: Box, force: bool = False)` - This methods sets the global configuration to the given Box object. This method is
+    only intended to be used in a subprocess context where reconstructing the
+    configuration using ``load`` would be inadvisable.
+
+=== Configuration Dependencies
+
+None.
+
+////
+== Auth[nz]
+
+The auth service is responsible for authentication and authorization. Essentially, it is responsible for providing a yes or no answer to the question, "Can User X do Action Y on Resource Z?". In all likelihood, this subsystem will actually be broken down into additional subsystems. As a result, it will probably need its own section describing the internals of the Auth[nz] service.
+
+**Notes:** (These can be delete once finalized)
+
+* Down stream systems do not make additional auth[nz] decisions.
+* Does not forward roles or tokens.
+
+=== Auth[nz] API
+
+CAUTION: This API is not finalized. It is just a working copy of where we are so far.
+
+* `authenticate(user_id: Any)` - Return an internal Beer Garden user if it could resolve the user, error otherwise.
+* `authorize(user: User, action: dict, klazz: Union[str,object])` - Return a `True` if the user is authorized to perform the action on the given class. I'm not in love with `action` being a `dict`, and could easily be convinced that each action needs to be a particular object.
+
+=== Auth[nz] Dependencies
+
+* Persistence Layer - Will need to query the database to determine permissions/users.
+* Marshaler - Will need to convert users into the internal user objects.
+
+////
+
+== Persistence Layer
+
+The persistence layer is responsible for:
+
+* Querying the database
+* Create, Update, and Delete operations on the database
+
+This layer should allow us to swap out databases without the rest of the system knowing/caring. Objects coming out of the persistence layer should have nothing to do with the underlying data store. Access to the persistence layer assumes you have already authenticated/authorized a user.
+
+The persistence layer is also responsible for saving/retrieving files.
+
+=== Persistence Layer API
+
+CAUTION: This API is not finalized. It is just a working copy of where we are so far.
+
+* `query(model_class: ModelType, **kwargs)` - Query a collection
+* `query_unique(model_class: ModelType, raise_missing=False, **kwargs)` - Query a collection for a unique item
+* `create(obj: ModelItem)` - Create the object given. The object's class will be inspected to determine the correct place to save it.
+* `delete(obj: ModelItem)` - Delete an item from the database
+* `update(obj: ModelItem)` - Update the given object such that all attributes on the obj replace the current values in the database.
+* `modify(obj: ModelItem, query=None, **kwargs)` - Modify an item in the database based on the kwargs provided
+* `count(model_class: ModelType, **kwargs)` - Count the number of items matching a query
+
+=== Persistence Layer Dependencies
+
+* Marshaler - Will need to convert internal models into database representations and back.
+
+== Plugin State Manager
+
+The PSM subsystem is responsible for:
+
+* Plugin Registration
+* Plugin Monitoring
+* Plugin Removal
+
+Plugins in this case are the abstract concept of plugins. That is to say, the PSM doesn't know anything about the actual process that is running.  The only distinction the Plugin State Manager makes is about downstream vs upstream plugins.
+
+It is completely up to the PSM to change a plugin's state (i.e. is the plugin unresponsive? healthy? running? stopped? etc.)
+
+While the plugin state manager is responsible for initiating status messages, it will delegate requesting information from the plugin to the request subsystem.
+
+Here are some additional notes:
+
+* `PATCH` on a system is equivalent to a `PATCH` on all instances.
+* `PATCH` is used for start/stop
+* `DELETE` is used for removal of a particular plugin.
+
+=== Plugin State Manager API
+
+CAUTION: The target input values for this API is `system` and `instance`. If System is not provided, it will be derived from
+`instance` or `instance_id`. If `instance` is not provided, it will be derived from `system` + `instance_name`
+
+* `initialize(instance_id: str = None, instance: Instance = None, system: System = None, runner_id: str = None, **_,)` - Create a queue if required, Update DB.
+* `start(instance_id: str = None, instance: Instance = None, system: System = None)` - Attempt to start a plugin. Only guarantees that we attempted, not that the plugin will actually start. In `start`, `stop`, and `kill`, if `instances` is specified, the action will only be applied to those specific instances. If it not provided, it will apply to all `instances` on the `System` object passed in.
+* `stop(instance_id: str = None, instance: Instance = None, system: System = None)` - Attempt to stop a plugin. Only guarantees that we attempted, not that the plugin is actually stopped.
+* `update(instance_id: str = None, instance: Instance = None, system: System = None, new_status: str = None, metadata: dict = None, update_heartbeat: bool = True,**_,)` - When updating an instance, has the flag to update the heartbeat to the current timestamp.
+* `remove(system: System, instances=None)` - Called for instance removal or system removal. Will attempt to `stop`, if this is not successful, it will not remove the plugin, if it is successful, then it will also remove the plugin and cleanup the queue if required.
+* `heartbeat(instance_id: str = None,instance: Instance = None,system: System = None,**_,)` - Update the last updated time for an instance. Indicates the plugin has responded to a status message.
+
+The monitoring happens as a background process and provides no formal API to the rest of the system. It uses the database as the source of truth and expects the PSM to update the status as responses come from the API.
+
+=== Plugin State Manager Dependencies
+
+* Persistence Layer - Will need to create, remove, and update `System` and `Instance` objects.
+* Queue - Will need to create, and remove queues.
+* Request - Will need to request status from plugins
+
+== Queue
+
+The queue subsystem is responsible for:
+
+* Queue CRUD operations
+* Publishing requests
+
+Much like the persistence layer, the queue subsystem helps keep the rest of the subsystems from understanding anything about the queueing mechanism being used by a particular system. As such, it is responsible for providing an API which is consistent across each queue technology we use.
+
+=== Queue API
+
+CAUTION: This API is not finalized. It is just a working copy of where we are so far.
+
+* `create(instance: Instance)` - Creates a queue for the given instance. Remember queues are unique for an instance/system pair. Guarantees that the queue actually exists, and that we can communicate with it.
+* `put(request: Request, instance: Instance)` - Put the request on the specified instance's queue. If the instance's queue does not exist, will error. If returns successfully, then the plugin will receive this request.
+* `remove(instance: Instance)` - Removes the queue for a specific instance. Guarantees that the queue no longer exists.
+* `clear(instance: Instance)` - Remove all unreceived messages from the given instance's queue.
+
+=== Queue Dependencies
+
+* Persistence Layer (?) - It is possible the queue API will need to generate username/passwords for given instances and save them to the DB.
+* Event - It will publish events whenever it does any of the 4 main things.
+
+== Event
+
+The event subsystem is responsible for:
+
+* Internal events
+* Publishing external events
+
+Ultimately, many parts of Beer Garden are going to rely on the event subsystem. There will be an internal event bus that will publish events not intended for external use. There is a second part of the event subsystem that publishes event intended for external use. This portion can be toggled on or off based on configuration settings.
+
+=== Event API
+
+CAUTION: This API is not finalized. It is just a working copy of where we are so far.
+
+* `publish(event: Event)`
+* `subscribe(event_type: str)`
+
+=== Event Dependencies
+
+* None
+
+== Local Plugin
+
+The local plugin subsystem is responsible for:
+
+* Monitoring a directory
+* Monitoring local plugin processes
+* Load a plugin from disk
+
+One note here is that it does *process* monitoring **not** plugin monitoring.
+
+=== Local Plugin API
+
+CAUTION: This API is not finalized. It is just a working copy of where we are so far.
+
+* `scan()` - scans the local plugin directory for new plugins.
+* `start()` - Start the local plugin subsystem.
+* `stop()` - Stop the local plugin subsystem.
+
+The Local Plugin subsystem doesn't have much of an API. Everything it does is in a background process. It will listen to events to determine when it is time to stop caring if a local plugin process is dead.
+
+=== Local Plugin Dependencies
+
+* Event - It will listen to events to determine when things should no longer be monitored.
+
+== Request
+
+The request subsystem is responsible for:
+
+* Validating requests
+* Request routing/delivery
+* Request completion notification
+
+The request subsystem needs to be aware of how to get a request to the given system. Whether that is publishing events for a downstream Beer Garden or using the queue API.
+
+=== Request API
+
+CAUTION: This API is not finalized. It is just a working copy of where we are so far.
+
+* `validate(request: Request)` - Validates that the given request can be made.
+* `execute(request: Request)` - Execute the given request by routing it to the plugin
+
+The request subsystem may expose synchronous and asynchronous versions of the its API. In the async versions, it will respond as quickly as possible, however in the synchronous versions, it will use the event subsystem as its callback for requests finishing.
+
+=== Request Dependencies
+
+* Persistence Layer
+* Queue
+* Event
+
+== Scheduler
+
+The scheduler subsystem is responsible for:
+
+* Creation of new jobs
+* Pausing/Starting jobs
+* Deleting jobs
+* Executing new jobs based on their interval
+
+=== Scheduler API
+
+CAUTION: This API is not finalized. It is just a working copy of where we are so far.
+
+* `create(job: Job)` - Create the given job in the scheduler.
+* `pause(job: Job)` - Pause the given job
+* `start(job: Job)` - Start the given job
+* `delete(job: Job)` - Delete the given job
+
+The Scheduler will have a background thread that is actually responsible for kicking of new requests.
+
+=== Scheduler Dependencies
+
+* Persistence Layer
+* Request
+* Marshaler
+
+== SUBSYSTEMNAME
+
+The SUBSYSTEMNAME subsystem is responsible for:
+
+* TODO: Fill this out.
+
+=== SUBSYSTEMNAME API
+
+CAUTION: This API is not finalized. It is just a working copy of where we are so far.
+
+* TODO: Fill this out.
+
+=== SUBSYSTEMNAME Dependencies
+
+* TODO: Fill this out

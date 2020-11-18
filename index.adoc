@@ -16,33 +16,17 @@ __It **can** be.__
 
 That's the main idea behind Beer Garden. So much of software development is tangled in the weeds of standing up services, getting messages from one component to another, creating UIs, writing documentation, and concurrently supporting multiple versions. We want to change that.
 
-Beer Garden makes it easy to turn your functions into REST interfaces that are ready for production use, in a way that's accessible to anyone that can write a function. It creates all the boilerplate and infrastructure needed to turn that function into a type-safe, discoverable REST interface and an easy-to-use webform-based UI.
+Beer Garden makes it easy to turn your functions into REST interfaces that are ready for production use, in a way that's accessible to anyone that can write a function. It creates all the boilerplate and infrastructure needed to turn that function into a type-safe, discoverable REST interface and an easy-to-use webform-based UI:
 
-If that sounds interesting go ahead and check out the link:docs/quickstart[Quickstart section]!
-
-
-== Look at me!
-image:demo.gif["Preview Plugin to HTML Form Screenshot"]
+video::demo.webm[alt="Preview Plugin to HTML Form Screenshot",width=100%, options="autoplay, loop"]
 
 
-== Further Reading
+== Next Steps
+If this looks interesting and you're ready to jump in then the link:docs/startup/quickstart[Quickstart] is for you!
 
-* If you're still not quite sure what Beer Garden is or what it can do for you there's more information in link:docs/what-is-beergarden[What is Beer Garden?]
+On the other hand, if you're still unsure of exactly what Beer Garden is and what it can do for you then take a look at link:docs/startup/what-is-beergarden[What is Beer Garden?] It has more overview information that can help you decide if Beer Garden is right for you.
 
-* If you're trying to get up and running as quickly as possible then the link:docs/quickstart[Quickstart section] is for you
-
-* If you're interested in administering a Beer Garden the link:docs/installation-guides/[Installation Guides] will be helpful in getting started, and the link:docs/configuration[Configuration Guide] will help with configuration
-
-* If you're looking for guidance on writing plugins check out the link:docs/plugin-developer-guide[Plugin Developer Guide] for a detailed rundown
-
-* If you'd like to better understand how to interact with Beer Garden (and learn the magic behind the Python bindings) take a look at the link:docs/api-users-guide[API Guide]
-
-* If you want to understand how the different components of Beer Garden work and interact then the link:docs/architecture[Architecture Guide] is the place to look
-
-* To learn about additional cool things Beer Garden can do explore the link:docs/user_manual[User Manual]
-
-* For documentation on the Python bindings head over to {brewtils_docs_uri}[Read the Docs]
-
+Finally, if you're looking for specific info, trying to figure out how to do something, or wondering if Beer Garden can do the neat thing you thought of the best place to look is the link:docs[User Manual].
 
 == Getting Help
 
@@ -52,7 +36,7 @@ We want Beer Garden to make your life easier. If there's anything that's unclear
 * Submit an issue to the {issues_uri}[Issue Tracker]
 
 
-== Contributing
+=== Contributing
 
 Beer Garden is open-source, and in the spirit of open-source software _everyone_ is encouraged to help improve this project. If you discover errors or omissions in the source code, documentation, or website content please don't hesitate to submit an issue or open a merge request. New contributors are always welcome!
 
@@ -64,22 +48,16 @@ Here are some ways __you__ can contribute:
 * Report bugs
 * Suggest new features
 * Write or edit the documentation
-* Write code - _No patch is too small_:
-** Fix typos
-** Add comments
-** Clean up whitespace
-** Write tests
-** Fix issues
-** Refactor
+* Write code - _No patch is too small_
 
 
-== Credits
+=== Credits
 
 A huge shout-out to https://asciidoctor.org[the Asciidoctor Project]. This website is built with AsciiDoctor and was heavily influenced by the Asciidoctor website. It really is the best way to write documentation and we highly recommend you check it out!
 
 This website is hosted by https://pages.github.com/[GitHub Pages]. It makes deployment easy and cheap. You can use it for blogs or documentation like this. Definitely take a look!
 
 
-== Copyright and Licensing
+=== Copyright and Licensing
 
 Free use of this software is granted under the terms of the MIT License. See the {uri-license}[LICENSE] file for details.

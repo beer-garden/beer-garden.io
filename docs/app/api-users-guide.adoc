@@ -1,6 +1,6 @@
 = API Users Guide
 :page-layout: docs
-:includedir: python/_includes
+:includedir: ../plugins/python/_includes
 :prewrap!:
 
 This guide is intended for people who would like to use Beer Garden's API. Basically, if you want to use Beer Garden without the web interface you've come to the right place!
@@ -36,6 +36,7 @@ The `SystemClient` is a nice abstraction, but it can be useful to know what's ha
 ----
 $ curl -X POST -H 'Content-Type: application/json' -d \
 '{
+  "namespace": "default"
   "system": "echo",
   "system_version": "1.0.0.dev",
   "instance_name": "default",

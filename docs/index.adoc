@@ -1,47 +1,49 @@
-= Beer Garden Documentation
-Logan Jones <https://github.com/loganasherjones> @loganasherjones
-:idprefix:
+= Beer Garden Manual
 :page-layout: docs
 
-Follow the links on this page to learn about Beer Garden or plugin development. You'll also find tips on how to be troubleshoot Beer Garden and how to write effective, composable plugins with Beer Garden syntax.
+The starting point for all your Beer Garden needs!
 
 TIP: Can't find the information you need? Reach out to project members and users via {chat_uri}[Gitter]
 
-== The Basics
+== Getting Started
 
 Discover Beer Garden and how it can help you.
 
-link:what-is-beergarden/[What is Beer Garden?]::
+link:startup/what-is-beergarden/[What is Beer Garden?]::
   A high-level overview of what Beer Garden is exactly and when you should use it
 
-link:user-manual[Beer Garden User Manual]::
-  The A to Z guide of Beer Garden
-
-link:api-users-guide/[API User's Guide]::
-    If you aren't writing plugins, but rather using them, this guide is for you
-
-== Get Started with Beer Garden
-
-link:installation-guides/[Installation Guides]::
-  Ready to Install Beer Garden? Pick your favorite guide and get started!
-
-link:quickstart/[Quickstart]::
+link:startup/quickstart/[Quickstart]::
   A short 5-minute tutorial for getting Beer Garden and a plugin up and running
 
-== Write Plugins with Beer Garden
+link:startup/installation-guides/[Installation Guides]::
+  Ready to Install Beer Garden? Pick your favorite guide and get started!
 
-link:plugin-syntax-quick-reference/[Plugin Syntax Quick Reference Guide]::
-  An overview of the plugin syntax you'll likely need to write a useful plugins
+== Plugins
 
-link:plugin-developer-guide/[Plugin Developer's Guide]::
+All about Beer Garden plugins.
+
+link:plugins/plugin-developer-guide/[Plugin Developer's Guide]::
   A comprehensive tutorial with examples that show you how to write plugins
 
-== Beer Garden Architecture
+link:plugins/plugin-syntax-quick-reference/[Plugin Syntax Quick Reference Guide]::
+  An overview of the plugin syntax you'll likely need to write a useful plugins
 
-link:architecture/[Beer Garden Architecture]::
+== Application
+
+Information about the Beer Garden application and how it works.
+
+link:app/architecture/[Architecture]::
   Learn how Beer Garden internals works
 
-== Contributing to Beer Garden
+link:app/configuration[Configuration Guide]::
+  Help with Application configuration
+
+link:app/api-users-guide/[API Guide]::
+    If you aren't writing plugins, but rather using them, this guide is for you
+
+== Contributing
+
+How to contribute to the Beer Garden project.
 
 link:contributing/#submitting-an-issue[How do I report a bug?]::
   Did you find a bug somewhere in Beer Garden? Checkout how to tell us.

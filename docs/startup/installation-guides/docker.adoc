@@ -8,13 +8,14 @@ This guide provides step-by-step instructions for installing and running Beer Ga
 
 include::{includedir}/docker-prereqs.adoc[]
 
-== Installing via Docker Compose
+== Docker-compose file
 
 include::{includedir}/docker-git-clone.adoc[]
 
-In this directory you will see a `docker-compose.yml` file that describes the different components of Beer Garden and how they fit together. Before we can run Beer Garden we need to make one change to the configuration.
+In this directory you will see a `docker-compose.yml` file that describes the different components of Beer Garden and how they fit together.
 
-TIP: You can checkout all the options for configuration in the link:../../configuration/[Configuration section]
+== Configuration
+Before we can run Beer Garden we need to make one small change to the configuration.
 
 include::{includedir}/docker-config-change.adoc[]
 
@@ -38,7 +39,8 @@ doesn't have a valid server certificate.
 If you have a remote plugin, you simply need to start it and point it to the host you just stood up!
 
 == Start a Local Plugin
-If you have a local plugin, then this Beer Garden is ready to deploy it. Simply copy your plugin into the `./plugins/` then navigate to `http://<IP-ADDRESS>:2337` then:
+If you have a local plugin, then this Beer Garden is ready to deploy it. Simply copy your plugin into the `./plugins/`
+then navigate to `http://<IP-ADDRESS>:80` then:
 
 1. Click on Administration on the left side of the page
 2. Click on System Administration
@@ -47,7 +49,7 @@ If you have a local plugin, then this Beer Garden is ready to deploy it. Simply 
 You should see your plugin appear!
 
 TIP: If your plugin does not appear, be sure to checkout the logs using:
-`docker-compose logs -f bartender`
+`docker-compose logs -f beer-garden`
 
 == Stop
 Run this command to stop Beer Garden.

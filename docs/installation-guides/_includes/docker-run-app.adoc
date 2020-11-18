@@ -1,8 +1,0 @@
-Then run this command to start Beer Garden:
-
-[source]
-----
-docker-compose up -d
-----
-
-Once that finishes Beer Garden will be listening on port 2337. Point a browser at `http://localhost:2337` and you'll see a message letting you know that Beer Garden couldn't find any systems. That's OK - you're about to add one!
