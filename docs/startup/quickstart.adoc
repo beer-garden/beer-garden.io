@@ -1,6 +1,6 @@
 = Beer Garden in 5 minutes
 :page-layout: docs
-:plugin-include-dir: plugins/python/_includes
+:plugin-include-dir: ../plugins/python/_includes
 :install-include-dir: installation-guides/_includes
 :plugin-base-image: bgio/plugins
 

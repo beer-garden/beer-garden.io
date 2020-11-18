@@ -22,11 +22,11 @@ video::demo.webm[alt="Preview Plugin to HTML Form Screenshot",width=100%, option
 
 
 == Next Steps
-If this looks interesting and you're ready to jump in then the link:docs/quickstart[Quickstart] is for you!
+If this looks interesting and you're ready to jump in then the link:docs/startup/quickstart[Quickstart] is for you!
 
-On the other hand, if you're still unsure of exactly what Beer Garden is and what it can do for you then take a look at link:docs/what-is-beergarden[What is Beer Garden?] It has more overview information that can help you decide if Beer Garden is right for you.
+On the other hand, if you're still unsure of exactly what Beer Garden is and what it can do for you then take a look at link:docs/startup/what-is-beergarden[What is Beer Garden?] It has more overview information that can help you decide if Beer Garden is right for you.
 
-Finally, if you're looking for specific info, trying to figure out how to do something, or wondering if Beer Garden can do the neat thing you thought of the best place to look is the link:docs/user_manual[User Manual].
+Finally, if you're looking for specific info, trying to figure out how to do something, or wondering if Beer Garden can do the neat thing you thought of the best place to look is the link:docs[User Manual].
 
 == Getting Help
 
