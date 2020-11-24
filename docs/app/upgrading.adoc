@@ -1,0 +1,80 @@
+
+= Upgrading
+:page-layout: docs
+
+Help with upgrading the Beer Garden application from 2.x to 3.x.
+
+== Should I Upgrade?
+
+It depends! In a nutshell, you should upgrade if you don't absolutely require functionality that was left on the cutting room floor during the jump to v3:
+
+- Users / Roles / Permissions. This functionality was very basic and will be completely rebuilt for version 3.1. As such, we decided that porting the current limited capability that existed in version 2 was not worth the effort.
+- Publishing events to a RabbitMQ topic. Again, this capability was fairly basic and will be getting an upgrade soon. If you depend on this capability it's best to hold off on upgrading. Also, be aware that the Event structure will most likely be different once this feature is re-enabled.
+
+== What's different?
+
+A bunch of stuff! But here we're only going to cover the *most important* changes. So if you only read one thing, this should be it.
+
+If you want to see *all* the changes then feel free to check out the changelog :)
+
+=== Goodbye Bartender & Brew-view
+Brew-view and bartender are no more. The functionality that lived in each of those applications has been combined into a single "beer-garden" application.
+
+This has some implications:
+
+==== Install and Run
+If you use docker you'll no longer use the `bgio/bartender` and `bgio/brew-view` docker images. Instead, you'll use `bgio/beer-garden`.
+
+If you use the rpm the `bartender` and `brew-view` services no longer exist. Instead, you'll start and stop the `beer-garden` service. This service already existed in version 2, but it was just a wrapper that invoked the other two "real" services. Now `beer-garden` is the "real" service.
+
+==== Configuration Files
+With the rpm install, the two config files (`/opt/beer-garden/conf/brew-view-config.yaml` and `/opt/beer-garden/conf/bartender-config.yaml`) have been superseded by the new consolidated `/opt/beer-garden/conf/config.yaml` file. The two old files will be renamed to have a `.old` extension. The old files aren't needed to run Beer Garden anymore, but unfortunately you'll need to migrate the values in them to the new file yourself. After that's done it's fine to delete them.
+
+=== Configuration Options
+The configuration names and structure have changed quite a bit between v2 and v3. For a complete guide to exactly how the configuration has changed see below.
+
+=== User Interface
+The user interface has been split out from the rest of the Beer Garden application. In v2 brew-view did double duty: it served the static resources for the frontend as well as the REST endpoints for the application. In v3 the Beer Garden application only does the latter.
+
+To run the frontend you'll need to either use the docker image (`bgio/ui`) or install a server capable of serving static files and proxying the REST API. If you're using the rpm we recommend you install the "nginx" rpm before installing or upgrading the beer-garden rpm. If you install in that order we'll create a symlink in nginx's configuration directory to a config file that will serve everything for you.
+
+=== Local Plugins
+Local plugins got a bit of a makeover in version 3.
+
+==== Logging
+In version 2 local plugins traditionally logged to STDOUT. Bartender would capture that output and would write it to a "logging" file.
+
+In version 3 that's no longer the case. Plugins (all plugins, not just local ones) now ask the Beer Garden server for a logging configuration when they're created. This allows them to log directly to a file themselves, which simplifies things.
+
+However, the logging configuration doesn't kick in until the Plugin is able to make a successful connection to Beer Garden. What if something bad occurs before that happens? To help troubleshoot that case there's a new option you can set in a Plugin's beer.conf: `CAPTURE_STREAMS`. Setting `CAPTURE_STREAMS=True` in beer.conf will cause two files, plugin.stdout and plugin.stderr, to be created in the plugin directory. These will contain whatever the plugin process generates.
+
+==== beer.conf
+The main change is that most of the items in `beer.conf` that were previously required are now optional. The only item still required is `PLUGIN_ENTRY`, all others can be omitted.
+
+Note that you'll still need to provide required information *somehow* when running a plugin. The typical way to do this is to pass things like system name to the Plugin as kwargs. Doing things this way will allow you to run a plugin as either local or remote with minimal duplication.
+
+
+== How Do I Upgrade?
+That depends on how you run Beer Garden:
+
+=== rpm
+- If you don't already have nginx installed, install it first (`yum install nginx`)
+- Upgrade with `yum upgrade beer-garden`
+- Migrate your config settings from bartender-config.yaml and brew-view-config.yaml to the new consolidated config.yaml
+- Start both Beer Garden and nginx: `systemctl start nginx beer-garden`
+
+=== Docker
+- You'll need to use the `bgio/beer-garden` and `bgio/ui` images
+- You don't need the `bgio/bartender` or `bgio/brew-view` images anymore
+- Any configuration you were applying (such as environment variables or command line arguments) to the bartender and brew-view containers needs to be applied to the beer-garden container instead. **HOWEVER**, the names of the configuration items have changed, so please consult the configuration guide when migrating.
+
+
+== Potential Pitfalls
+Just some other things to be aware of:
+
+=== Local Plugins
+Local plugins have changed a bit, so be on the lookout for these:
+
+- If a Plugin you're expecting to see just doesn't show up in the Systems list, try adding `CAPTURE_STREAMS=True` to its beer.conf and looking at the plugin.stdout and plugin.stderr files that are generated in the plugin directory.
+- If a Plugin isn't logging like you think it should, make sure that you aren't configuring logging in your Plugin's `main()` method. Plugins now get their logging configuration from Beer Garden during initialization. However, if you configure logging yourself the Plugin will respect that configuration and will *NOT* overwrite it. This is most likely not what you want. If you'd like to change the level the Plugin logs at, a better way to do that is to add `LOG_LEVEL="DEBUG"` to the beer.conf, or pass `log_level="DEBUG"` as a kwarg when creating the Plugin.
+- The version of Python used to run Beer Garden has been bumped from 3.6 to 3.7. If you're using local plugins and have any additional packages (a vendor directory) then you may run into problems if any of those vendored packages have been built for a specific Python version. This should be fairly straightforward to fix - just make a new version with vendor dependencies installed on 3.7.
