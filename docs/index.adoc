@@ -28,6 +28,9 @@ link:plugins/plugin-developer-guide/[Plugin Developer's Guide]::
 link:plugins/plugin-syntax-quick-reference/[Plugin Syntax Quick Reference Guide]::
   An overview of the plugin syntax you'll likely need to write a useful plugins
 
+link:plugins/upgrading[Upgrade Guide]::
+  Instructions for upgrading plugins from brewtils 2.x to 3.x
+
 == Application
 
 Information about the Beer Garden application and how it works.
@@ -40,6 +43,9 @@ link:app/configuration[Configuration Guide]::
 
 link:app/api-users-guide/[API Guide]::
     If you aren't writing plugins, but rather using them, this guide is for you
+
+link:app/upgrading[Upgrade Guide]::
+  Instructions for upgrading Beer Garden from 2.x to 3.x
 
 == Contributing
 
