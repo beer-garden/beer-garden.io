@@ -1,0 +1,176 @@
+
+= Upgrading
+:page-layout: docs
+
+Help with upgrading plugins from 2.x to 3.x.
+
+== Common Issues
+
+Here are some common issues seen when upgrading (and how to fix them).
+
+
+=== Plugin Creation
+
+This is the biggest change. Previously, it was required that the plugin client be passed as a kwarg when creating a Plugin. This is no longer true, and it helps in a couple of ways. 
+
+If you're in a hurry, here's what we recommend: **create the plugin as early as possible.** Ideally it should be the first line in your `main()`. The Plugin `\\__init__` does a lot of work behind the scenes, so we recommend calling it as early as possible.
+
+Here are the benefits you get from making this change:
+
+- Once the plugin is created *logging is configured for you*.
+- The plugin's connection parameters are saved globally, and the classes in the `brewtils.rest` package (eg `SystemClient`) will use those parameters by default. *You no longer need to store and pass around connection parameters yourself*.
+- The default namespace you're operating in will be saved. That enables any `SystemClient`s created to use the same namespace without needing to specify it everywhere. This is comparatively minor, but it's still nice.
+
+Bottom line, previously you could run a plugin like this:
+
+[source,python]
+.+my_plugin/__main__.py+
+----
+from my_plugin.client import MyPluginClient
+
+def main():
+    Plugin(MyPluginClient(), name="my_plugin", ...).run()
+----
+
+Now, we recommend you do this:
+
+[source,python]
+.+my_plugin/__main__.py+
+----
+from my_plugin.client import MyPluginClient
+
+def main():
+    plugin = Plugin(name="my_plugin", ...)
+
+    plugin.client = MyPluginClient()
+    plugin.run()
+----
+
+
+==== I want some examples
+
+Sounds good, here you go! We'll be splitting the client into its own module because we like to be organized:
+
+[source,python]
+.+my_plugin/client.py+
+----
+@system
+class MyPluginClient:
+    pass
+----
+
+[source,python]
+.+my_plugin/__main__.py+
+----
+from my_plugin.client import MyPluginClient
+
+def main():
+    plugin = Plugin(MyPluginClient(), name="my_plugin", ...)
+----
+
+===== Logging Configuration
+This example works fine for simple plugins, but can become cumbersome once plugins and clients become more complicated. For example, let's say that you want to load a configuration file and use it to populate the choices for a particular parameter. There are a couple of ways to do this, but let's further say that the choices will never realistically change while the plugin is running, so it doesn't make sense to implement choices as a command.
+
+The fastest way to make this work is to stick the choices in a global and populate it _before importing the client module_:
+
+[source,python]
+.+my_plugin/__init__.py+
+----
+the_choices = []
+----
+
+[source,python]
+.+my_plugin/client.py+
+----
+from my_plugin import the_choices
+
+@system
+class MyPluginClient:
+    @parameter(key="param", choices=the_choices)
+    def cmd(self, param):
+        pass
+----
+
+[source,python]
+.+my_plugin/__main__.py+
+----
+import my_plugin
+
+def main():
+    plugin = Plugin(name="my_plugin", ...)
+
+    my_plugin.the_choices = magic_load_config("config_file")
+
+    from my_plugin.client import MyPluginClient
+    
+    plugin.client = MyPluginClient()
+    plugin.run()
+----
+
+You can see that by deferring the assignment of the client we're able to create the plugin and _then_ worry about setting up the client. This is nice because remember, once the plugin is created *logging is configured for you*. This is just a simple example that handwaves away actually loading the configuration. But what if that configuration file is missing? What if `magic_load_config` actually needs to make a network call that could fail for a ton of different reasons? It's important to have logging configured as soon as possible.
+
+===== Connection Parameters
+Let's suppose that you'd like to have your client use a `SystemClient` to make requests to another plugin (see the echo-sleeper plugins in the example-plugins repo for a working example of this).
+
+In this example we'll assume you're passing in connection parameters (like `bg_host`, `bg_port`, etc.) using environment variables or the command line.
+
+Using v2 you'd need to load the connection parameters yourself and get them to where they could be passed to the `SystemClient`:
+
+[source,python]
+.+my_plugin/client.py+
+----
+@system
+class MyPluginClient:
+
+    def __init__(self, connection_info)
+        self._system_client = SystemClient(
+            system_name="other_plugin" **connection_info
+        )
+
+    @command
+    def cmd(self):
+        pass
+----
+
+[source,python]
+.+my_plugin/__main__.py+
+----
+from brewtils import get_connection_info
+from my_plugin.client import MyPluginClient
+
+def main():
+    connection_info = get_connection_info(sys.argv[1:])
+
+    plugin = Plugin(
+        MyPluginClient(connection_info), name="my_plugin"
+    )
+
+    plugin.run()
+----
+
+Now, you don't have to worry about that. Just create the system client and it will use the same connection parameters as the plugin:
+
+[source,python]
+.+my_plugin/client.py+
+----
+@system
+class MyPluginClient:
+
+    def __init__(self, connection_info)
+        self._system_client = SystemClient(system_name="other_plugin")
+
+    @command
+    def cmd(self):
+        pass
+----
+
+[source,python]
+.+my_plugin/__main__.py+
+----
+from my_plugin.client import MyPluginClient
+
+def main():
+    plugin = Plugin(name="my_plugin")
+    plugin.client = MyPluginClient()
+    plugin.run()
+----
