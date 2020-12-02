@@ -31,7 +31,202 @@ If you use the rpm the `bartender` and `brew-view` services no longer exist. Ins
 With the rpm install, the two config files (`/opt/beer-garden/conf/brew-view-config.yaml` and `/opt/beer-garden/conf/bartender-config.yaml`) have been superseded by the new consolidated `/opt/beer-garden/conf/config.yaml` file. The two old files will be renamed to have a `.old` extension. The old files aren't needed to run Beer Garden anymore, but unfortunately you'll need to migrate the values in them to the new file yourself. After that's done it's fine to delete them.
 
 === Configuration Options
-The configuration names and structure have changed quite a bit between v2 and v3. For a complete guide to exactly how the configuration has changed see below.
+The configuration names and structure have changed quite a bit between v2 and v3.
+
+The largest change is the switch from two config files (one for brew-view, one for bartender) to just one. This is nice since it removes some annoying failure cases relating to redundant configuration (for example, if you changed db.name in one config file but not the other you'd have a bad time). With this change that's no longer a possibility.
+
+Unfortunately, it also means that our normal automated configuration migration won't work in this case. So if you use configuration files to run Beer Garden you'll need to do the migration manually. If you're using the rpm the v3 install process will generate a new ``config.yaml`` file which will be used going forward. It'll also rename the old config files to have a ``.old`` suffix.
+
+For a complete guide to exactly how the configurations have changed see the tables below. Each table represents the **changes** in the configuration structure. Items with an "\*" indicate that the change applies to everything nested under that item. Everything that's *not* listed in the tables is unchanged.
+
+Some examples are provided below.
+
+
+.Table Brew-view Configuration Mapping
+|===
+| Brew-view (v2) | Beer Garden (v3) | Comments
+
+| amq.*
+| mq.*
+| 
+
+| application.allow_unsafe_output
+.2+| ui.execute_javascript
+.2+| These two items have been combined
+| application.allow_unsafe_templates
+
+| application.icon_default
+| ui.icon_default
+| 
+
+| application.name
+| ui.name
+| 
+
+| backend.*
+| 
+| This section has been removed
+
+| cors_enabled
+| ui.cors_enabled
+| 
+
+| debug_mode
+| ui.debug_mode
+| 
+
+| event.*
+| 
+| This section has been removed
+
+| log.file
+| 
+| This item has been removed
+
+| log.level
+| log.fallback_level
+| 
+
+| metrics.*
+| metrics.prometheus.*
+| 
+
+| plugin_logging.config_file
+| plugin.local.logging.config_file plugin.remote.logging.config_file
+| Local and remote plugins now have separate configurations
+
+| plugin_logging.level
+| plugin.local.logging.fallback_level plugin.remote.logging.fallback_level
+| Local and remote plugins now have separate configurations
+
+| scheduler.auth.*
+| 
+| This section has been removed
+
+| shutdown_timeout
+| 
+| This item has been removed
+
+| web.*
+| entry.http.*
+| 
+
+| web.public_fqdn
+| 
+| This item has been removed
+
+|===
+
+.Table Bartender Configuration Mapping
+|===
+| Bartender (v2) | Beer Garden (v3) | Comments
+
+| amq.*
+| mq.*
+| 
+
+| db.ttl.event
+| 
+| This item has been removed
+
+| log.file
+| 
+| This item has been removed
+
+| log.level
+| log.fallback_level
+| 
+
+| plugin.local.log_directory
+| 
+| This item has been removed
+
+| **publish_hostname**
+| **plugin.mq.host**
+| **This one is super important**
+
+| thrift.*
+| 
+| This section has been removed
+
+| web.*
+| 
+| This section has been removed
+
+|===
+
+==== Examples
+
+===== Config file
+Both config files must be combined into a single, new file.
+
+[source,yaml]
+.bartender-config.yaml
+----
+db:
+  connection:
+    host: localhost
+    password: null
+    port: 27017
+    username: null
+  name: beer_garden
+  ttl:
+    action: -1
+    event: 15
+    info: 15
+publish_hostname: localhost
+----
+
+[source,yaml]
+.brew-view-config.yaml
+----
+db:
+  connection:
+    host: localhost
+    password: null
+    port: 27017
+    username: null
+  name: beer_garden
+----
+
+BECOMES
+
+[source,yaml]
+.config.yaml
+----
+db:
+  connection:
+    host: localhost
+    password: null
+    port: 27017
+    username: null
+  name: beer_garden
+  ttl:
+    action: -1
+    info: 15
+plugin:
+  mq:
+    host: localhost
+----
+
+===== Environment Variables
+Environment variables need their names changed according to the mapping.
+
+|===
+| Old | New | Rule
+| BG_PUBLISH_HOSTNAME
+| BG_PLUGIN_MQ_HOST
+| publish_hostname -> plugin.mq.host
+
+| BG_WEB_PORT
+| BG_ENTRY_HTTP_PORT
+| web.* -> entry.http.*
+
+| BG_DB_NAME
+| BG_DB_NAME
+| Unchanged
+|===
+
 
 === User Interface
 The user interface has been split out from the rest of the Beer Garden application. In v2 brew-view did double duty: it served the static resources for the frontend as well as the REST endpoints for the application. In v3 the Beer Garden application only does the latter.
