@@ -22,5 +22,8 @@ jobs:
           ruby-version: 2.4.1
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
+      - name: Verify Gem Install
+        run: bundle install --gemfile ./Gemfile
+
       - name: Build Site
         run: rake deploy
