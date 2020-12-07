@@ -1,0 +1,37 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+# For Testing Code Only
+#on: pull_request
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    name: Build and Deploy Beer-Garden.io
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.4.1
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      - name: Verify Gem Install # Not Required if bundler-cache is true
+        run: bundle install --gemfile ./Gemfile
+
+      - name: Build Site
+        run: rake deploy
+
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: public
+        env:
+          GITHUB_TOKEN: ${{ secrets.BUILDBOT_PAGES }}
