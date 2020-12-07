@@ -16,9 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build Site
+      - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.4.1
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      - name: Build Site
         run: rake deploy
