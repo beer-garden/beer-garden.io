@@ -1,12 +1,12 @@
 name: Deploy
 
-#on:
-#  push:
-#    branches:
-#      - master
+on:
+  push:
+    branches:
+      - master
 
 # For Testing Code Only
-on: pull_request
+#on: pull_request
 
 jobs:
   deploy:
@@ -28,10 +28,10 @@ jobs:
       - name: Build Site
         run: rake deploy
 
-#      - name: Deploy to GitHub Pages
-#        uses: crazy-max/ghaction-github-pages@v2
-#        with:
-#          target_branch: master
-#          build_dir: public
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: public
+        env:
+          GITHUB_TOKEN: ${{ secrets.BUILDBOT_PAGES }}
