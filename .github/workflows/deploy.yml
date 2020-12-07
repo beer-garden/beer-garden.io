@@ -1,0 +1,25 @@
+name: Deploy
+
+#on:
+#  push:
+#    branches:
+#      - master
+
+# For Testing Code Only
+on: pull_request
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+      name: Build and Deploy Beer-Garden.io
+      steps:
+
+        - uses: actions/checkout@v2
+
+        - name: Build Site
+          uses: ruby/setup-ruby@v1
+          with:
+            ruby-version: 2.4.1
+            bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+          run: rake deploy
