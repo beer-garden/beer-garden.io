@@ -20,18 +20,20 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.4.1
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+          #bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
-      - name: Verify Gem Install # Not Required if bundler-cache is true
-        run: bundle install --gemfile ./Gemfile
+      - name: Gem Install # Not Required if bundler-cache is true
+        run: bundle install # --gemfile ./Gemfile
 
       - name: Build Site
-        run: rake deploy
+        run: rake gen[prod]
+        env:
+          NOKOGIRI_USE_SYSTEM_LIBRARIES: true
 
       - name: Deploy to GitHub Pages
         uses: crazy-max/ghaction-github-pages@v2
         with:
           target_branch: gh-pages
-          build_dir: public
+          build_dir: _site
         env:
           GITHUB_TOKEN: ${{ secrets.BUILDBOT_PAGES }}
