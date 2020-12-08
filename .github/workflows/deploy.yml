@@ -6,7 +6,7 @@ on:
       - master
 
 # For Testing Code Only
-#on: pull_request
+# on: pull_request
 
 jobs:
   deploy:
@@ -16,14 +16,24 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      # Cache is local to the Branch running OR pulled from the Default Branch
+      - name: Setup Cache for Ruby
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.4.1
-          #bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
-      - name: Gem Install # Not Required if bundler-cache is true
-        run: bundle install # --gemfile ./Gemfile
+      - name: Gem Install
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
 
       - name: Build Site
         run: rake gen[prod]
