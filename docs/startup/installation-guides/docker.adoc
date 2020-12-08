@@ -8,13 +8,14 @@ This guide provides step-by-step instructions for installing and running Beer Ga
 
 include::{includedir}/docker-prereqs.adoc[]
 
-== Installing via Docker Compose
+== Docker-compose file
 
 include::{includedir}/docker-git-clone.adoc[]
 
-In this directory you will see a `docker-compose.yml` file that describes the different components of Beer Garden and how they fit together. Before we can run Beer Garden we need to make one change to the configuration.
+In this directory you will see a `docker-compose.yml` file that describes the different components of Beer Garden and how they fit together.
 
-TIP: You can checkout all the options for configuration in the link:../../configuration/[Configuration section]
+== Configuration
+Before we can run Beer Garden we need to make one small change to the configuration.
 
 include::{includedir}/docker-config-change.adoc[]
 

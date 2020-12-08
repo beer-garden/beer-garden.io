@@ -1,6 +1,6 @@
 = Beer Garden in 5 minutes
 :page-layout: docs
-:plugin-include-dir: python/_includes
+:plugin-include-dir: ../plugins/python/_includes
 :install-include-dir: installation-guides/_includes
 :plugin-base-image: bgio/plugins
 
@@ -37,11 +37,11 @@ Sweet! Now you can use the plugin image to run your plugin:
 docker run -v $(pwd):/src --network host {plugin-base-image}
 ----
 
-You should see a message letting you know that your plugin has started - now just refresh your browser and you should see your plugin availible!
+You should see a message letting you know that your plugin has started - now just refresh your browser and you should see your plugin available!
 
 == Use your plugin
 
-Click the big `Explore` button to see a list of commands availible for your `hello-world` plugin. Right now there's just one - `say_hello`. Click the `Make it Happen!` button to bring up the Make Request page.
+Click the big `Explore` button to see a list of commands available for your `hello-world` plugin. Right now there's just one - `say_hello`. Click the `Make it Happen!` button to bring up the Make Request page.
 
 On this page you'll see a text field for the `message` parameter pre-filled with the default text "Hello, World!". Click the `Make Request` button to create your first request!
 

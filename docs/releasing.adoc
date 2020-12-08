@@ -1,63 +1,56 @@
-= Releasing Beergarden
+= Releasing
 :page-layout: docs
 
-This is intended as a guide / checklist for releasing a new versions of Beergarden things. It's aimed at the Beergarden
+This is intended as a guide / checklist for releasing a new versions of Beer Garden things. It's aimed at the Beer Garden
 maintainers.
 
-Next MAKE SURE YOU UPDATED THE CHANGELOG.
+== Brewtils
+Bump the version in `brewtils/\\__version__.py`. Make a new commit with a message that's *only* the new version (this commit message
+shows up on the Github releases page). Then create and push a new *signed* tag (`git tag -s <version>`) with *only* the version number (get that extra 'v' out of here).
 
-== Libraries
-This one is pretty easy. Applies to these:
-
-- brewtils
-- beer-garden
-
-Bump the version in `_version.py`. Make a new commit with a message that's *only* the new version (this commit message
-shows up on the Github releases page). Then create and push a new tag with the version number (*only* the version
-number - get that extra 'v' out of here).
-
-Travis will run the tests and then build and deploy the source and wheel distributions to pypi.org.
+Travis will run the tests and then build and deploy the source and wheel distributions to pypi.org. Travis will also build some docker images and deploy them too.
 
 That's it!
 
-== Docker
-This works just like the Libraries. Applies to the following to Brewtils, Beer Garden, or Example Plugins repositories.
+== Application
+Bump the version in `src/app/beer_garden/\\__version__.py`.
 
-* bgio/beer-garden
-* bgio/ui
-* bgio/example-plugins
-* bgio/plugins
-** bgio/plugins:python2
-** bgio/plugins:python3
-** bgio/plugins:python2-onbuild
-** bgio/plugins:python3-onbuild
+We *should* also be updating the UI version in `src/ui/package.json`, but since we don't currently deploy that it's not necessary.
 
-Bump the version in `_version.py`. Make a new commit with a message that's *only* the new version (this commit message
-shows up on the Github releases page). Then create and push a new tag with the version number (*only* the version
-number - get that extra 'v' out of here).
+Make a new commit with a message that's *only* the new version (this commit message
+shows up on the Github releases page). Then create and push a new tag with the version number (again, *only* the version
+number).
 
-Travis will run the tests and then build and deploy the source and wheel distributions to hub.docker.com.
+Travis will run the tests and then build and deploy the source and wheel distributions to pypi.org. Travis will also build and deploy the docker images for the release.
 
 That's it!
 
-== RPM
-This requires some effort. We currently don't have a hosting location for RPMs, so this is manually created each time.
+== rpm
+This requires some effort. We currently don't have a hosting location for rpms, so this is manually created each time.
 
-[source,shell script]
+You can build the rpm with the `--local` flag, which means "use the version that's locally checked out right now." If you don't specify this flag (the default) then the rpm build process will install the latest versions of "deployed" artifacts (in other words, it will pull the latest `beer-garden` from PyPI).
+
+[CAUTION]
+====
+Right now we don't actually deploy the UI artifact to npm, so the UI will *always* be built as if the `--local` flag was specified.
+====
+
+To build the rpm just run the build script, passing in the build type (currently only 'rpm' is supported) and version:
+
+[source,shell]
 ----
-mkdir rpm-builder;
-git clone --branch v3 https://github.com/beer-garden/beer-garden.git rpm-builder/;
+git clone https://github.com/beer-garden/beer-garden.git
 
-mkdir rpm-builder-brewtils;
-git clone --branch v3 https://github.com/beer-garden/brewtils.git rpm-builder-brewtils;
+# Only necessary if using the --local flag
+git clone https://github.com/beer-garden/brewtils.git beer-garden/src/brewtils
 
-mkdir rpm-builder/src/brewtils;
-mv rpm-builder-brewtils/* rpm-builder/src/brewtils;
+python beer-garden/rpm/bin/build.py rpm 3.0.0
 
-npm --prefix ./rpm-builder/src/ui/ install ./rpm-builder/src/ui/;
-
-rm rpm-builder/src/ui/package-lock.json;
-cd rpm-builder/rpm/bin/;
-
-python3 build.py --local --python 3.7 --distribution centos7 rpm 3.0.0;
 ----
+
+That will result in a new rpm being created in `beer-garden/rpm/dist/`.
+
+[CAUTION]
+====
+Be aware this will overwrite any existing files with the same name already in that directory.
+====
