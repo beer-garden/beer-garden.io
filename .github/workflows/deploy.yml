@@ -1,12 +1,12 @@
 name: Deploy
 
-#on:
-#  push:
-#    branches:
-#      - master
+on:
+  push:
+    branches:
+      - master
 
 # For Testing Code Only
-on: pull_request
+# on: pull_request
 
 jobs:
   deploy:
@@ -29,22 +29,18 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.4.1
-          #bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
-      - name: Gem Install # Not Required if bundler-cache is true
+      - name: Gem Install
         run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
 
-      # Blocking commands to test caching
       - name: Build Site
-        if: false
         run: rake gen[prod]
         env:
           NOKOGIRI_USE_SYSTEM_LIBRARIES: true
 
       - name: Deploy to GitHub Pages
-        if: false
         uses: crazy-max/ghaction-github-pages@v2
         with:
           target_branch: gh-pages
