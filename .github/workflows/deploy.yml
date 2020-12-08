@@ -36,12 +36,15 @@ jobs:
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
 
+      # Blocking commands to test caching
       - name: Build Site
+        if: false
         run: rake gen[prod]
         env:
           NOKOGIRI_USE_SYSTEM_LIBRARIES: true
 
       - name: Deploy to GitHub Pages
+        if: false
         uses: crazy-max/ghaction-github-pages@v2
         with:
           target_branch: gh-pages
