@@ -17,13 +17,13 @@ jobs:
       - uses: actions/checkout@v2
 
       # Cache is local to the Branch running OR pulled from the Default Branch
-      - name: Setup Cache for Ruby
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
+#      - name: Setup Cache for Ruby
+#        uses: actions/cache@v2
+#        with:
+#          path: vendor/bundle
+#          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-gems-
 
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
