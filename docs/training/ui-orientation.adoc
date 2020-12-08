@@ -105,10 +105,10 @@ for the job, it will only trigger it once.
 . Repeats job with CRON formatting
 . Repeats job on a set time internal within a provided date range (if provided)
 . Runs the job once at a future timestamp
-. Repeats the job whenever a file operation occurs and matches the given pattern.
+. Runs the job whenever a file operation occurs and matches the given pattern.
 .. Note:
 ... Patterns are matched with the directory prepended, so adjust accordingly
-(e.g. `\*.txt` -> `*/*.txt`)
+(e.g. `hello.txt` -> `*/hello.txt`)
 ... Callback events may not match expected behavior depending on operating system/application-specific
 implementations.  Some programs are known to cause both `delete` and `create` events when a `modify`
 event is expected.

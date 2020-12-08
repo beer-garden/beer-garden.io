@@ -3,7 +3,7 @@
 |===
 |Argument |Required? |Options |Default |Description
 |<<plugin-param-key,key>> |Y |N/A |N/A |Specifies the Argument Name
-|<<plugin-param-type,type>> |N |[String, Integer, Float, Boolean, Any, Dictionary] |Any |Specifies the type of Parameter
+|<<plugin-param-type,type>> |N |[String, Integer, Float, Boolean, Any, Dictionary, Base64] |Any |Specifies the type of Parameter
 |<<plugin-param-multi,multi>> |N |[True, False] | False | Specifies if the parameter is a list
 |<<plugin-param-display-name,display_name>> |N |N/A |  key  | Specifies a Pretty way to refer to the key
 |<<plugin-param-optional,optional>> |N |[True, False] |False | Specifies if the parameter is required
