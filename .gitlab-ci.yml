@@ -5,7 +5,7 @@ pages:
     NOKIGIRI_USE_SYSTEM_LIBRARIES: "true"
   script:
     - bundle install
-    - rake gen[prod]
+    - rake gen[gitlab]
   artifacts:
     paths:
       - public

@@ -27,7 +27,7 @@ jobs:
         run: bundle install # --gemfile ./Gemfile
 
       - name: Build Site
-        run: rake gen[prod]
+        run: rake gen[github]
         env:
           NOKOGIRI_USE_SYSTEM_LIBRARIES: true
 
