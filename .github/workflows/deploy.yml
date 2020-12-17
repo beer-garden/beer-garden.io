@@ -23,8 +23,8 @@ jobs:
         #    ruby-version: 2.7.2
         #    bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
-        #- name: Gem Install # Not Required if bundler-cache is true
-        #  run: bundle install # --gemfile ./Gemfile
+      - name: Bundle Install # Not Required if bundler-cache is true
+        run: bundle install # --gemfile ./Gemfile
 
       - name: Build Site
         run: rake gen[prod]
