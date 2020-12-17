@@ -31,7 +31,7 @@ gem 'haml', '4.0.7'
 gem 'slim', '3.0.6'
 gem 'tilt', '2.0.2'
 gem 'rb-inotify', '0.9.7', :platforms => [:ruby, :jruby]
-gem 'bootstrap-sass', '< 3.4'
+gem 'bootstrap-sass', '< 3.5'
 gem 'font-awesome-sass', '<= 5'
 gem 'tzinfo', '1.2.2', :group => :test
 gem 'rake', '12.3.3', :group => :test
