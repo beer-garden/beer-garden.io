@@ -1,0 +1,12 @@
+image: ruby:2.7.2
+
+pages:
+  variables:
+    NOKIGIRI_USE_SYSTEM_LIBRARIES: "true"
+  script:
+    - bundle install
+    - rake gen[prod]
+    - mv _site public
+  artifacts:
+    paths:
+      - public
