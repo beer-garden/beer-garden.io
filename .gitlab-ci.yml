@@ -6,7 +6,6 @@ pages:
   script:
     - bundle install
     - rake gen[prod]
-    - mv _site public
   artifacts:
     paths:
       - public

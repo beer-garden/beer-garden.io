@@ -107,7 +107,7 @@ task :gen, [:profile, :output_dir] => :check do |task, args|
   profile = args[:profile] || 'development'
   profile = 'production' if profile == 'prod'
 
-  output_dir = args[:output_dir] || '_site'
+  output_dir = args[:output_dir] || 'public'
 
   run_awestruct %(-P #{profile} --output-dir #{output_dir} -g --force)
 end
