@@ -11,19 +11,20 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    container: ruby:2.7.2
 
     name: Build and Deploy Beer-Garden.io
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7.2
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+        #- name: Install Ruby
+        #  uses: ruby/setup-ruby@v1
+        #  with:
+        #    ruby-version: 2.7.2
+        #    bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
-          #- name: Gem Install # Not Required if bundler-cache is true
-          #  run: bundle install # --gemfile ./Gemfile
+        #- name: Gem Install # Not Required if bundler-cache is true
+        #  run: bundle install # --gemfile ./Gemfile
 
       - name: Build Site
         run: rake gen[prod]
