@@ -10,7 +10,7 @@ In this guide, we will go over the configuration options in Beer Garden and how 
 talk about the configuration at a high level, but we assume you have installed Beer Garden somehow.
 
 If you would like to jump straight to the definitions of `{bg-config}`, please redirect to
-link:user_manual/config_yaml.adoc[Config User Manual]
+link:/config_yaml.adoc[Config User Manual]
 
 == Configuration Files ==
 
