@@ -1,5 +1,10 @@
 image: ruby:2.7.2
 
+cache:
+  key: bundlecache
+  paths:
+    - .vendor
+
 pages:
   variables:
     NOKIGIRI_USE_SYSTEM_LIBRARIES: "true"
