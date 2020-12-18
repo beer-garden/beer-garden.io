@@ -20,7 +20,7 @@ jobs:
       - name: Cache Bundler
         uses: actions/cache@v2
         with:
-          path: ~/.cache/bundler
+          path: .cache/bundler
           key: ${{ runner.os }}-bundler-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-bundler
