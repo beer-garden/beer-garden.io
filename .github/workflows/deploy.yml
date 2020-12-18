@@ -23,8 +23,19 @@ jobs:
         #    ruby-version: 2.7.2
         #    bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
+      - name: Cache Bundler
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/bundler
+          key: ${{ runner.os }}-bundler-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bundler
+
+
       - name: Bundle Install # Not Required if bundler-cache is true
-        run: bundle install # --gemfile ./Gemfile
+        run: |
+          bundle config set path .cache/bundler
+          bundle install
 
       - name: Build Site
         run: rake gen[github]
