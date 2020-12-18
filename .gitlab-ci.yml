@@ -3,7 +3,7 @@ image: ruby:2.7.2
 cache:
   key: bundlecache
   paths:
-    - .vendor
+    - .cache/bundler
 
 stages:
   - build
@@ -15,7 +15,7 @@ pages:
     NOKIGIRI_USE_SYSTEM_LIBRARIES: "true"
 
   script:
-    - bundle config set path .vendor
+    - bundle config set path .cache/bundler
     - bundle install
     - rake gen[gitlab]
 

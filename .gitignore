@@ -6,4 +6,5 @@
 /.rbx/
 /.sass-cache/
 /.vendor/
+/.cache/
 /public/
