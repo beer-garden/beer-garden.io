@@ -15,6 +15,7 @@ pages:
     NOKIGIRI_USE_SYSTEM_LIBRARIES: "true"
 
   script:
+    - bundle config set mirror.https://rubygems.org/ $GEM_MIRROR
     - bundle config set path .cache/bundler
     - bundle install
     - rake gen[gitlab]
