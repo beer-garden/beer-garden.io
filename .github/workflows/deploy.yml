@@ -27,7 +27,7 @@ jobs:
         run: bundle install # --gemfile ./Gemfile
 
       - name: Build Site
-        run: rake gen[prod]
+        run: rake gen[github]
         env:
           NOKOGIRI_USE_SYSTEM_LIBRARIES: true
 
@@ -35,6 +35,6 @@ jobs:
         uses: crazy-max/ghaction-github-pages@v2
         with:
           target_branch: gh-pages
-          build_dir: _site
+          build_dir: public
         env:
           GITHUB_TOKEN: ${{ secrets.BUILDBOT_PAGES }}

@@ -1,0 +1,25 @@
+image: ruby:2.7.2
+
+cache:
+  key: bundlecache
+  paths:
+    - .vendor
+
+stages:
+  - build
+
+pages:
+  stage: build
+
+  variables:
+    NOKIGIRI_USE_SYSTEM_LIBRARIES: "true"
+
+  script:
+    - bundle config set path .vendor
+    - bundle install
+    - rake gen[gitlab]
+
+  artifacts:
+    paths:
+      - public
+

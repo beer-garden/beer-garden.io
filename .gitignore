@@ -5,4 +5,5 @@
 /.bundle/
 /.rbx/
 /.sass-cache/
-/vendor/
+/.vendor/
+/public/

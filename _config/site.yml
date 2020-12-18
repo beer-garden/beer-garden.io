@@ -37,8 +37,16 @@ haml:
     :ugly: true
 slim|html:
     :format: :html
+
 profiles:
-    production:
+    development:
+        # base_url: 'http://localhost:4242'
+    gitlab:
+        base_url: '/beer-garden.io'
+        scss:
+          line_numbers: false
+          style: compressed
+    github:
         base_url: ''
         disqus_developer: false
         google_analytics_account: UA-113442079-2
@@ -47,9 +55,7 @@ profiles:
         scss:
           line_numbers: false
           style: compressed
-        deploy:
-          host: github_pages
-          branch: gh-pages
-    development:
-        deploy: null
-        # base_url: 'http://localhost:4242'
+          # Don't think this is necessary, we let CI do the deploying
+          #deploy:
+          #  host: github_pages
+          #  branch: gh-pages

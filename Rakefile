@@ -94,7 +94,6 @@ end
 desc 'Generate and preview the site locally using the specified profile (default: development)'
 task :preview, [:profile] => :check do |task, args|
   profile = args[:profile] || 'development'
-  profile = 'production' if profile == 'prod'
   run_awestruct %(-P #{profile} -a --generate-on-access --livereload -s)
 end
 
@@ -105,9 +104,7 @@ task :serve => :preview
 desc 'Generate the site using the specified profile (default: development)'
 task :gen, [:profile, :output_dir] => :check do |task, args|
   profile = args[:profile] || 'development'
-  profile = 'production' if profile == 'prod'
-
-  output_dir = args[:output_dir] || '_site'
+  output_dir = args[:output_dir] || 'public'
 
   run_awestruct %(-P #{profile} --output-dir #{output_dir} -g --force)
 end
