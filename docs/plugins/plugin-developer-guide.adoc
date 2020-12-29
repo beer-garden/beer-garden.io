@@ -7,8 +7,7 @@ These guides provide gentle introductions to plugin development. They are intend
 
 == Guides
 
-* link:../python/local-guide/[Python Plugin (Local)]
-* link:../python/remote-guide/[Python Plugin (Remote)]
+* link:../python/local-guide/[Python Plugin]
 // TODO: Add the Java guide once it is done
 // * link:java/remote-guide/[Java Plugin (Remote)]
 
@@ -22,4 +21,4 @@ These guides will dive into some of the more specific ways you can develop plugi
 
 Pick your favorite currently supported language and let's get started!
 
-TIP: If you don't know the difference between remote and local plugins, please check the link:../local-vs-remote/[local vs remote plugins docs]
+//TIP: If you don't know the difference between remote and local plugins, please check the link:../local-vs-remote/[local vs remote plugins docs]

@@ -11,16 +11,33 @@ The goal of this section is to help you write a local plugin from scratch. In or
 
 include::{includedir}/prereqs.adoc[]
 
-NOTE: Don't forget, if you're writing a local plugin, you'll need to be able to write to the plugins directory of the Beer Garden you plan on using.
+NOTE: You'll also need to be able to write to the plugins directory of the Beer Garden you plan on using.
 
 Now you're ready to start writing your plugin.
+
+== Anatomy of a plugin
+
+The anatomy of a plugin is pretty simple. If you are familiar with writing python libraries, this directory structure should look very familiar. A normal plugin will look something like this:
+
+    my_plugin/
+        |
+        | - beer.conf
+        | - setup.py
+        |   my_plugin/
+        |       |
+        |       |  - __main__.py
+        |       |  - __init__.py
 
 == Hello World!
 Plugins are just classes with methods that you would like to expose. This section will walk you through setting up a plugin that exposes the classic 'Hello, World!' functionality.
 
+=== Setting up
+
+Using the structure shown in <<Anatomy of a plugin>>, create the necessary empty files and folders.  For this example use `hello_world` for the folders labeled `my_plugin`.
+
 === Write the code
 
-Use your favorite text editor and open up a file called `main.py` and add the following:
+Use your favorite text editor to open up `\\__main__.py` and add the following:
 
 include::{includedir}/hello-world-client.adoc[]
 
@@ -29,12 +46,12 @@ Once we have the client, we now need to create our entry point. Let's open back 
 include::{includedir}/hello-world-local-entry-point.adoc[]
 
 === Configure your plugin
-First things first, we need to create a special configuration file that Beer Garden uses to determine important information about your plugin. That file is called `beer.conf`
+Alongside, not inside, our `hello_world` folder we need to create two more files: `beer.conf` and `setup.py`.  `beer.conf` is a special configuration file that Beer Garden uses to determine important information about your plugin.
 
 [source,python]
 .beer.conf
 ----
-PLUGIN_ENTRY='main.py'
+PLUGIN_ENTRY='-m hello_world'
 ----
 
 Now that you've written your code and `beer.conf`, you'll need to find a way to package your software. Python uses `setuptools` to do this. Let's start with a simple `setup.py`. This file is standard python, but we will go over an easy configuration first:
@@ -42,43 +59,35 @@ Now that you've written your code and `beer.conf`, you'll need to find a way to 
 [source,python]
 .setup.py
 ----
-import sys
-import os
-from setuptools import setup, find_packages
+from setuptools import setup
 
-requirements = ['brewtils']
-
-setup_args = {
-  'name'             : 'my_plugin',
-  'description'      : 'My Cool Plugin that does stuff',
-  'version'          : '1.0.0',
-  'pacakges'         : find_packages(exclude=['test','test.*']),
-  'install_requires' : requirements
-}
-
-setup(**setup_args)
+setup(
+    name="hello-world",
+    version="1.0.0.dev0",
+    description="Prints 'Hello, World'",
+    packages=["hello_world"],
+    install_requires=["brewtils"],
+)
 ----
-
-Since our files may or may not be in a correct package, we also are going to add the following to `MANIFEST.in`. Since Beer Garden plugins are expected to include a `beer.conf` file in their distributions, the `MANIFEST.in` is python's way of including that file in the source build. You can simply include it as follows:
-
-[source]
-.MANIFEST.in
-----
-include beer.conf
-include main.py
-----
-
+//
+//Since our files may or may not be in a correct package, we also are going to add the following to `MANIFEST.in`. Since Beer Garden plugins are expected to include a `beer.conf` file in their distributions, the `MANIFEST.in` is python's way of including that file in the source build. You can simply include it as follows:
+//
+//[source]
+//.MANIFEST.in
+//----
+//include beer.conf
+//include main.py
+//----
+//
+// TO-DO: Confirm that this is right? When setup with the include beer.conf line, the file still isn't in the tar
 === Creating your distribution
 
-Once you are done configuring everything, you simply need to build a source distribution, which you can do with the following command:
-
+Once you are done configuring everything, all you need to do is tar
 [source]
 ----
 python setup.py sdist
 ----
-
-This will create a `tar.gz` file in your `dist` directory. This file is what will get transferred to the `plugins/` directory in Beer Garden.
-
+// Relies on the previous to-do
 === Deploying your plugin
 
 Take your `tar.gz` file, and copy it to the plugins directory of Beer Garden. The default location for RPMs is `/opt/beer-garden/plugins` but varies based on your installation methods. Once copied, you simply need to untar/compress it:
@@ -94,21 +103,7 @@ Now go to the Beer Garden GUI under `Administration -> Systems Management` and c
 
 That's it!
 
-== Anatomy of a local plugin
-
-The anatomy of a plugin is pretty simple. If you are familiar with writing python libraries, this directory structure should look very familiar. A normal plugin will look something like this:
-
-    my_plugin/
-        |
-        | - beer.conf
-        | - MANIFEST.in
-        | - main.py
-        | - setup.py
-        |   my_plugin/
-        |       |
-        |       |  - client.py
-        |       |  - __init__.py
-
+== Anatomy of a plugin
 
 The only thing in this directory structure that should look non-standard is the `beer.conf` file. But for posterity's sake, let's examine each of these files/directories a little bit more closely.
 

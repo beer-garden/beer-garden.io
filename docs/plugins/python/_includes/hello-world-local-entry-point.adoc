@@ -6,8 +6,13 @@ from brewtils import Plugin
 # Your implementation of the client goes here
 
 def main():
-    client = HelloWorldClient()
-    plugin = Plugin(client)
+    plugin = Plugin(
+        name="HelloWorld",
+        namespace="MyWorld",
+        version="1.0.0.dev0"
+        description="Prints 'Hello, World'",
+    )
+    plugin.client = HelloWorldClient()
     plugin.run()
 
 if __name__ == "__main__":
