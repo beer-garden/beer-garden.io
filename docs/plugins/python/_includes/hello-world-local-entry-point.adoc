@@ -1,7 +1,8 @@
 [source,python]
 .plugin.py
 ----
-from brewtils import Plugin
+import sys
+from brewtils import Plugin, get_connection_info
 
 # Your implementation of the client goes here
 
@@ -9,8 +10,9 @@ def main():
     plugin = Plugin(
         name="HelloWorld",
         namespace="MyWorld",
-        version="1.0.0.dev0"
+        version="1.0.0.dev0",
         description="Prints 'Hello, World'",
+        **get_connection_info(sys.argv[1:])
     )
     plugin.client = HelloWorldClient()
     plugin.run()

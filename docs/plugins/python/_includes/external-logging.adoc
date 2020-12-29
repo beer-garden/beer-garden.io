@@ -4,19 +4,15 @@ This allows you to do one-time configuration of a logger in Beer Garden configur
 
 [source,python]
 ----
-from brewtils.log import setup_logger
+import sys
+from brewtils import get_connection_info
+from brewtils.log import configure_logging
 
 # Your client definition Here
 
 if __name__ == "__main__":
-    setup_logger(
-        bg_host='localhost',
-        bg_port=2337,
-        system_name='my_name',
-        ca_cert=None,
-        client_cert=None,
-        ssl_enabled=None,
-    )
+    connection_info = get_connection_info(sys.argv[1:])
+    configure_logging(system_name='my_system', **connection_info)
     # Init your plugin as normal.
 ----
 

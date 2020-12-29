@@ -5,7 +5,7 @@
 
 // TODO Should we update this to include Namespace?
 
-The goal of this section is to help you write a local plugin from scratch. In order to write local plugins there are a few things that you need.
+The goal of this section is to help you write a plugin from scratch. In order to write plugins there are a few things that you need.
 
 == Prerequisites
 
@@ -79,31 +79,30 @@ setup(
 //include main.py
 //----
 //
-// TO-DO: Confirm that this is right? When setup with the include beer.conf line, the file still isn't in the tar
 === Creating your distribution
 
-Once you are done configuring everything, all you need to do is tar
+Once you are done configuring everything, all you need to do is tar the entire folder.
 [source]
 ----
-python setup.py sdist
+tar -czvf my_plugin.tar.gz my_plugin
 ----
-// Relies on the previous to-do
+
 === Deploying your plugin
 
 Take your `tar.gz` file, and copy it to the plugins directory of Beer Garden. The default location for RPMs is `/opt/beer-garden/plugins` but varies based on your installation methods. Once copied, you simply need to untar/compress it:
 
 [source]
 ----
-cp dist/my-plugin-0.0.1.tar.gz /opt/beer-garden/plugins/
+cp my_plugin.tar.gz /opt/beer-garden/plugins/
 cd /opt/beer-garden/plugins/
-tar -zxvf my-plugin-0.0.1.tar.gz
+tar -zxvf my_plugin.tar.gz
 ----
 
 Now go to the Beer Garden GUI under `Administration -> Systems Management` and click `Rescan System Directory` in the top right. This will instruct Beer Garden to scan the plugins directory for new plugins and start them. You should see your plugin appear. Once it is up, you can go to `Systems` then your system and see the command `hello_world`! Click `Make it Happen!` then `Make Request` to see your plugin in action.
 
 That's it!
 
-== Anatomy of a plugin
+== Further file details
 
 The only thing in this directory structure that should look non-standard is the `beer.conf` file. But for posterity's sake, let's examine each of these files/directories a little bit more closely.
 
@@ -122,20 +121,16 @@ The `beer.conf` file is a minimal configuration file that specifies to Beer Gard
     ENVIRONMENT = {'MY_PASSWORD':'sup3r$ecret'}  # Environment variables
     REQUIRES = ['foo']                           # Defines relationship to 'foo' plugin
 
-
-=== MANIFEST.in
-
-To developers who have never written a complicated egg before, the `MANIFEST.in` may be something new. Since Beer Garden Plugins are expected to include a `beer.conf` file in their distributions, the `MAINFEST.in` is python's way of including that file in the source build. Generally speaking (unless you have additional requirements that are not python packages) you can simply include the `beer.conf` and your plugin executable in the MANIFEST. Most `MANIFEST.in` files look like the following:
-
-    include beer.conf
-    include main.py
-
-
-This basically says "include main.py and beer.conf" in my source distribution.
-
-=== main.py
-
-___The main.py does not have to be called main.py___, but it is whatever name you gave to your `PLUGIN_ENTRY` entry in the `beer.conf` file and must be included in the source distribution. This is what starts up the plugin and keeps it running.
+//see other to-dos
+//=== MANIFEST.in
+//
+//To developers who have never written a complicated egg before, the `MANIFEST.in` may be something new. Since Beer Garden Plugins are expected to include a `beer.conf` file in their distributions, the `MAINFEST.in` is python's way of including that file in the source build. Generally speaking (unless you have additional requirements that are not python packages) you can simply include the `beer.conf` and your plugin executable in the MANIFEST. Most `MANIFEST.in` files look like the following:
+//
+//    include beer.conf
+//    include main.py
+//
+//
+//This basically says "include main.py and beer.conf" in my source distribution.
 
 === setup.py
 
@@ -143,7 +138,15 @@ The `setup.py` file should be very standard. Customize this as you would customi
 
 === my_plugin/*
 
-Everything in the `my_plugin/` directory is specific module level code you would like to include in your distribution. You can organize your library however makes sense to you. The code underneath here has little if anything to do with Beer Garden.  The only thing that you'll see that Beer Garden requires is some type of client that has been decorated with utilities from {brewtils_docs_uri}[brewtils.]
+Everything in the `my_plugin/` directory is specific module level code you would like to include in your distribution.
+
+==== \\__main__.py
+
+This is what starts up the plugin and keeps it running.
+
+==== \\__init__.py
+
+This is a standard Python module file.  It may be empty, but must exist.
 
 That's all there is to plugin layouts!
 
@@ -157,7 +160,7 @@ include::{includedir}/exceptions.adoc[]
 
 == Logging
 
-For Local plugins, Beer Garden will attempt to make decent decisions about where it should log. For example, if Beer Garden is configured to log to `STDOUT` or `STDERR` then your plugin will log there as well. If, however, Beer Garden is configured to log to a file (the default behavior for RPMs), then it will give each unique plugin its own log file. If you would like to log, you can either print to `STDOUT` or `STDERR`. The `LocalPlugin` will take care of everything else.
+For local plugins, Beer Garden will attempt to make decent decisions about where it should log. For example, if Beer Garden is configured to log to `STDOUT` or `STDERR` then your plugin will log there as well. If, however, Beer Garden is configured to log to a file (the default behavior for RPMs), then it will give each unique plugin its own log file. If you would like to log, you can either print to `STDOUT` or `STDERR`. The `Plugin` will take care of everything else.
 
 INFO: Use STDOUT or STDERR for logging
 
@@ -191,7 +194,7 @@ def do_something(self):
   my_long_running_method()
 ----
 
-Otherwise, if you are using print, the `LocalPlugin` will flush once your method has been completed.
+Otherwise, if you are using print, the `Plugin` will flush once your method has been completed.
 
 == External Logging
 
