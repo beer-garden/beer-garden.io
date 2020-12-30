@@ -1,9 +1,9 @@
 [source,python]
-.plugin.py
+.\\__main__.py
 ----
 from brewtils import command, system
 
-@system # <1>
+@system  <1>
 class HelloWorldClient(object):
 
     @command <2>

@@ -1,4 +1,4 @@
-= Python Plugin Guide (Local)
+= Python Local Plugin Guide
 :page-layout: docs
 :includedir: _includes
 :uri-install-guides: ../../installation-guides/
@@ -69,16 +69,6 @@ setup(
     install_requires=["brewtils"],
 )
 ----
-//
-//Since our files may or may not be in a correct package, we also are going to add the following to `MANIFEST.in`. Since Beer Garden plugins are expected to include a `beer.conf` file in their distributions, the `MANIFEST.in` is python's way of including that file in the source build. You can simply include it as follows:
-//
-//[source]
-//.MANIFEST.in
-//----
-//include beer.conf
-//include main.py
-//----
-//
 === Creating your distribution
 
 Once you are done configuring everything, all you need to do is tar the entire folder.
@@ -121,17 +111,6 @@ The `beer.conf` file is a minimal configuration file that specifies to Beer Gard
     ENVIRONMENT = {'MY_PASSWORD':'sup3r$ecret'}  # Environment variables
     REQUIRES = ['foo']                           # Defines relationship to 'foo' plugin
 
-//see other to-dos
-//=== MANIFEST.in
-//
-//To developers who have never written a complicated egg before, the `MANIFEST.in` may be something new. Since Beer Garden Plugins are expected to include a `beer.conf` file in their distributions, the `MAINFEST.in` is python's way of including that file in the source build. Generally speaking (unless you have additional requirements that are not python packages) you can simply include the `beer.conf` and your plugin executable in the MANIFEST. Most `MANIFEST.in` files look like the following:
-//
-//    include beer.conf
-//    include main.py
-//
-//
-//This basically says "include main.py and beer.conf" in my source distribution.
-
 === setup.py
 
 The `setup.py` file should be very standard. Customize this as you would customize any `setup.py` file for packaging python eggs.
@@ -157,7 +136,7 @@ include::{includedir}/beer-conf.adoc[]
 == Exception Handling
 
 include::{includedir}/exceptions.adoc[]
-
+// TODO - Confirm that logging operations haven't changed
 == Logging
 
 For local plugins, Beer Garden will attempt to make decent decisions about where it should log. For example, if Beer Garden is configured to log to `STDOUT` or `STDERR` then your plugin will log there as well. If, however, Beer Garden is configured to log to a file (the default behavior for RPMs), then it will give each unique plugin its own log file. If you would like to log, you can either print to `STDOUT` or `STDERR`. The `Plugin` will take care of everything else.
@@ -218,11 +197,9 @@ mkdir vendor
 pip install Fabric -t vendor/
 ```
 
-Now, you need to include this in your source distribution by modifying your `MANIFEST.in`
+Now, you need to include this in your source distribution by modifying or creating your `MANIFEST.in` in your top-level directory and add the following line:
 
 ```
-include beer.conf
-include main.py
 graft vendor
 ```
 

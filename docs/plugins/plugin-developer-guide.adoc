@@ -7,7 +7,7 @@ These guides provide gentle introductions to plugin development. They are intend
 
 == Guides
 
-* link:../python/local-guide/[Python Plugin]
+* link:../python/local-guide/[Python Plugin (Local)]
 // TODO: Add the Java guide once it is done
 // * link:java/remote-guide/[Java Plugin (Remote)]
 

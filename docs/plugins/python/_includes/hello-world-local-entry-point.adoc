@@ -1,5 +1,5 @@
 [source,python]
-.plugin.py
+.\\__main__.py
 ----
 import sys
 from brewtils import Plugin, get_connection_info
