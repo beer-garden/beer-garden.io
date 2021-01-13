@@ -11,6 +11,9 @@ stages:
 pages:
   stage: build
 
+  tags:
+    - pages
+
   variables:
     NOKIGIRI_USE_SYSTEM_LIBRARIES: "true"
 
