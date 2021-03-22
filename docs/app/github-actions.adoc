@@ -1,0 +1,105 @@
+= Github Actions
+:page-layout: docs
+
+On this page we will go over the different Actions that are triggered within the Beer-Garden Repo.
+
+== Pull Requests
+During every Pull Request, Github Actions runs the following steps.
+
+* Linting: Verifies that the formatting standard was maintained. Common resolution is running `make format`.
+* PyTest: Runs all of the Unit Tests documented within the environment
+* Code Coverage: Checks the cover coverage of the Unit Tests and uploads results to CodeCov.io (https://app.codecov.io/gh/beer-garden/beer-garden[Beer Garden] and https://app.codecov.io/gh/beer-garden/brewtils[Brewtils])
+* Complexity Checks: Custom-ish complexity checker to identify how many if/for loops we are utilizing.
+* Security Checks: Runs security scans on the code repo.
+
+
+----
+For Pull Requests that depends on a Brewtils PR, we have a custom tag that can be utilized to reference it for testing purposes: `brewtils: <branch>`
+
+This tag will download that version of Brewtils for the test environment, instead of develop.
+----
+
+== Tagging
+
+When a Tag is added to Beer Garden, the automated release process is kicked off. This is how Beer-Garden
+manages releases. The tag text will be utilized as the Version release for their respective hosting location.
+
+
+* Docker Builds
+** https://hub.docker.com/r/bgio/beer-garden[Beer-Garden Framework]
+** https://hub.docker.com/r/bgio/plugins[Plugins]
+** https://hub.docker.com/r/bgio/ui[Beer-Garden UI]
+* NPM Build
+** https://www.npmjs.com/package/@beer-garden/addons[Angular Schema Forms Addons]
+** https://www.npmjs.com/package/@beer-garden/builder[Angular Schema Forms Builder]
+* PyPi Build
+** https://pypi.org/project/beer-garden/[Beer Garden]
+** https://pypi.org/project/brewtils/[Brewtils]
+
+----
+Please note that the version utilized Docker Builder for Beer-Garden will be utilized for the Brewtils install on that Docker Image.
+----
+
+
+== Scheduled and Integration
+
+On a nightly job, Beer Garden kicks off it's integration testing. This is a short list of tests that heavily
+relies on the matrix feature of Github Actions to support all the various use cases that is needed.
+
+There are three primary tests that are executed through the scheduler.
+
+=== Local Plugin Testing
+Beer Garden has a collection of Example Plugins that are used to demonstrate the various features of the
+framework. This test deploys the latest version of that plugins against the latest version of Develop. Then
+verifies that Requests can be sent to each of them. This ensures that all edge cases has been handled.
+
+=== Remote Plugin Testing
+The latest V3 release branch of Beer Garden is backwards compatible with V3 releases of Brewtils on
+various Python versions. This ensures that any older V3 plugins that are running remotely will be to
+connection to Beer Garden.
+
+Currently Testing Matrix:
+
+[
+`Python 2.7`,
+`Python 3.4`,
+`Python 3.5`,
+`Python 3.6`,
+`Python 3.7`,
+`Python 3.8`,
+`Python 3.9`
+]
+x
+[
+`Brewtils 3.0.0`,
+`Brewtils 3.0.1`,
+`Brewtils 3.0.2`,
+`Brewtils 3.1.0`
+]
+
+=== Parent/Child Testing
+
+V3 introduced the new ability to connect Beer Gardens together. To ensure this is working properly, Beer Garden
+deploys and configures two Beer Gardens to communicate. Just like the plugin, if the Parent Beer Garden is the
+latest V3 release, the Child Beer Garden can be any V3 variant.
+
+Testing steps
+
+* Start Parent Garden
+* Start Child Garden
+* Configure Child Connection on Parent
+* Verify the Child Systems are on the Parent
+* Task Child through Parent
+* Task Child through Child
+* Verify both requests are on Parent
+
+
+== Source Code
+
+If you are interested in how we accomplished any of our Github actions, check out the following links and our source code.
+
+* https://github.com/beer-garden/beer-garden/tree/develop/.github/workflows[Beer-Garden]
+* https://github.com/beer-garden/brewtils/blob/develop/.github/workflows[Brewtils]
+* https://github.com/beer-garden/angular-schema-form-builder/tree/develop/.github/workflows[Angular Schema Form Builder]
+* https://github.com/beer-garden/angular-schema-form-addons/tree/develop/.github/workflows[Angular Schema Form Addons]
+* https://docs.github.com/en/actions[Github Actions Docs]
