@@ -43,12 +43,14 @@ profiles:
         # base_url: 'http://localhost:4242'
     gitlab:
         base_url: '/beer-garden.io'
+        image_dir: './beer-garden.io'
         scss:
           line_numbers: false
           style: compressed
     github:
         base_url: ''
         disqus_developer: false
+        image_dir: '.'
         google_analytics_account: UA-113442079-2
         google_analytics:
           account: UA-113442079-2
