@@ -4,6 +4,7 @@
 On this page we will go over the different Actions that are triggered within the Beer-Garden Repo.
 
 == Pull Requests
+[[_pull_requests]]
 During every Pull Request, Github Actions runs the following steps.
 
 * Linting: Verifies that the formatting standard was maintained. Common resolution is running `make format`.
@@ -20,7 +21,7 @@ This tag will download that version of Brewtils for the test environment, instea
 ----
 
 == Tagging
-
+[[_tagging]]
 When a Tag is added to Beer Garden, the automated release process is kicked off. This is how Beer-Garden
 manages releases. The tag text will be utilized as the Version release for their respective hosting location.
 
@@ -42,6 +43,7 @@ Please note that the version utilized Docker Builder for Beer-Garden will be uti
 
 
 == Scheduled and Integration
+[[_scheduled_and_integration]]
 
 On a nightly job, Beer Garden kicks off it's integration testing. This is a short list of tests that heavily
 relies on the matrix feature of Github Actions to support all the various use cases that is needed.

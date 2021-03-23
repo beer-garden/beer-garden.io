@@ -52,11 +52,14 @@ link:app/upgrading[Upgrade Guide]::
 Beer Garden automates a range of tasks through Github Actions. This is information on what to expect
 for each action.
 
-link:app/github-actions#_pull_requests[Pull Request]
+link:app/github-actions#_pull_requests[Pull Request]::
+When a Pull Request is submitted, what happens?
 
-link:app/github-actions#_tagging[Tagging]
+link:app/github-actions#_tagging[Tagging]::
+When a Tag is creates, what happens?
 
-link:app/github-actions#_scheduled_and_integration[Scheduler and Integration]
+link:app/github-actions#_scheduled_and_integration[Scheduler and Integration]::
+What automated actions exist
 
 == Contributing
 
