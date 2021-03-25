@@ -38,6 +38,9 @@ Information about the Beer Garden application and how it works.
 link:app/architecture/[Architecture]::
   Learn how Beer Garden internals works
 
+link:app/parent-child[Parent & Child Configurations]::
+  Learn how Beer Garden can be configured in a Parent/Child Relationship
+
 link:app/configuration[Configuration Guide]::
   Help with Application configuration
 
