@@ -96,8 +96,11 @@ parent:
 
 Here is a partial list of the events that are generated and the impact if filtered.
 
+
 Critical = Blocks expected behaviors
+
 Awareness = Utilized for informational events
+
 None = Not utilized by Parent
 
 [options="header"]
@@ -105,7 +108,7 @@ None = Not utilized by Parent
 | Event | Skip Event Impact | Justification
 
 | REQUEST_COMPLETED | Critical | If request is spawned by Parent, the parent will never receive Completion event to return to System Client or User Interface
-| REQUEST_CANCELED | |
+| REQUEST_CANCELED | Critical | If request is spawned by Parent, the parent will never receive Cancellation event to return to System Client or User Interface
 | GARDEN_UPDATED | Critical | These updates are utilized for Routing decisions
 | GARDEN_SYNC | Critical | These updates are utilized for Routing decisions
 
@@ -175,27 +178,3 @@ parent:
     - RUNNER_STOPPED
     - RUNNER_REMOVED
 ----
-
-////
-parent config
-
-===== How to filter events
-
-If there are concerns with emitting all events to a Parent, either due to bandwidth concern or operational use case. These
-events can be filtered through the configuration of the parent connection object.
-
-[source,yaml]
-.config.yaml
-----
-parent:
-  http:
-    skip_events:
-    - INSTANCE_INITIALIZED
-    - REQUEST_STARTED
-----
-
-ui config
-
-
-
-////
