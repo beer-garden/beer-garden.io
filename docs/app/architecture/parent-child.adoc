@@ -96,8 +96,11 @@ parent:
 
 Here is a partial list of the events that are generated and the impact if filtered.
 
+
 Critical = Blocks expected behaviors
+
 Awareness = Utilized for informational events
+
 None = Not utilized by Parent
 
 [options="header"]
