@@ -105,7 +105,7 @@ None = Not utilized by Parent
 | Event | Skip Event Impact | Justification
 
 | REQUEST_COMPLETED | Critical | If request is spawned by Parent, the parent will never receive Completion event to return to System Client or User Interface
-| REQUEST_CANCELED | |
+| REQUEST_CANCELED | Critical | If request is spawned by Parent, the parent will never receive Cancellation event to return to System Client or User Interface
 | GARDEN_UPDATED | Critical | These updates are utilized for Routing decisions
 | GARDEN_SYNC | Critical | These updates are utilized for Routing decisions
 
