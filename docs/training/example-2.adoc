@@ -1,5 +1,5 @@
 == Example 2: Running Shell Commands
-:imagesdir: ../../images/
+:imagesdir: ./images
 
 
 For this example, we are going to explore kicking off Shell Commands from Beer Garden plugins. To accomplish

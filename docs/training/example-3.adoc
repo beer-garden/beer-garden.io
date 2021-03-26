@@ -1,5 +1,5 @@
 == Example 3: Web Scraping
-:imagesdir: ../../images/
+:imagesdir: ./images
 
 
 For this example we are going to explore Web Scraping. There are many different ways to accomplish
