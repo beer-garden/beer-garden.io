@@ -30,6 +30,7 @@ asciidoctor:
         issues_uri: https://github.com/beer-garden/beer-garden/issues
         brewtils_docs_uri: https://brewtils.readthedocs.io
         bg_utils_docs_uri: https://bg-utils.readthedocs.io
+        imagesdir: './images'
 # base_url: ''
 # ctx_path: ''
 # interpolate: false

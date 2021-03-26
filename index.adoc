@@ -7,7 +7,7 @@ Logan Jones <https://github.com/loganasherjones[@loganasherjones]>;
 :uri-doc-repo: {git_group_uri}/beer-garden.io
 :uri-license: {uri-repo}/blob/master/LICENSE.md
 // Images
-:imagesdir: {image_dir}/images
+:imagesdir: ./images
 
 
 Imagine if writing composable software services was as easy as writing a class in your favorite language with your favorite text editor. And sharing was as easy as running your main method.
