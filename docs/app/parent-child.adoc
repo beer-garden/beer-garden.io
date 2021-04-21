@@ -1,4 +1,5 @@
 === Connecting Gardens
+:page-layout: docs
 
 Beer Garden has the ability to connect other Beer Gardens in a Parent-Child relationship. The approach Beer Garden takes
 for command and control is Parents can only send Operations to Children, and Children can only send Events to Parents.
