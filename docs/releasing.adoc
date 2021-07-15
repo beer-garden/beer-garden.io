@@ -1,14 +1,13 @@
 = Releasing
 :page-layout: docs
 
-This is intended as a guide / checklist for releasing a new versions of Beer Garden things. It's aimed at the Beer Garden
-maintainers.
+This is intended as a guide / checklist for releasing a new versions of Beer Garden things. It's aimed at Beer Garden maintainers.
 
 == Brewtils
 Bump the version in `brewtils/\\__version__.py`. Make a new commit with a message that's *only* the new version (this commit message
-shows up on the Github releases page). Then create and push a new *signed* tag (`git tag -s <version>`) with *only* the version number (get that extra 'v' out of here).
+shows up on the Github releases page). Then create and push a new *signed* tag (`git tag -s <version>`) with *only* the version number.
 
-Travis will run the tests and then build and deploy the source and wheel distributions to pypi.org. Travis will also build some docker images and deploy them too.
+The CI pipeline will run the tests and then build and deploy the source and wheel distributions to pypi.org. It will also build some docker images and deploy them to docker.io.
 
 That's it!
 
@@ -21,13 +20,15 @@ Make a new commit with a message that's *only* the new version (this commit mess
 shows up on the Github releases page). Then create and push a new tag with the version number (again, *only* the version
 number).
 
-Travis will run the tests and then build and deploy the source and wheel distributions to pypi.org. Travis will also build and deploy the docker images for the release.
+The CI pipeline will then:
+- Create a Github Release
+- Build and deploy the source and wheel distributions to pypi.org
+- Use those distributions to build the docker images and deploy them to docker.io
+- Build the rpm and upload it to the Github Release as an asset
 
 That's it!
 
 == rpm
-This requires some effort. We currently don't have a hosting location for rpms, so this is manually created each time.
-
 You can build the rpm with the `--local` flag, which means "use the version that's locally checked out right now." If you don't specify this flag (the default) then the rpm build process will install the latest versions of "deployed" artifacts (in other words, it will pull the latest `beer-garden` from PyPI).
 
 [CAUTION]
@@ -35,17 +36,19 @@ You can build the rpm with the `--local` flag, which means "use the version that
 Right now we don't actually deploy the UI artifact to npm, so the UI will *always* be built as if the `--local` flag was specified.
 ====
 
-To build the rpm just run the build script, passing in the build type (currently only 'rpm' is supported) and version:
+To build the rpm just run the appropriate `make` target, passing in the version as a build argument:
 
 [source,shell]
 ----
 git clone https://github.com/beer-garden/beer-garden.git
+cd beer-garden
 
-# Only necessary if using the --local flag
-git clone https://github.com/beer-garden/brewtils.git beer-garden/src/brewtils
+# Builds an rpm using the latest published versions of beer-garden and brewtils
+make rpm-build VERSION=1.2.3
 
-python beer-garden/rpm/bin/build.py rpm 3.0.0
-
+# Builds an rpm using the local repository
+git clone https://github.com/beer-garden/brewtils.git src/brewtils
+make rpm-build-local VERSION=1.2.3
 ----
 
 That will result in a new rpm being created in `beer-garden/rpm/dist/`.
