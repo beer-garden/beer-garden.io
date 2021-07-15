@@ -41,7 +41,8 @@ slim|html:
 
 profiles:
     development:
-        # base_url: 'http://localhost:4242'
+        base_url: ''
+        image_dir: '.'
     gitlab:
         base_url: '/beer-garden.io'
         image_dir: './beer-garden.io'
