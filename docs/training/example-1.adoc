@@ -1,127 +1,102 @@
 == Example 1: Hello Beer Garden
 :includedir: ../python/_includes
 
-This section will walk you through creating a simple Hello, World example.
+This section will walk you through creating a basic example plugin. We'll start with a simple Python script (hello, world) and turn it into a functional plugin.
 
-=== Write the code
+=== Prep
 
-Plugins are basically just classes that you would like to expose over the network. So let's create a simple, and classic "Hello, World!" example.
-Use your favorite text editor and open up a file called `plugin.py` and write your basic Hello World example:
+We'll begin by constructing a basic "Hello, World" program. Create and open a file called `plugin.py` and write the classic:
 
 [source,python]
 .plugin.py
 ----
 def main():
-	print("Hello, World!")
-
-if __name__ == "__main__":
-	main()
-----
-
-To further structure the code, we can evolve the plugin.py to utilize class objects:
-
-[source,python]
-.plugin.py
-----
-class HelloWorldClient:
-
-    def hello_world(self):
-        greeting = "Hello, World!"
-
-        print(greeting)
-
-def main():
-	client = HelloWorldClient()
-	client.hello_world()
-
-if __name__ == "__main__":
-	main()
-----
-
-The next step is to integrate Beer Garden Annotations into your class object.
-
-[source,python]
-.plugin.py
-----
-from brewtils import command, system
-
-@system # <1>
-class HelloWorldClient(object):
-
-    @command <2>
-    def hello_world(self):
-        greeting = "Hello, World!"
-
-        print(greeting)
-
-        return greeting
-----
-<1> The `@system` decorator marks this class as a Beer Garden plugin.
-<2> The `@command` decorator marks this method as a Command that's part of the enclosing System.
-
-
-Once we have the client, we now need to create our entry point.
-
-[source,python]
-.plugin.py
-----
-from brewtils import command, system, Plugin
-
-
-@system
-class HelloWorldClient(object):
-
-    @command
-    def hello_world(self):
-        greeting = "Hello, World!"
-
-        print(greeting)
-
-        return greeting
-
-
-def main():
-    client = HelloWorldClient() # <1>
-
-    plugin = Plugin(
-        client, # <2>
-        name='hello-world', # <3>
-        version='1.0.0', # <4>
-        description='My First Plugin', # <5>
-        bg_host="<HOST>", # <6>
-        bg_port="<PORT>", # <7>
-        ssl_enabled=<SSL_ENABLED>, # <8>
-    )
-
-    plugin.run() * <8>
+    print("Hello, World!")
 
 
 if __name__ == "__main__":
     main()
 ----
 
-<1> Initializes the HelloWorldClient
-<2> Passes the HelloWorldClient as the target Client class for the Plugin Library
-<3> The name utilized when referencing the plugin for routing and display
-<4> The version utilized when reference the plugin for routing and display
-<5> The description displayed when viewing the plugin in the UI
-<6> The hostname or IP of the target Beer Garden instance
-<7> The port that Beer Garden is listening on (Default is 2337)
-<8> If SSL is enabled, if TRUE then additional fields are required.
+This can be run from the command line like this:
+
+[source,bash]
+----
+python plugin.py
+----
+
+=== Organize
+
+Plugins need to be organized around a class, so let's do some light reorganization before converting this to a plugin:
+
+[source,python]
+.plugin.py
+----
+class Greeter:
+    def greet(self, greeting="Hello, World!"):
+        print(greeting)
 
 
-To review what's happening here: we added an import `Plugin` at the top of our file and created a standard main method. In that method we created a `HelloWorldClient` object and a `Plugin` object. Notice that when we create the `Plugin` we pass it the client and some additional parameters.
+def main():
+    greeter = Greeter()
+    greeter.greet()
 
 
-That's all the code you need!
+if __name__ == "__main__":
+    main()
+----
 
-=== Run the code
+We've moved the `print` call into a `greet` method, and we now call that method in `main`. We've also added an argument to the `greet` method to make our greeting more dynamic.
 
-Run the plugin like this:
+We can still run the file like before, though:
 
-    python plugin.py
+[source,bash]
+----
+python plugin.py
+----
 
-It will start up and print some logging showing the plugin registering with Beer Garden. Congratulations! You've just deployed your first plugin!
+=== Plugify
+
+Now that the prep work is done we can convert this to a Beergarden plugin.
+
+[source,python]
+.plugin.py
+----
+from brewtils import command, Plugin
+
+
+class Greeter:
+    @command <1>
+    def greet(self, greeting="Hello, World!"):
+        print(greeting)
+
+
+def main():
+    plugin = Plugin(name='greeter', version='1.0.0')
+    plugin.client = Greeter()
+    plugin.run()
+
+
+if __name__ == "__main__":
+    main()
+----
+<1> The `@command` decorator marks this method as a Command to make available
+
+Let's review the changes here:
+
+* We've added a decorator to the `greet` method. This tells Beergarden to expose that method as a Command.
+* We now create a `Plugin` object, passing in a name and version. We then assign an instance of our `Greeter` class as its `client`. Finally, we `run` the Plugin.
+
+=== Run the plugin
+
+To run our plugin now we need to tell it how to connect to our Beergarden application. We can do that by passing in the appropriate command line arguments. This tutorial assumes your application is running on `localhost`:
+
+[source,bash]
+----
+python plugin.py --bg-host localhost --no-ssl-enabled
+----
+
+The plugin should now start and display log statements showing the plugin registering with Beer Garden. Congratulations! You've just deployed your first plugin!
 
 === Use the code
 
