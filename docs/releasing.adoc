@@ -4,21 +4,18 @@
 This is intended as a guide / checklist for releasing a new versions of Beer Garden things. It's aimed at Beer Garden maintainers.
 
 == Brewtils
-Bump the version in `brewtils/\\__version__.py`. Make a new commit with a message that's *only* the new version (this commit message
-shows up on the Github releases page). Then create and push a new *signed* tag (`git tag -s <version>`) with *only* the version number.
+Bump the version in `brewtils/\\__version__.py` and update the changelog. Make a new commit with a message that's *only* the new version (this commit message shows up on the Github releases page). Then create and push a new *signed* tag (`git tag -s <version>`) with *only* the version number.
 
 The CI pipeline will run the tests and then build and deploy the source and wheel distributions to pypi.org. It will also build some docker images and deploy them to docker.io.
 
 That's it!
 
 == Application
-Bump the version in `src/app/beer_garden/\\__version__.py`.
+Bump the version in `src/app/beer_garden/\\__version__.py` and update the changelog.
 
 We *should* also be updating the UI version in `src/ui/package.json`, but since we don't currently deploy that it's not necessary.
 
-Make a new commit with a message that's *only* the new version (this commit message
-shows up on the Github releases page). Then create and push a new tag with the version number (again, *only* the version
-number).
+Make a new commit with a message that's *only* the new version (this commit message shows up on the Github releases page). Then create and push a new tag with the version number (again, *only* the version number).
 
 The CI pipeline will then:
 - Create a Github Release
