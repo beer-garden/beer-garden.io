@@ -3,20 +3,18 @@
 :page-layout: docs
 
 
-We would love for you to help us make Beer Garden better. There are a seemingly infinite number of features that would be great to add. Remember, __no contribution is too small__.
+We would love for you to help us make Beer Garden better. Remember, __no contribution is too small__.
 
 == License Agreement
 By contributing to any of the Beer Garden repositories, you agree to license your contributions under the {git_group_uri}/beer-garden/blob/master/LICENSE.md[MIT license]. This ensures your contributions have the same license as the project and that the community is free to use your contributions. You also assert that you are the original author of the work you are contributing unless otherwise stated.
 
 == Submitting an Issue
 
-If you have the next cool idea for Beer Garden, we want to hear about it. We use the {issues_uri}[issue tracker on GitHub] to track bugs/features. Before you submit a request or bug, please make sure it has not already been submitted.
+If you have an idea for Beer Garden we want to hear about it. We use the {issues_uri}[issue tracker on GitHub] to track bugs/features. We just ask that before you submit a request or bug you do a quick search to make sure it hasn't already been submitted.
 
 Our ideal feature request comes in with a merge request for a way to implement the feature, but feature requests should at least come with an explanation of how you want the app to behave differently than the current implementation.
 
-If you've found a bug in Beer Garden, we would love for you to submit a bug report. When submitting a bug report, please include a {uri-snippet}[Snippet] that includes any details that may help reproduce the bug, including your version of Beer Garden, language, language version and operating system.
-
-Most importantly, since Beer Garden is a plugin framework, __do not__ submit bugs with particular plugins in the Beer Garden issue tracker.
+If you've found a bug in Beer Garden we would love for you to submit a bug report. When submitting please include a {uri-snippet}[Snippet] that includes any details that may help reproduce the bug. It's also a good idea to include your version of Beer Garden, language, language version and operating system.
 
 Ideal bug reports include a merge request with a failing test.
 
