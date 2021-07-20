@@ -38,7 +38,7 @@ Ok, that was admittedly a lot. The code should make things clearer:
 ----
 class Calculator: <1>
 
-    def add(self, x, y): <2, 3>
+    def add(self, x, y): <2> <3>
         return x + y
 ----
 <1> Define the "Calculator" System
