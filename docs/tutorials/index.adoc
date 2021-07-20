@@ -34,26 +34,17 @@ include::ui-orientation.adoc[]
 
 == Writing Plugins for Beer Garden
 
-After completing this section you will have created a Beer Garden plugin that can be
-deployed against an active Beer Garden instance.
+After completing this section you will have created a Beer Garden plugin that can be deployed against an active Beer Garden instance.
 
-include::example-1.adoc[]
+* link:hello-world[Hello World]
+* link:shell-commands[Shell Commands]
+* link:web-scraping[Web Scraping]
+* link:external-data[External Data]
+* link:user-forms[User Forms]
 
-include::example-2.adoc[]
-
-include::example-3.adoc[]
-
-include::example-4.adoc[]
-
-include::example-5.adoc[]
 
 == Now What?
 
-Now that you know the basics for creating Beer Garden plugins, it is time to experiment.  Go out and create your own
-plugins. Maybe there is a script you run daily for your job and you want to automate it, use Beer Garden. Maybe there
-is an analytic that you run monthly to generate a report, use Beer Garden. We will be here to support the community
-and provide guidance.
+Now that you know the basics for creating Beer Garden plugins, it is time to experiment.  Go out and create your own plugins. Maybe there is a script you run daily for your job and you want to automate it, use Beer Garden. Maybe there is an analytic that you run monthly to generate a report, use Beer Garden. We will be here to support the community and provide guidance.
 
-If you want to go the extra mile, have you considered becoming an open source developer yourself?
-Beer Garden and many other projects out there need your support and time. Donate your time to
-improve something that you have a passion in.
+If you want to go the extra mile, have you considered becoming an open source developer yourself? Beer Garden and many other projects out there need your support and time. Donate your time to improve something that you have a passion in.
