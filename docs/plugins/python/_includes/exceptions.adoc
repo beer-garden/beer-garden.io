@@ -58,4 +58,4 @@ Then you throw that error during a command, Beer Garden will modify the output a
 }
 ```
 
-WARNING: If your attributes are not JSON serializable, then a string representation of the dictionary will be provided to the attributes.
+WARNING: If your attributes are not JSON serializable a string representation of the dictionary will be provided to the attributes.

@@ -2,7 +2,7 @@
 = Upgrading
 :page-layout: docs
 
-Help with upgrading plugins from 2.x to 3.x.
+How to successfully upgrade plugins from 2.x to 3.x.
 
 == Common Issues
 

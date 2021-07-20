@@ -9,7 +9,6 @@ Things start to get tricky when you need to combine decorators. This is because 
 [source,python]
 .+info_command.py+
 ----
-@system
 class TimeClient(object):
 
     @command
@@ -33,7 +32,6 @@ Right now `@classmethod` decorators need to be the outermost decorator:
 [source,python]
 .+classmethod.py+
 ----
-@system
 class TimeClient(object):
 
     @classmethod
@@ -81,7 +79,7 @@ def bg_decorator(_wrapped=None, subject="Beer Garden!"):
 
     return wrapper(_wrapped)
 
-@system
+
 class TimeClient(object):
 
     @bg_decorator(subject="Matt!")

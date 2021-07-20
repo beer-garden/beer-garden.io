@@ -1,12 +1,11 @@
 == Example 5: User Forms and Advanced Features
 :imagesdir: ./images
 
-We have covered the basics of how to create Beer Garden Plugins with a variety of input and output types.
-This example will merge these concepts together while creating more complex user forms.
+We have covered the basics of how to create Beer Garden Plugins with a variety of input and output types. This example will merge these concepts together while creating more complex user forms.
 
 For this example you will need the Beer Statistics Plugin running from the last example.
 
-    python beer_statistics_plugin.py
+    python beer_statistics_plugin.py --no-ssl-enabled --bg-host <host>
 
 We are going to create a new plugin that accomplishes the following tasks:
 
@@ -19,154 +18,109 @@ We are going to work down this list in order for creating our new plugin.
 
 === Connect to Another Client
 
-In this snippet we are going to create a `System Client` connection with to allow access
-to remote commands within the Beer Statistics Plugin.
+In this snippet we are going to create a `System Client` connection with to allow access to remote commands within the Beer Statistics Plugin.
 
 [source,python]
 .complex_beer_statistics_plugin.py
 ----
-
 from brewtils import parameter, command, system, SystemClient, Plugin
-import json
 
-@system
+
 class ComplexBeerStatisticsClient:
 
-    def __init__(self, params):
-        # (1)
-        self.beer_statistics_client = SystemClient(system_name="BeerStatistics", **params)
+    def __init__(self):
+        self.beer_statistics_client = SystemClient(system_name="BeerStatistics")
 
     @command(output_type="JSON")
     def test_beer_statistics_client(self):
-        # (2)
-        results = self.beer_statistics_client.download_year_statistics(year=2010)
-        # (3)
-        return results.output
+        return self.beer_statistics_client.download_year_statistics(year=2010).output
+
 
 def main():
-
-    # (4)
-    connection_params = {"bg_host":"<HOST>",
-                         "bg_port":<PORT>,
-                         "ssl_enabled":False}
-
-    client = ComplexBeerStatisticsClient(connection_params)
-
     plugin = Plugin(
-        client,
         name='ComplexBeerStatistics',
-        version='1.0.0.dev', # (5)
+        version='1.0.0.dev',
         description='Parses data from TTB.gov on Brewer Production sizes of Beer',
-        **connection_params
     )
-
+    plugin.client = ComplexBeerStatisticsClient()
     plugin.run()
+
 
 if __name__ == "__main__":
     main()
-
 ----
-
-<1> Developers can reference other clients through the `SystemClient` class.
-<2> All commands on `SystemClient` can be referenced directly like a standard Class Function
-<3> The output of the `Command` is a `Request`. Developers can put the raw output from the `output` field.
-<4> For ease of use, we are passing forward connection parameters so we only have to define it once
-<5> Because we are going to start and stop this plugin multiple times, using the `.dev` tag on the version
-will not require version increases while you are developing the plugin.
 
 Let's run this Plugin and see what happens
 
-    python complex_beer_statistics_plugin.py
+    python complex_beer_statistics_plugin.py --no-ssl-enabled --bg-host <host>
 
 image::complex-beer-statistics-test.png[Complex Beer Statistics Results]
 
-We can see that a child request is spawned when invoking this command. If you click on the hyperlink
-for `download_year_statistics` you can see the input/output for that command.
+We can see that a child request is spawned when invoking this command. If you click on the hyperlink for `download_year_statistics` you can see the input/output for that command.
 
 === Building Dynamic Dropdown List
 
-In this snippet we want to use the `valid_year_range` command output at the input to the choices list that will be
-used to render the form. This is helpful when variables are environment specific or static lists.
+In this snippet we want to use the `valid_year_range` command output at the input to the choices list that will be used to render the form. This is helpful when variables are environment specific or static lists.
 
 [source,python]
 .complex_beer_statistics_plugin.py
 ----
+from brewtils import parameter, command, SystemClient, Plugin
 
-from brewtils import parameter, command, system, SystemClient, Plugin
-import json
 
-@system
 class ComplexBeerStatisticsClient:
 
-    def __init__(self, params):
-        self.beer_statistics_client = SystemClient(system_name="BeerStatistics", **params)
+    def __init__(self):
+        self.beer_statistics_client = SystemClient(system_name="BeerStatistics")
 
     @command(output_type="JSON")
     def test_beer_statistics_client(self):
-        results = self.beer_statistics_client.download_year_statistics(year=2010)
-        return results.output
+        return self.beer_statistics_client.download_year_statistics(year=2010).output
 
-    # <1>
-    @command()
+    @command
     def valid_year_range(self):
-        return list(range(2008, 2019))
+        return range(2008, 2019)
 
-    @command(output_type="JSON")
     @parameter(
         key="year",
         type="Integer",
         description="Enter the year to pull Beer Production Statistics",
-        choices={"type": "command", "value": "valid_year_range", "display": "select"},  # <2>
+        choices={"type": "command", "value": "valid_year_range", "display": "select"},
     )
+    @command(output_type="JSON")
     def test_beer_statistics_client_with_year(self, year):
-        results = self.beer_statistics_client.download_year_statistics(year=year)
-        return results.output
+        return self.beer_statistics_client.download_year_statistics(year=year).output
+
 
 def main():
-
-    connection_params = {"bg_host":"<HOST>",
-                         "bg_port":<PORT>,
-                         "ssl_enabled":False}
-
-    client = ComplexBeerStatisticsClient(connection_params)
-
     plugin = Plugin(
-        client,
         name='ComplexBeerStatistics',
         version='1.0.0.dev',
         description='Parses data from TTB.gov on Brewer Production sizes of Beer',
-        **connection_params
     )
-
+    plugin.client = ComplexBeerStatisticsClient()
     plugin.run()
+
 
 if __name__ == "__main__":
     main()
-
 ----
-
-<1> We created the `valid_year_range` command that returns back the values we want to use on our form.
-<2> Here we tell the `Parameter` field that it needs to use a `Command` of name `valid_year_range` to
-limit the choices. By setting the `display` property to `select`, it will display the field as a drop down.
 
 So now lets run this Plugin and see what happens
 
-    python complex_beer_statistics_plugin.py
+    python complex_beer_statistics_plugin.py --no-ssl-enabled --bg-host <host>
 
-When the Form is loaded it doesn't have the Choices list,
-once the command is executed the options are populated and limit input to the output of `valid_year_range`.
+When the form is loaded it doesn't have the Choices list, once the command is executed the options are populated and limit input to the output of `valid_year_range`.
 
 image::complex-beer-statistics-years.png[Complex Beer Statistics Years]
 
-We can then go to the `Requests` page and see that the request was submitted to invoke that command
-to populate the form.
+We can then go to the `Requests` page and see that the request was submitted to invoke that command to populate the form.
 
 image::complex-beer-statistics-years-request.png[Complex Beer Statistics Years Request]
 
 === Building Dynamic Dropdown List off Plugin Results
 
-In this update to the snippet we are going to use the `Choices` field to specify another command for
-the choices list. This is helpful when variables are managed remotely.
+In this update to the snippet we are going to use the `choices` field to specify another command for the choices list. This is helpful when variables are managed remotely.
 
 [source,python]
 .complex_beer_statistics_plugin.py
@@ -177,8 +131,8 @@ import json
 @system
 class ComplexBeerStatisticsClient:
 
-    def __init__(self, params):
-        self.beer_statistics_client = SystemClient(system_name="BeerStatistics", **params)
+    def __init__(self):
+        self.beer_statistics_client = SystemClient(system_name="BeerStatistics")
 
 
     @command(output_type="JSON")
@@ -230,26 +184,17 @@ class ComplexBeerStatisticsClient:
         return field
 
 def main():
-
-    connection_params = {"bg_host":"<HOST>",
-                         "bg_port":<PORT>,
-                         "ssl_enabled":False}
-
-    client = ComplexBeerStatisticsClient(connection_params)
-
     plugin = Plugin(
-        client,
         name='ComplexBeerStatistics',
         version='1.0.0.dev',
         description='Parses data from TTB.gov on Brewer Production sizes of Beer',
-        **connection_params
     )
-
+    plugin.client = ComplexBeerStatisticsClient()
     plugin.run()
+
 
 if __name__ == "__main__":
     main()
-
 ----
 
 <1> We are going to call the `SystemClient` for Beer Statistics and pull back a single record, then find all

@@ -1,12 +1,11 @@
 [source,python]
 .plugin.py
 ----
-from brewtils import command, system
+from brewtils import command
 
-@system # <1>
 class HelloWorldClient(object):
 
-    @command <2>
+    @command  # <1>
     def hello_world(self):
         greeting = "Hello, World!"
 
@@ -14,5 +13,4 @@ class HelloWorldClient(object):
 
         return greeting
 ----
-<1> The `@system` decorator marks this class as a Beer Garden plugin.
-<2> The `@command` decorator marks this method as a Command that's part of the enclosing System.
+<1> The `@command` decorator marks this method as a Command

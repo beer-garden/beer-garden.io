@@ -1,11 +1,10 @@
 [source,python]
 .+__main__.py+
 ----
-from brewtils import system, parameter, Plugin
+from brewtils import parameter, Plugin
 
 
-@system
-class HelloClient(object):
+class HelloClient):
 
     @parameter(key="message", type="String", default="Hello, World!")
     def say_hello(self, message):
@@ -15,13 +14,7 @@ class HelloClient(object):
 
 
 if __name__ == "__main__":
-    plugin = Plugin(
-        name="hello-world",
-        version="0.0.1.dev0",
-        bg_host='localhost',
-        bg_port=80,
-        ssl_enabled=False,
-    )
+    plugin = Plugin(name="hello-world", version="0.0.1.dev0")
     plugin.client = HelloClient()
     plugin.run()
 ----

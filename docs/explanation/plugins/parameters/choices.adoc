@@ -33,8 +33,10 @@ There are some configuration options that control how `choices` works. Beer Gard
 [source,python]
 .Choices Dictionary example
 ----
-@parameter(key="output_type",
-           choices={'type': 'static', 'value': ['json','xml']})
+@parameter(
+    key="output_type",
+    choices={'type': 'static', 'value': ['json','xml']}
+)
 def format(self, output_type):
     ...
 ----
@@ -50,24 +52,28 @@ The other choice types will be explained in detail in the <<Choice Sources>> sec
 
 ===== Display
 When you use `choices` the UI form control can be a typeahead or a select. To specify which to use just set the `display` key:
+
 [source,python]
 .Choices Typeahead example
 ----
-@parameter(key="output_type",
-           choices={'type': 'static', 'value': ['json','xml'],
-                    'display': 'typeahead'})
+@parameter(
+    key="output_type",
+    choices={'type': 'static', 'value': ['json','xml'], 'display': 'typeahead'}
+)
 def format(self, output_type):
     ...
 ----
 
 ===== Strictness
 The `strict` configuration controls whether values that aren't explicitly listed are allowed. Setting `strict` to False will result in a typeahead control that will use the `choices` values but still allow any text to be submitted.
+
 [source,python]
 .Choices Non-strict example
 ----
-@parameter(key="output_type",
-           choices={'type': 'static', 'value': ['json','xml'],
-                    'strict': False})
+@parameter(
+    key="output_type",
+    choices={'type': 'static', 'value': ['json','xml'], 'strict': False}
+)
 def format(self, output_type):
     ...
 ----
@@ -81,12 +87,15 @@ NOTE: In all cases the result of the `choices` operation must be a valid choices
 
 ===== URL
 Specifying a URL will tell the browser to load choices using an HTTP GET request. You can use type 'url' if using dictionary configuration or just pass the URL as a string:
+
 [source,python]
 .Choices URL example
 ----
 @parameter(key="p1", choices='https://test.com/p1.json')
-@parameter(key="p2", choices={"type": "url",
-                              "value": 'https://test.com/p2.json'})
+@parameter(
+    key="p2",
+    choices={"type": "url", "value": 'https://test.com/p2.json'}
+)
 def format(self, p1, p2):
     ...
 ----
@@ -94,12 +103,15 @@ CAUTION: Be aware that the user's browser will be making this request. So if the
 
 ===== Command
 Specifying a command will load choices by making a request to the current system. You can use type 'command' if using dictionary configuration or just pass the command as a string. If you're not using choice parameters (more on those in a minute) you can omit the parenthesis for brevity.
+
 [source,python]
 .Choices Command example
 ----
 @parameter(key="p1", choices="get_choices()")
-@parameter(key="p2", choices={"type": "command",
-                              "value": "get_choices"})
+@parameter(
+    key="p2",
+    choices={"type": "command", "value": "get_choices"}
+)
 def format(self, p1, p2):
     ...
 
@@ -120,6 +132,7 @@ It's often useful to have the choices for one parameter depend on the current va
 To create a reference on another parameter enclose its key in `${}`. How the parameter is passed depends on what choice source is being used.
 
 For 'command' types the parameter will be passed as an argument to the command. For example, suppose you have two parameters: `day_type` and `day_of_week`. You'd like the choices for `day_of_week` to depend on what the user has selected for `day_type`:
+
 [source,python]
 .Choices Command Parameter example
 ----
@@ -152,6 +165,7 @@ def my_command(self, day_type, day_of_week):
 ----
 
 Choice parameters also enable using a static choices dictionary with one parameter used as the dictionary key. To do this use type `static` and pass the dictionary as the value. Since we can construct the dictionary before defining the `command` we can rework the `day_of_week` example to look like this:
+
 [source,python]
 .Choices Dictionary example
 ----
@@ -161,30 +175,33 @@ day_dict = {
 }
 
 @parameter(key="day_type", choices=["Weekday", "Weekend"])
-@parameter(key="day_of_week", choices={'type': 'static',
-                                       'value': day_dict,
-                                       'key_reference': '${day_type}'})
+@parameter(
+    key="day_of_week",
+    choices={'type': 'static', 'value': day_dict, 'key_reference': '${day_type}'}
+)
 def my_command(self, day_type, day_of_week):
     do_something(day_of_week)
     return "All done!"
 ----
 
 When using a choices dictionary the `None` key can be used to specify the allowed values when the reference key is `null`. For example, if we wanted to modify the `day_of_week` example to additionally allow _any_ day to be selected if `day_type` was `null` we could do this:
+
 [source,python]
 .Choices Dictionary with None example
 ----
 day_dict = {
     "Weekday": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
     "Weekend": ["Saturday", "Sunday"],
-    None: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
-           "Saturday", "Sunday"]
 }
+day_dict[None] = day_dict["Weekday"] + day_dict["Weekend]
 
-@parameter(key="day_type", choices=["Weekday", "Weekend"],
-           nullable=True)
-@parameter(key="day_of_week", choices={'type': 'static',
-                                       'value': day_dict,
-                                       'key_reference': '${day_type}'})
+@parameter(
+    key="day_type", choices=["Weekday", "Weekend"], nullable=True
+)
+@parameter(
+    key="day_of_week",
+    choices={'type': 'static', 'value': day_dict, 'key_reference': '${day_type}'}
+)
 def my_command(self, day_type, day_of_week):
     do_something(day_of_week)
     return "All done!"
