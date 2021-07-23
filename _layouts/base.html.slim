@@ -21,6 +21,8 @@ javascript:
 body.antialiased
   .bootstrap
     nav.navbar.navbar-default.navbar-fixed-top role='navigation'
+      include header.html.slim
+
       .container
         .navbar-header
           button.navbar-toggle.collapsed type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"
@@ -71,5 +73,8 @@ body.antialiased
         i.fa.fa-gitter
     .footer-copyright
       p © Beer Garden Project 2018.
+
+    include footer.html.slim
+
 script
   |$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });

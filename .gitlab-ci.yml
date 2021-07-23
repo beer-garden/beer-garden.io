@@ -6,7 +6,23 @@ cache:
     - .cache/bundler
 
 stages:
+  - prep
   - build
+
+banners:
+  stage: prep
+
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master" && $BANNER_HEADER && $BANNER_FOOTER
+
+  script:
+    - cat "$BANNER_HEADER" > ./_layouts/header.html.slim
+    - cat "$BANNER_FOOTER" > ./_layouts/footer.html.slim
+
+  artifacts:
+    paths:
+      - ./_layouts/header.html.slim
+      - ./_layouts/footer.html.slim
 
 pages:
   stage: build

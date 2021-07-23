@@ -2,6 +2,7 @@ require 'bootstrap-sass'
 require 'font-awesome-sass'
 require 'awestruct_ext'
 require 'slim'
+require 'slim/include'
 
 Awestruct::Extensions::Pipeline.new do
   helper Awestruct::Extensions::GoogleAnalytics
