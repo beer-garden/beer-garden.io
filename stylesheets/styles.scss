@@ -88,6 +88,28 @@ h2.hero {
 
 .top-buffer { margin-top: 20px;}
 
+.banner {
+  font-family: Veranda, Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  color: #FFFF00;
+  background-color: #009900;
+  text-align: center;
+  padding-top: 4px;
+  padding-bottom: 2px;
+}
+
+.centered {
+  text-align: center;
+}
+
+.bottom-fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
 #bgfooter {
   background-color: #3c3d41;
   color: white;
@@ -135,10 +157,6 @@ h2.hero {
   .info {
     text-align: justify;
     color: #afb0b1;
-  }
-
-  .row {
-    margin-bottom: 60px;
   }
 
   .social-networks {
