@@ -1,0 +1,99 @@
+= SystemClient
+:page-layout: docs
+
+The SystemClient is the recommended way to create requests. A SystemClient instance is constructed for a specific system/version, and can then be used to create requests for that system.
+
+For this discussion we'll say the following systems with the following commands exist:
+
+echo 1.0.0 say
+sleeper 1.0.0 sleep
+
+== Contrived Example
+Let's say that we want to make it easy to run the `say` and `sleep` commands together. To do this we'll make a new system, echo-sleeper. This system will have a command called `say_sleep` that will run both of those commands together.
+
+So how do we go about doing that? Let's start by stubbing out the echo-sleeper client:
+
+[source%nowrap,python]
+.echo-sleeper.py
+----
+class EchoSleeper:
+
+    @command
+    def say_sleep(self):
+        pass
+----
+
+== Creation
+SystemClients are bound to a specific system, so enough information needs to be provided during creation to resolve a specific system. Below you can see that we pass a `system_name` argument when we create each client.
+
+It's also possible to specify a system version, but if one isn't provide the latest version will be used.
+
+[source%nowrap,python]
+.echo-sleeper.py
+----
+class EchoSleeper:
+
+    def __init__(self):
+        self.echo_client = SystemClient(system_name="echo")
+        self.sleeper_client = SystemClient(system_name="sleeper")
+
+    @command
+    def say_sleep(self):
+        pass
+----
+
+
+== Usage
+Now that we have our SystemClient instances we can use them to create requests. The API for creating a request is designed to emulate a standard Python function call with keyword arguments.
+
+[source%nowrap,python]
+.echo-sleeper.py
+----
+class EchoSleeper:
+
+    def __init__(self):
+        self.echo_client = SystemClient(system_name="echo")
+        self.sleeper_client = SystemClient(system_name="sleeper")
+
+    @command
+    def say_sleep(self):
+        self.echo_client.say(message="Hello, World!")
+        self.sleeper_client.sleep(amount=10)
+----
+
+That's it for the SystemClient tutorial!
+
+
+[source%nowrap,python]
+.SystemClient Example
+----
+from brewtils.rest.system_client import SystemClient
+
+client = SystemClient("localhost", 2337, system_name="echo") # <1>
+
+request = client.echo(message="Hello, World!") <2>
+
+print(request.status)
+print(request.output)
+----
+<1> Create the client, passing Beer Garden connection parameters and the target System name
+<2> Create a Request for the 'echo' Command as if you were calling a method
+
+The `SystemClient` is a blocking client that will make a rest request that is formatted correctly and returns a request object. This request object can then be queried the same way you would query a normal request object.
+
+If the system you are using is multi-instanced, you can specify the default instance to use at the system level:
+
+[source%nowrap,python]
+.Default Instance Example
+----
+client = SystemClient("localhost", 2337, system_name="echo", default_instance="01")
+
+request = client.say(message="Hello, Instance 01!")
+----
+
+You can also specify a different instance when creating a Request:
+
+[source%nowrap,python]
+----
+request = client.say(message="Hello, Instance 02!", _instance_name="02")
+----

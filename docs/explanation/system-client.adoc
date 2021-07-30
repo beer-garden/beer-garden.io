@@ -1,0 +1,27 @@
+= SystemClient
+:page-layout: docs
+
+== Target Instance
+If the system referenced by the SystemClient has multiple instances it's recommended to specify the default instance at creation. Then all requests created by that SystemClient will target that instance:
+
+[source,python]
+----
+echo_client = SystemClient(system_name="echo", default_instance="instance1")
+----
+
+It's also possible to dynamically target different instances when creating a request:
+
+[source,python]
+----
+echo_client = SystemClient(system_name="echo", default_instance= "other_instance")
+echo_client.say(message="Hello, World!", _instance_name="instance1")
+----
+
+== Blocking / Nonblocking
+By default a request made by a SystemClient will block until that request completes.
+
+[source,python]
+----
+sleep_client = SystemClient(system_name="sleeper")
+sleep_request = sleep_client.sleep(amount=10)  # Will block for 10 seconds
+----

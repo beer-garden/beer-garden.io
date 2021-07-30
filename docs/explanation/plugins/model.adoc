@@ -1,0 +1,20 @@
+The `model` argument allows you to group parameters into a single object. A model can be created by using the `@parameter` decorator on a class.
+
+[source,python]
+.Model argument example
+----
+from brewtils import parameter
+
+@parameter(key="name", type="String")
+@parameter(key="age", type="Integer")
+class Person:
+    pass
+
+
+class ExampleClient:
+
+    @command
+    @parameter(key="person", model=Person)
+    def greet(self, person):
+        print("Hello %s" % person.name)
+----
