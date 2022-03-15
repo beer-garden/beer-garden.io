@@ -1,4 +1,5 @@
 = Beer Garden Configuration
+:page-layout: docs
 
 This document describes the configuration for Beer Garden. Each section will
 document a particular configuration value and its description. First,
@@ -18,55 +19,60 @@ This section outlines the various configuration items Beer Garden supports.
 |===
 | Name | Type | Default | Description
 
-| <<application.cors_enabled,application.cors_enabled>>
+| <<auth.authentication_handlers.basic.enabled,auth.authentication_handlers.basic.enabled>>
+| bool
+| True
+| Enable authentication via username andpassword
+
+| <<auth.authentication_handlers.trusted_header.create_users,auth.authentication_handlers.trusted_header.create_users>>
+| bool
+| True
+| Create an account for the user specified byusername_header if one does not already exist
+
+| <<auth.authentication_handlers.trusted_header.enabled,auth.authentication_handlers.trusted_header.enabled>>
 | bool
 | False
-| Determine if CORS should be enabled
+| Enable authentication via trusted headers
 
-| <<application.debug_mode,application.debug_mode>>
-| bool
-| False
-| Run the application in debug mode
-
-| <<application.execute_javascript,application.execute_javascript>>
-| bool
-| False
-| Execute plugin-provided javascript
-
-| <<application.icon_default,application.icon_default>>
+| <<auth.authentication_handlers.trusted_header.user_groups_header,auth.authentication_handlers.trusted_header.user_groups_header>>
 | str
-| fa-beer
-| Default font-awesome icon to display
+| bg-user-groups
+| The http header containing the comma separated list of the user's groups.
 
-| <<application.name,application.name>>
+| <<auth.authentication_handlers.trusted_header.username_header,auth.authentication_handlers.trusted_header.username_header>>
 | str
-| Beer Garden
-| The title to display on the GUI
+| bg-username
+| The http header containing the username
+
+| <<auth.default_admin.password,auth.default_admin.password>>
+| str
+| password
+| The password for the default admin account that will be created when initializing a new environment
+
+| <<auth.default_admin.username,auth.default_admin.username>>
+| str
+| admin
+| The username for the default admin account that will be created when initializing a new environment
 
 | <<auth.enabled,auth.enabled>>
 | bool
 | False
 | Use role-based authentication / authorization
 
-| <<auth.guest_login_enabled,auth.guest_login_enabled>>
-| bool
-| True
-| Only applicable if auth is enabled. If set to true, guests can login without username/passwords.
-
-| <<auth.token.algorithm,auth.token.algorithm>>
+| <<auth.group_definition_file,auth.group_definition_file>>
 | str
-| HS256
-| Algorithm to use when signing tokens
+| None
+| Path to the file containg a mapping of groups to beer garden role assignments
 
-| <<auth.token.lifetime,auth.token.lifetime>>
-| int
-| 1200
-| Time (seconds) before a token expires
+| <<auth.role_definition_file,auth.role_definition_file>>
+| str
+| None
+| Path to the yaml file that defines roles used for authorization
 
-| <<auth.token.secret,auth.token.secret>>
+| <<auth.token_secret,auth.token_secret>>
 | str
 |
-| Secret to use when signing tokens
+| Secret to use when signing authentication tokens
 
 | <<configuration.file,configuration.file>>
 | str
@@ -103,6 +109,11 @@ This section outlines the various configuration items Beer Garden supports.
 | -1
 | Number of minutes to wait before deleting ACTION requests (negative number for never)
 
+| <<db.ttl.file,db.ttl.file>>
+| int
+| 15
+| Number of minutes to wait before deleting FILE documents (negative number for never)
+
 | <<db.ttl.info,db.ttl.info>>
 | int
 | 15
@@ -122,11 +133,6 @@ This section outlines the various configuration items Beer Garden supports.
 | int
 | 2337
 | Serve content on this port
-
-| <<entry.http.public_fqdn,entry.http.public_fqdn>>
-| str
-| localhost
-| Public fully-qualified domain name
 
 | <<entry.http.ssl.ca_cert,entry.http.ssl.ca_cert>>
 | str
@@ -162,6 +168,66 @@ This section outlines the various configuration items Beer Garden supports.
 | str
 | /
 | URL path prefix
+
+| <<entry.stomp.enabled,entry.stomp.enabled>>
+| bool
+| False
+| Connect to a Stomp Broker
+
+| <<entry.stomp.headers,entry.stomp.headers>>
+| list
+| []
+| Headers to be sent with messages. Follows standard YAML formatting for lists with two variables 'key' and 'value'
+
+| <<entry.stomp.host,entry.stomp.host>>
+| str
+| localhost
+| Broker hostname
+
+| <<entry.stomp.password,entry.stomp.password>>
+| str
+| None
+| Password to use for authentication
+
+| <<entry.stomp.port,entry.stomp.port>>
+| int
+| 61613
+| Broker port
+
+| <<entry.stomp.send_destination,entry.stomp.send_destination>>
+| str
+| None
+| Topic where events are published
+
+| <<entry.stomp.ssl.ca_cert,entry.stomp.ssl.ca_cert>>
+| str
+| None
+| Path to certificate file containing the certificate of the authority that issued the message broker certificate
+
+| <<entry.stomp.ssl.client_cert,entry.stomp.ssl.client_cert>>
+| str
+| None
+| Path to client public certificate to use when communicating with the message broker
+
+| <<entry.stomp.ssl.client_key,entry.stomp.ssl.client_key>>
+| str
+| None
+| Path to client private key to use when communicating with the message broker
+
+| <<entry.stomp.ssl.use_ssl,entry.stomp.ssl.use_ssl>>
+| bool
+| False
+| Use SSL when connecting to the message broker
+
+| <<entry.stomp.subscribe_destination,entry.stomp.subscribe_destination>>
+| str
+| None
+| Topic to listen for operations
+
+| <<entry.stomp.username,entry.stomp.username>>
+| str
+| None
+| Username to use for authentication
 
 | <<garden.name,garden.name>>
 | str
@@ -301,12 +367,27 @@ This section outlines the various configuration items Beer Garden supports.
 | <<mq.host,mq.host>>
 | str
 | localhost
-| Hostname of MQ to use
+| Will be used by the Beergarden application as the location of the message broker.
 
 | <<mq.virtual_host,mq.virtual_host>>
 | str
 | /
 | Virtual host to use for MQ
+
+| <<parent.http.access_token,parent.http.access_token>>
+| str
+| None
+| Access token for authentication
+
+| <<parent.http.api_version,parent.http.api_version>>
+| int
+| 1
+| Beergarden API version
+
+| <<parent.http.client_timeout,parent.http.client_timeout>>
+| float
+| -1
+| Max time RestClient will wait for server response
 
 | <<parent.http.enabled,parent.http.enabled>>
 | bool
@@ -315,58 +396,128 @@ This section outlines the various configuration items Beer Garden supports.
 
 | <<parent.http.host,parent.http.host>>
 | str
-| 0.0.0.0
+| None
 | Host for the HTTP Server to bind to
+
+| <<parent.http.password,parent.http.password>>
+| str
+| None
+| Password for authentication
 
 | <<parent.http.port,parent.http.port>>
 | int
 | 2337
 | Serve content on this port
 
-| <<parent.http.public_fqdn,parent.http.public_fqdn>>
+| <<parent.http.refresh_token,parent.http.refresh_token>>
 | str
-| localhost
-| Public fully-qualified domain name
-
-| <<parent.http.skip_events,parent.http.skip_events>>
-| list
-| ['DB_CREATE']
-| Events to be skipped
+| None
+| Refresh token for authentication
 
 | <<parent.http.ssl.ca_cert,parent.http.ssl.ca_cert>>
 | str
 | None
 | Path to CA certificate file to use for SSLContext
 
-| <<parent.http.ssl.ca_path,parent.http.ssl.ca_path>>
+| <<parent.http.ssl.ca_verify,parent.http.ssl.ca_verify>>
+| bool
+| True
+| Verify server certificate when using SSL
+
+| <<parent.http.ssl.client_cert,parent.http.ssl.client_cert>>
 | str
 | None
-| Path to CA certificate path to use for SSLContext
+| Client certificate to use
 
-| <<parent.http.ssl.client_cert_verify,parent.http.ssl.client_cert_verify>>
+| <<parent.http.ssl.client_key,parent.http.ssl.client_key>>
 | str
-| NONE
-| Client certificate mode to use when handling requests
+| None
+| Client key to use
 
 | <<parent.http.ssl.enabled,parent.http.ssl.enabled>>
 | bool
 | False
-| Serve content using SSL
-
-| <<parent.http.ssl.private_key,parent.http.ssl.private_key>>
-| str
-| None
-| Path to a private key
-
-| <<parent.http.ssl.public_key,parent.http.ssl.public_key>>
-| str
-| None
-| Path to a public key
+| Use SSL when connecting
 
 | <<parent.http.url_prefix,parent.http.url_prefix>>
 | str
 | /
 | URL path prefix
+
+| <<parent.http.username,parent.http.username>>
+| str
+| None
+| Username for authentication
+
+| <<parent.skip_events,parent.skip_events>>
+| list
+| []
+| Events to be skipped
+
+| <<parent.stomp.enabled,parent.stomp.enabled>>
+| bool
+| False
+| Publish events to parent garden over STOMP
+
+| <<parent.stomp.headers,parent.stomp.headers>>
+| list
+| []
+| Headers to be sent with messages. Follows standard YAML formatting for lists with two variables 'key' and 'value'
+
+| <<parent.stomp.host,parent.stomp.host>>
+| str
+| localhost
+| Broker hostname
+
+| <<parent.stomp.password,parent.stomp.password>>
+| str
+| None
+| Password to use for authentication
+
+| <<parent.stomp.port,parent.stomp.port>>
+| int
+| 61613
+| Broker port
+
+| <<parent.stomp.send_destination,parent.stomp.send_destination>>
+| str
+| None
+| Topic where events are published
+
+| <<parent.stomp.ssl.ca_cert,parent.stomp.ssl.ca_cert>>
+| str
+| None
+| Path to certificate file containing the certificate of the authority that issued the message broker certificate
+
+| <<parent.stomp.ssl.client_cert,parent.stomp.ssl.client_cert>>
+| str
+| None
+| Path to client public certificate to use when communicating with the message broker
+
+| <<parent.stomp.ssl.client_key,parent.stomp.ssl.client_key>>
+| str
+| None
+| Path to client private key to use when communicating with the message broker
+
+| <<parent.stomp.ssl.use_ssl,parent.stomp.ssl.use_ssl>>
+| bool
+| False
+| Use SSL when connecting to message broker
+
+| <<parent.stomp.subscribe_destination,parent.stomp.subscribe_destination>>
+| str
+| None
+| Topic to listen for operations
+
+| <<parent.stomp.username,parent.stomp.username>>
+| str
+| None
+| Username to use for authentication
+
+| <<plugin.allow_command_updates,plugin.allow_command_updates>>
+| bool
+| False
+| Allow commands of non-dev systems to be updated
 
 | <<plugin.local.auth.password,plugin.local.auth.password>>
 | str
@@ -388,10 +539,15 @@ This section outlines the various configuration items Beer Garden supports.
 | []
 | Host environment variables that will be propagated to local plugin processes
 
-| <<plugin.local.logging.stream_files,plugin.local.logging.stream_files>>
-| bool
-| False
-| Write plugin STDOUT to plugin.out and plugin STDERR to plugin.err
+| <<plugin.local.logging.config_file,plugin.local.logging.config_file>>
+| str
+| None
+| Path to a logging configuration file for local plugins
+
+| <<plugin.local.logging.fallback_level,plugin.local.logging.fallback_level>>
+| str
+| INFO
+| Level that will be used with a default logging configuration if config_file is not specified
 
 | <<plugin.local.timeout.shutdown,plugin.local.timeout.shutdown>>
 | int
@@ -403,12 +559,17 @@ This section outlines the various configuration items Beer Garden supports.
 | 5
 | Seconds to wait for a plugin to start
 
-| <<plugin.logging.config_file,plugin.logging.config_file>>
+| <<plugin.mq.host,plugin.mq.host>>
+| str
+| localhost
+| Globally resolvable host name of message broker
+
+| <<plugin.remote.logging.config_file,plugin.remote.logging.config_file>>
 | str
 | None
 | Path to a logging configuration file for plugins
 
-| <<plugin.logging.fallback_level,plugin.logging.fallback_level>>
+| <<plugin.remote.logging.fallback_level,plugin.remote.logging.fallback_level>>
 | str
 | INFO
 | Level that will be used with a default logging configuration if config_file is not specified
@@ -423,20 +584,20 @@ This section outlines the various configuration items Beer Garden supports.
 | 30
 | Amount of time to wait before marking a plugin asunresponsive
 
-| <<publish_hostname,publish_hostname>>
-| str
-| localhost
-| Publicly accessible hostname for plugins to connect to
+| <<request_validation.dynamic_choices.command.timeout,request_validation.dynamic_choices.command.timeout>>
+| int
+| 10
+| Time to wait for a command-based choices validation
 
-| <<scheduler.auth.password,scheduler.auth.password>>
+| <<request_validation.dynamic_choices.url.ca_cert,request_validation.dynamic_choices.url.ca_cert>>
 | str
 | None
-| Password that scheduler will use for authentication (needs bg-admin role)
+| CA file for validating url-based choices
 
-| <<scheduler.auth.username,scheduler.auth.username>>
-| str
-| None
-| Username that scheduler will use for authentication (needs bg-admin role)
+| <<request_validation.dynamic_choices.url.ca_verify,request_validation.dynamic_choices.url.ca_verify>>
+| bool
+| True
+| Verify external certificates for url-based choices
 
 | <<scheduler.job_defaults.coalesce,scheduler.job_defaults.coalesce>>
 | bool
@@ -453,25 +614,105 @@ This section outlines the various configuration items Beer Garden supports.
 | 10
 | Number of workers (processes) to run concurrently.
 
-| <<validator.command.timeout,validator.command.timeout>>
-| int
-| 10
-| Time to wait for a command-based choices validation
-
-| <<validator.url.ca_cert,validator.url.ca_cert>>
-| str
-| None
-| CA file for validating url-based choices
-
-| <<validator.url.ca_verify,validator.url.ca_verify>>
+| <<ui.cors_enabled,ui.cors_enabled>>
 | bool
-| True
-| Verify external certificates for url-based choices
+| False
+| Determine if CORS should be enabled
+
+| <<ui.debug_mode,ui.debug_mode>>
+| bool
+| False
+| Run the application in debug mode
+
+| <<ui.execute_javascript,ui.execute_javascript>>
+| bool
+| False
+| Execute plugin-provided javascript
+
+| <<ui.icon_default,ui.icon_default>>
+| str
+| fa-beer
+| Default font-awesome icon to display
+
+| <<ui.name,ui.name>>
+| str
+| Beer Garden
+| The title to display on the GUI
 |===
 
-=== application.cors_enabled
+=== auth.authentication_handlers.basic.enabled
 
-Determine if CORS should be enabled
+Enable authentication via username andpassword
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
+| `True`
+
+| *env_name*
+| `BG_AUTH_AUTHENTICATION_HANDLERS_BASIC_ENABLED`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-authentication_handlers-basic-no-enabled`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.authentication_handlers.basic.enabled from the environment by setting the environment variable `BG_AUTH_AUTHENTICATION_HANDLERS_BASIC_ENABLED`
+
+You can set `auth.authentication_handlers.basic.enabled` from the command-line by specifying `--auth-authentication_handlers-basic-no-enabled` at Beer Garden's entrypoint.
+
+If `auth.authentication_handlers.basic.enabled` is not set in any of the sources listed, it will fallback to the default value `True`
+
+=== auth.authentication_handlers.trusted_header.create_users
+
+Create an account for the user specified byusername_header if one does not already exist
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
+| `True`
+
+| *env_name*
+| `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_CREATE_USERS`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-authentication_handlers-trusted_header-no-create-users`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.authentication_handlers.trusted_header.create_users from the environment by setting the environment variable `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_CREATE_USERS`
+
+You can set `auth.authentication_handlers.trusted_header.create_users` from the command-line by specifying `--auth-authentication_handlers-trusted_header-no-create-users` at Beer Garden's entrypoint.
+
+If `auth.authentication_handlers.trusted_header.create_users` is not set in any of the sources listed, it will fallback to the default value `True`
+
+=== auth.authentication_handlers.trusted_header.enabled
+
+Enable authentication via trusted headers
 
 |===
 | Attribute | Value
@@ -483,13 +724,13 @@ Determine if CORS should be enabled
 | `False`
 
 | *env_name*
-| `BG_APPLICATION_CORS_ENABLED`
+| `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_ENABLED`
 
 | *required*
 | `True`
 
 | *cli_name*
-| `--application-cors-enabled`
+| `--auth-authentication_handlers-trusted_header-enabled`
 
 | *fallback*
 | `None`
@@ -498,81 +739,13 @@ Determine if CORS should be enabled
 | `None`
 |===
 
-You can set application.cors_enabled from the environment by setting the environment variable `BG_APPLICATION_CORS_ENABLED`
+You can set auth.authentication_handlers.trusted_header.enabled from the environment by setting the environment variable `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_ENABLED`
 
-You can set `application.cors_enabled` from the command-line by specifying `--application-cors-enabled` at Beer Garden's entrypoint.
+You can set `auth.authentication_handlers.trusted_header.enabled` from the command-line by specifying `--auth-authentication_handlers-trusted_header-enabled` at Beer Garden's entrypoint.
 
-=== application.debug_mode
+=== auth.authentication_handlers.trusted_header.user_groups_header
 
-Run the application in debug mode
-
-|===
-| Attribute | Value
-
-| *item_type*
-| `bool`
-
-| *default*
-| `False`
-
-| *env_name*
-| `BG_APPLICATION_DEBUG_MODE`
-
-| *required*
-| `True`
-
-| *cli_name*
-| `--application-debug-mode`
-
-| *fallback*
-| `None`
-
-| *choices*
-| `None`
-|===
-
-You can set application.debug_mode from the environment by setting the environment variable `BG_APPLICATION_DEBUG_MODE`
-
-You can set `application.debug_mode` from the command-line by specifying `--application-debug-mode` at Beer Garden's entrypoint.
-
-=== application.execute_javascript
-
-Execute plugin-provided javascript
-
-|===
-| Attribute | Value
-
-| *item_type*
-| `bool`
-
-| *default*
-| `False`
-
-| *env_name*
-| `BG_APPLICATION_EXECUTE_JAVASCRIPT`
-
-| *required*
-| `True`
-
-| *cli_name*
-| `--application-execute-javascript`
-
-| *fallback*
-| `None`
-
-| *choices*
-| `None`
-|===
-
-You can set application.execute_javascript from the environment by setting the environment variable `BG_APPLICATION_EXECUTE_JAVASCRIPT`
-
-You can set `application.execute_javascript` from the command-line by specifying `--application-execute-javascript` at Beer Garden's entrypoint.
-
-This is dangerous!! Setting this to true will instruct the browser to execute javascript provided by plugins. This means you MUST have control over all plugins running in the environment, otherwise this is a problem waiting to happen.
-
-=== application.icon_default
-
-Default font-awesome icon to display
+The http header containing the comma separated list of the user's groups.
 
 |===
 | Attribute | Value
@@ -581,16 +754,16 @@ Default font-awesome icon to display
 | `str`
 
 | *default*
-| `fa-beer`
+| `bg-user-groups`
 
 | *env_name*
-| `BG_APPLICATION_ICON_DEFAULT`
+| `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_USER_GROUPS_HEADER`
 
 | *required*
 | `True`
 
 | *cli_name*
-| `--application-icon-default`
+| `--auth-authentication_handlers-trusted_header-user-groups-header`
 
 | *fallback*
 | `None`
@@ -599,15 +772,15 @@ Default font-awesome icon to display
 | `None`
 |===
 
-You can set application.icon_default from the environment by setting the environment variable `BG_APPLICATION_ICON_DEFAULT`
+You can set auth.authentication_handlers.trusted_header.user_groups_header from the environment by setting the environment variable `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_USER_GROUPS_HEADER`
 
-You can set `application.icon_default` from the command-line by specifying `--application-icon-default` at Beer Garden's entrypoint.
+You can set `auth.authentication_handlers.trusted_header.user_groups_header` from the command-line by specifying `--auth-authentication_handlers-trusted_header-user-groups-header` at Beer Garden's entrypoint.
 
-If `application.icon_default` is not set in any of the sources listed, it will fallback to the default value `fa-beer`
+If `auth.authentication_handlers.trusted_header.user_groups_header` is not set in any of the sources listed, it will fallback to the default value `bg-user-groups`
 
-=== application.name
+=== auth.authentication_handlers.trusted_header.username_header
 
-The title to display on the GUI
+The http header containing the username
 
 |===
 | Attribute | Value
@@ -616,16 +789,16 @@ The title to display on the GUI
 | `str`
 
 | *default*
-| `Beer Garden`
+| `bg-username`
 
 | *env_name*
-| `BG_APPLICATION_NAME`
+| `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_USERNAME_HEADER`
 
 | *required*
 | `True`
 
 | *cli_name*
-| `--application-name`
+| `--auth-authentication_handlers-trusted_header-username-header`
 
 | *fallback*
 | `None`
@@ -634,11 +807,81 @@ The title to display on the GUI
 | `None`
 |===
 
-You can set application.name from the environment by setting the environment variable `BG_APPLICATION_NAME`
+You can set auth.authentication_handlers.trusted_header.username_header from the environment by setting the environment variable `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_USERNAME_HEADER`
 
-You can set `application.name` from the command-line by specifying `--application-name` at Beer Garden's entrypoint.
+You can set `auth.authentication_handlers.trusted_header.username_header` from the command-line by specifying `--auth-authentication_handlers-trusted_header-username-header` at Beer Garden's entrypoint.
 
-If `application.name` is not set in any of the sources listed, it will fallback to the default value `Beer Garden`
+If `auth.authentication_handlers.trusted_header.username_header` is not set in any of the sources listed, it will fallback to the default value `bg-username`
+
+=== auth.default_admin.password
+
+The password for the default admin account that will be created when initializing a new environment
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `password`
+
+| *env_name*
+| `BG_AUTH_DEFAULT_ADMIN_PASSWORD`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-default_admin-password`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.default_admin.password from the environment by setting the environment variable `BG_AUTH_DEFAULT_ADMIN_PASSWORD`
+
+You can set `auth.default_admin.password` from the command-line by specifying `--auth-default_admin-password` at Beer Garden's entrypoint.
+
+If `auth.default_admin.password` is not set in any of the sources listed, it will fallback to the default value `password`
+
+=== auth.default_admin.username
+
+The username for the default admin account that will be created when initializing a new environment
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `admin`
+
+| *env_name*
+| `BG_AUTH_DEFAULT_ADMIN_USERNAME`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-default_admin-username`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.default_admin.username from the environment by setting the environment variable `BG_AUTH_DEFAULT_ADMIN_USERNAME`
+
+You can set `auth.default_admin.username` from the command-line by specifying `--auth-default_admin-username` at Beer Garden's entrypoint.
+
+If `auth.default_admin.username` is not set in any of the sources listed, it will fallback to the default value `admin`
 
 === auth.enabled
 
@@ -673,44 +916,9 @@ You can set auth.enabled from the environment by setting the environment variabl
 
 You can set `auth.enabled` from the command-line by specifying `--auth-enabled` at Beer Garden's entrypoint.
 
-=== auth.guest_login_enabled
+=== auth.group_definition_file
 
-Only applicable if auth is enabled. If set to true, guests can login without username/passwords.
-
-|===
-| Attribute | Value
-
-| *item_type*
-| `bool`
-
-| *default*
-| `True`
-
-| *env_name*
-| `BG_AUTH_GUEST_LOGIN_ENABLED`
-
-| *required*
-| `True`
-
-| *cli_name*
-| `--auth-no-guest-login-enabled`
-
-| *fallback*
-| `None`
-
-| *choices*
-| `None`
-|===
-
-You can set auth.guest_login_enabled from the environment by setting the environment variable `BG_AUTH_GUEST_LOGIN_ENABLED`
-
-You can set `auth.guest_login_enabled` from the command-line by specifying `--auth-no-guest-login-enabled` at Beer Garden's entrypoint.
-
-If `auth.guest_login_enabled` is not set in any of the sources listed, it will fallback to the default value `True`
-
-=== auth.token.algorithm
-
-Algorithm to use when signing tokens
+Path to the file containg a mapping of groups to beer garden role assignments
 
 |===
 | Attribute | Value
@@ -719,16 +927,16 @@ Algorithm to use when signing tokens
 | `str`
 
 | *default*
-| `HS256`
+| `None`
 
 | *env_name*
-| `BG_AUTH_TOKEN_ALGORITHM`
+| `BG_AUTH_GROUP_DEFINITION_FILE`
 
 | *required*
-| `True`
+| `False`
 
 | *cli_name*
-| `--auth-token-algorithm`
+| `--auth-group-definition-file`
 
 | *fallback*
 | `None`
@@ -737,33 +945,31 @@ Algorithm to use when signing tokens
 | `None`
 |===
 
-You can set auth.token.algorithm from the environment by setting the environment variable `BG_AUTH_TOKEN_ALGORITHM`
+You can set auth.group_definition_file from the environment by setting the environment variable `BG_AUTH_GROUP_DEFINITION_FILE`
 
-You can set `auth.token.algorithm` from the command-line by specifying `--auth-token-algorithm` at Beer Garden's entrypoint.
+You can set `auth.group_definition_file` from the command-line by specifying `--auth-group-definition-file` at Beer Garden's entrypoint.
 
-If `auth.token.algorithm` is not set in any of the sources listed, it will fallback to the default value `HS256`
+=== auth.role_definition_file
 
-=== auth.token.lifetime
-
-Time (seconds) before a token expires
+Path to the yaml file that defines roles used for authorization
 
 |===
 | Attribute | Value
 
 | *item_type*
-| `int`
+| `str`
 
 | *default*
-| `1200`
+| `None`
 
 | *env_name*
-| `BG_AUTH_TOKEN_LIFETIME`
+| `BG_AUTH_ROLE_DEFINITION_FILE`
 
 | *required*
-| `True`
+| `False`
 
 | *cli_name*
-| `--auth-token-lifetime`
+| `--auth-role-definition-file`
 
 | *fallback*
 | `None`
@@ -772,15 +978,13 @@ Time (seconds) before a token expires
 | `None`
 |===
 
-You can set auth.token.lifetime from the environment by setting the environment variable `BG_AUTH_TOKEN_LIFETIME`
+You can set auth.role_definition_file from the environment by setting the environment variable `BG_AUTH_ROLE_DEFINITION_FILE`
 
-You can set `auth.token.lifetime` from the command-line by specifying `--auth-token-lifetime` at Beer Garden's entrypoint.
+You can set `auth.role_definition_file` from the command-line by specifying `--auth-role-definition-file` at Beer Garden's entrypoint.
 
-If `auth.token.lifetime` is not set in any of the sources listed, it will fallback to the default value `1200`
+=== auth.token_secret
 
-=== auth.token.secret
-
-Secret to use when signing tokens
+Secret to use when signing authentication tokens
 
 |===
 | Attribute | Value
@@ -807,9 +1011,9 @@ Secret to use when signing tokens
 | `None`
 |===
 
-You can set auth.token.secret from the environment by setting the environment variable `BG_AUTH_TOKEN_SECRET`
+You can set auth.token_secret from the environment by setting the environment variable `BG_AUTH_TOKEN_SECRET`
 
-You can set `auth.token.secret` from the command-line by specifying `--auth-token-secret` at Beer Garden's entrypoint.
+You can set `auth.token_secret` from the command-line by specifying `--auth-token-secret` at Beer Garden's entrypoint.
 
 === configuration.file
 
@@ -1050,6 +1254,41 @@ You can set `db.ttl.action` from the command-line by specifying `--db-ttl-action
 
 If `db.ttl.action` is not set in any of the sources listed, it will fallback to the default value `-1`
 
+=== db.ttl.file
+
+Number of minutes to wait before deleting FILE documents (negative number for never)
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `15`
+
+| *env_name*
+| `BG_DB_TTL_FILE`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--db-ttl-file`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set db.ttl.file from the environment by setting the environment variable `BG_DB_TTL_FILE`
+
+You can set `db.ttl.file` from the command-line by specifying `--db-ttl-file` at Beer Garden's entrypoint.
+
+If `db.ttl.file` is not set in any of the sources listed, it will fallback to the default value `15`
+
 === db.ttl.info
 
 Number of minutes to wait before deleting INFO requests (negative number for never)
@@ -1189,41 +1428,6 @@ You can set entry.http.port from the environment by setting the environment vari
 You can set `entry.http.port` from the command-line by specifying `--entry-http-port` at Beer Garden's entrypoint.
 
 If `entry.http.port` is not set in any of the sources listed, it will fallback to the default value `2337`
-
-=== entry.http.public_fqdn
-
-Public fully-qualified domain name
-
-|===
-| Attribute | Value
-
-| *item_type*
-| `str`
-
-| *default*
-| `localhost`
-
-| *env_name*
-| `BG_ENTRY_HTTP_PUBLIC_FQDN`
-
-| *required*
-| `True`
-
-| *cli_name*
-| `--entry-http-public-fqdn`
-
-| *fallback*
-| `None`
-
-| *choices*
-| `None`
-|===
-
-You can set entry.http.public_fqdn from the environment by setting the environment variable `BG_ENTRY_HTTP_PUBLIC_FQDN`
-
-You can set `entry.http.public_fqdn` from the command-line by specifying `--entry-http-public-fqdn` at Beer Garden's entrypoint.
-
-If `entry.http.public_fqdn` is not set in any of the sources listed, it will fallback to the default value `localhost`
 
 === entry.http.ssl.ca_cert
 
@@ -1459,6 +1663,404 @@ You can set entry.http.url_prefix from the environment by setting the environmen
 You can set `entry.http.url_prefix` from the command-line by specifying `--entry-http-url-prefix` at Beer Garden's entrypoint.
 
 If `entry.http.url_prefix` is not set in any of the sources listed, it will fallback to the default value `/`
+
+=== entry.stomp.enabled
+
+Connect to a Stomp Broker
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
+| `False`
+
+| *env_name*
+| `BG_ENTRY_STOMP_ENABLED`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--entry-stomp-enabled`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set entry.stomp.enabled from the environment by setting the environment variable `BG_ENTRY_STOMP_ENABLED`
+
+You can set `entry.stomp.enabled` from the command-line by specifying `--entry-stomp-enabled` at Beer Garden's entrypoint.
+
+=== entry.stomp.headers
+
+Headers to be sent with messages. Follows standard YAML formatting for lists with two variables 'key' and 'value'
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `list`
+
+| *default*
+| `[]`
+
+| *env_name*
+| `None`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--entry-stomp-headers`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set `entry.stomp.headers` from the command-line by specifying `--entry-stomp-headers` at Beer Garden's entrypoint.
+
+=== entry.stomp.host
+
+Broker hostname
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `localhost`
+
+| *env_name*
+| `BG_ENTRY_STOMP_HOST`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--entry-stomp-host`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set entry.stomp.host from the environment by setting the environment variable `BG_ENTRY_STOMP_HOST`
+
+You can set `entry.stomp.host` from the command-line by specifying `--entry-stomp-host` at Beer Garden's entrypoint.
+
+If `entry.stomp.host` is not set in any of the sources listed, it will fallback to the default value `localhost`
+
+=== entry.stomp.password
+
+Password to use for authentication
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_ENTRY_STOMP_PASSWORD`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--entry-stomp-password`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set entry.stomp.password from the environment by setting the environment variable `BG_ENTRY_STOMP_PASSWORD`
+
+You can set `entry.stomp.password` from the command-line by specifying `--entry-stomp-password` at Beer Garden's entrypoint.
+
+=== entry.stomp.port
+
+Broker port
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `61613`
+
+| *env_name*
+| `BG_ENTRY_STOMP_PORT`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--entry-stomp-port`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set entry.stomp.port from the environment by setting the environment variable `BG_ENTRY_STOMP_PORT`
+
+You can set `entry.stomp.port` from the command-line by specifying `--entry-stomp-port` at Beer Garden's entrypoint.
+
+If `entry.stomp.port` is not set in any of the sources listed, it will fallback to the default value `61613`
+
+=== entry.stomp.send_destination
+
+Topic where events are published
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_ENTRY_STOMP_SEND_DESTINATION`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--entry-stomp-send-destination`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set entry.stomp.send_destination from the environment by setting the environment variable `BG_ENTRY_STOMP_SEND_DESTINATION`
+
+You can set `entry.stomp.send_destination` from the command-line by specifying `--entry-stomp-send-destination` at Beer Garden's entrypoint.
+
+=== entry.stomp.ssl.ca_cert
+
+Path to certificate file containing the certificate of the authority that issued the message broker certificate
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_ENTRY_STOMP_SSL_CA_CERT`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--entry-stomp-ssl-ca-cert`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set entry.stomp.ssl.ca_cert from the environment by setting the environment variable `BG_ENTRY_STOMP_SSL_CA_CERT`
+
+You can set `entry.stomp.ssl.ca_cert` from the command-line by specifying `--entry-stomp-ssl-ca-cert` at Beer Garden's entrypoint.
+
+=== entry.stomp.ssl.client_cert
+
+Path to client public certificate to use when communicating with the message broker
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_ENTRY_STOMP_SSL_CLIENT_CERT`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--entry-stomp-ssl-client-cert`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set entry.stomp.ssl.client_cert from the environment by setting the environment variable `BG_ENTRY_STOMP_SSL_CLIENT_CERT`
+
+You can set `entry.stomp.ssl.client_cert` from the command-line by specifying `--entry-stomp-ssl-client-cert` at Beer Garden's entrypoint.
+
+=== entry.stomp.ssl.client_key
+
+Path to client private key to use when communicating with the message broker
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_ENTRY_STOMP_SSL_CLIENT_KEY`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--entry-stomp-ssl-client-key`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set entry.stomp.ssl.client_key from the environment by setting the environment variable `BG_ENTRY_STOMP_SSL_CLIENT_KEY`
+
+You can set `entry.stomp.ssl.client_key` from the command-line by specifying `--entry-stomp-ssl-client-key` at Beer Garden's entrypoint.
+
+=== entry.stomp.ssl.use_ssl
+
+Use SSL when connecting to the message broker
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
+| `False`
+
+| *env_name*
+| `BG_ENTRY_STOMP_SSL_USE_SSL`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--entry-stomp-ssl-use-ssl`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set entry.stomp.ssl.use_ssl from the environment by setting the environment variable `BG_ENTRY_STOMP_SSL_USE_SSL`
+
+You can set `entry.stomp.ssl.use_ssl` from the command-line by specifying `--entry-stomp-ssl-use-ssl` at Beer Garden's entrypoint.
+
+=== entry.stomp.subscribe_destination
+
+Topic to listen for operations
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_ENTRY_STOMP_SUBSCRIBE_DESTINATION`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--entry-stomp-subscribe-destination`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set entry.stomp.subscribe_destination from the environment by setting the environment variable `BG_ENTRY_STOMP_SUBSCRIBE_DESTINATION`
+
+You can set `entry.stomp.subscribe_destination` from the command-line by specifying `--entry-stomp-subscribe-destination` at Beer Garden's entrypoint.
+
+=== entry.stomp.username
+
+Username to use for authentication
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_ENTRY_STOMP_USERNAME`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--entry-stomp-username`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set entry.stomp.username from the environment by setting the environment variable `BG_ENTRY_STOMP_USERNAME`
+
+You can set `entry.stomp.username` from the command-line by specifying `--entry-stomp-username` at Beer Garden's entrypoint.
 
 === garden.name
 
@@ -2389,7 +2991,7 @@ If `mq.heartbeat_interval` is not set in any of the sources listed, it will fall
 
 === mq.host
 
-Hostname of MQ to use
+Will be used by the Beergarden application as the location of the message broker.
 
 |===
 | Attribute | Value
@@ -2457,6 +3059,111 @@ You can set `mq.virtual_host` from the command-line by specifying `--mq-virtual-
 
 If `mq.virtual_host` is not set in any of the sources listed, it will fallback to the default value `/`
 
+=== parent.http.access_token
+
+Access token for authentication
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_PARENT_HTTP_ACCESS_TOKEN`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-http-access-token`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.http.access_token from the environment by setting the environment variable `BG_PARENT_HTTP_ACCESS_TOKEN`
+
+You can set `parent.http.access_token` from the command-line by specifying `--parent-http-access-token` at Beer Garden's entrypoint.
+
+=== parent.http.api_version
+
+Beergarden API version
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `1`
+
+| *env_name*
+| `BG_PARENT_HTTP_API_VERSION`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--parent-http-api-version`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `[1]`
+|===
+
+You can set parent.http.api_version from the environment by setting the environment variable `BG_PARENT_HTTP_API_VERSION`
+
+You can set `parent.http.api_version` from the command-line by specifying `--parent-http-api-version` at Beer Garden's entrypoint.
+
+If `parent.http.api_version` is not set in any of the sources listed, it will fallback to the default value `1`
+
+=== parent.http.client_timeout
+
+Max time RestClient will wait for server response
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `float`
+
+| *default*
+| `-1`
+
+| *env_name*
+| `BG_PARENT_HTTP_CLIENT_TIMEOUT`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--parent-http-client-timeout`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.http.client_timeout from the environment by setting the environment variable `BG_PARENT_HTTP_CLIENT_TIMEOUT`
+
+You can set `parent.http.client_timeout` from the command-line by specifying `--parent-http-client-timeout` at Beer Garden's entrypoint.
+
+If `parent.http.client_timeout` is not set in any of the sources listed, it will fallback to the default value `-1`
+
+This setting controls how long the HTTP(s) client will wait when opening a connection to Beergarden before aborting. This prevents some strange Beergarden server state from causing plugins to hang indefinitely. Set to -1 to disable (this is a bad idea in production code, see the Requests documentation).
+
 === parent.http.enabled
 
 Publish events to parent garden over HTTP
@@ -2501,13 +3208,13 @@ Host for the HTTP Server to bind to
 | `str`
 
 | *default*
-| `0.0.0.0`
+| `None`
 
 | *env_name*
 | `BG_PARENT_HTTP_HOST`
 
 | *required*
-| `True`
+| `False`
 
 | *cli_name*
 | `--parent-http-host`
@@ -2523,7 +3230,38 @@ You can set parent.http.host from the environment by setting the environment var
 
 You can set `parent.http.host` from the command-line by specifying `--parent-http-host` at Beer Garden's entrypoint.
 
-If `parent.http.host` is not set in any of the sources listed, it will fallback to the default value `0.0.0.0`
+=== parent.http.password
+
+Password for authentication
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_PARENT_HTTP_PASSWORD`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-http-password`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.http.password from the environment by setting the environment variable `BG_PARENT_HTTP_PASSWORD`
+
+You can set `parent.http.password` from the command-line by specifying `--parent-http-password` at Beer Garden's entrypoint.
 
 === parent.http.port
 
@@ -2560,9 +3298,9 @@ You can set `parent.http.port` from the command-line by specifying `--parent-htt
 
 If `parent.http.port` is not set in any of the sources listed, it will fallback to the default value `2337`
 
-=== parent.http.public_fqdn
+=== parent.http.refresh_token
 
-Public fully-qualified domain name
+Refresh token for authentication
 
 |===
 | Attribute | Value
@@ -2571,51 +3309,16 @@ Public fully-qualified domain name
 | `str`
 
 | *default*
-| `localhost`
+| `None`
 
 | *env_name*
-| `BG_PARENT_HTTP_PUBLIC_FQDN`
-
-| *required*
-| `True`
-
-| *cli_name*
-| `--parent-http-public-fqdn`
-
-| *fallback*
-| `None`
-
-| *choices*
-| `None`
-|===
-
-You can set parent.http.public_fqdn from the environment by setting the environment variable `BG_PARENT_HTTP_PUBLIC_FQDN`
-
-You can set `parent.http.public_fqdn` from the command-line by specifying `--parent-http-public-fqdn` at Beer Garden's entrypoint.
-
-If `parent.http.public_fqdn` is not set in any of the sources listed, it will fallback to the default value `localhost`
-
-=== parent.http.skip_events
-
-Events to be skipped
-
-|===
-| Attribute | Value
-
-| *item_type*
-| `list`
-
-| *default*
-| `['DB_CREATE']`
-
-| *env_name*
-| `None`
+| `BG_PARENT_HTTP_REFRESH_TOKEN`
 
 | *required*
 | `False`
 
 | *cli_name*
-| `--parent-http-skip-events`
+| `--parent-http-refresh-token`
 
 | *fallback*
 | `None`
@@ -2624,9 +3327,9 @@ Events to be skipped
 | `None`
 |===
 
-You can set `parent.http.skip_events` from the command-line by specifying `--parent-http-skip-events` at Beer Garden's entrypoint.
+You can set parent.http.refresh_token from the environment by setting the environment variable `BG_PARENT_HTTP_REFRESH_TOKEN`
 
-If `parent.http.skip_events` is not set in any of the sources listed, it will fallback to the default value `['DB_CREATE']`
+You can set `parent.http.refresh_token` from the command-line by specifying `--parent-http-refresh-token` at Beer Garden's entrypoint.
 
 === parent.http.ssl.ca_cert
 
@@ -2661,77 +3364,110 @@ You can set parent.http.ssl.ca_cert from the environment by setting the environm
 
 You can set `parent.http.ssl.ca_cert` from the command-line by specifying `--parent-http-ssl-ca-cert` at Beer Garden's entrypoint.
 
-=== parent.http.ssl.ca_path
+=== parent.http.ssl.ca_verify
 
-Path to CA certificate path to use for SSLContext
-
-|===
-| Attribute | Value
-
-| *item_type*
-| `str`
-
-| *default*
-| `None`
-
-| *env_name*
-| `BG_PARENT_HTTP_SSL_CA_PATH`
-
-| *required*
-| `False`
-
-| *cli_name*
-| `--parent-http-ssl-ca-path`
-
-| *fallback*
-| `None`
-
-| *choices*
-| `None`
-|===
-
-You can set parent.http.ssl.ca_path from the environment by setting the environment variable `BG_PARENT_HTTP_SSL_CA_PATH`
-
-You can set `parent.http.ssl.ca_path` from the command-line by specifying `--parent-http-ssl-ca-path` at Beer Garden's entrypoint.
-
-=== parent.http.ssl.client_cert_verify
-
-Client certificate mode to use when handling requests
+Verify server certificate when using SSL
 
 |===
 | Attribute | Value
 
 | *item_type*
-| `str`
+| `bool`
 
 | *default*
-| `NONE`
+| `True`
 
 | *env_name*
-| `BG_PARENT_HTTP_SSL_CLIENT_CERT_VERIFY`
+| `BG_PARENT_HTTP_SSL_CA_VERIFY`
 
 | *required*
 | `True`
 
 | *cli_name*
-| `--parent-http-ssl-client-cert-verify`
+| `--parent-http-ssl-no-ca-verify`
 
 | *fallback*
 | `None`
 
 | *choices*
-| `['NONE', 'OPTIONAL', 'REQUIRED']`
+| `None`
 |===
 
-You can set parent.http.ssl.client_cert_verify from the environment by setting the environment variable `BG_PARENT_HTTP_SSL_CLIENT_CERT_VERIFY`
+You can set parent.http.ssl.ca_verify from the environment by setting the environment variable `BG_PARENT_HTTP_SSL_CA_VERIFY`
 
-You can set `parent.http.ssl.client_cert_verify` from the command-line by specifying `--parent-http-ssl-client-cert-verify` at Beer Garden's entrypoint.
+You can set `parent.http.ssl.ca_verify` from the command-line by specifying `--parent-http-ssl-no-ca-verify` at Beer Garden's entrypoint.
 
-If `parent.http.ssl.client_cert_verify` is not set in any of the sources listed, it will fallback to the default value `NONE`
+If `parent.http.ssl.ca_verify` is not set in any of the sources listed, it will fallback to the default value `True`
+
+=== parent.http.ssl.client_cert
+
+Client certificate to use
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_PARENT_HTTP_SSL_CLIENT_CERT`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-http-ssl-client-cert`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.http.ssl.client_cert from the environment by setting the environment variable `BG_PARENT_HTTP_SSL_CLIENT_CERT`
+
+You can set `parent.http.ssl.client_cert` from the command-line by specifying `--parent-http-ssl-client-cert` at Beer Garden's entrypoint.
+
+=== parent.http.ssl.client_key
+
+Client key to use
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_PARENT_HTTP_SSL_CLIENT_KEY`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-http-ssl-client-key`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.http.ssl.client_key from the environment by setting the environment variable `BG_PARENT_HTTP_SSL_CLIENT_KEY`
+
+You can set `parent.http.ssl.client_key` from the command-line by specifying `--parent-http-ssl-client-key` at Beer Garden's entrypoint.
 
 === parent.http.ssl.enabled
 
-Serve content using SSL
+Use SSL when connecting
 
 |===
 | Attribute | Value
@@ -2761,72 +3497,6 @@ Serve content using SSL
 You can set parent.http.ssl.enabled from the environment by setting the environment variable `BG_PARENT_HTTP_SSL_ENABLED`
 
 You can set `parent.http.ssl.enabled` from the command-line by specifying `--parent-http-ssl-enabled` at Beer Garden's entrypoint.
-
-=== parent.http.ssl.private_key
-
-Path to a private key
-
-|===
-| Attribute | Value
-
-| *item_type*
-| `str`
-
-| *default*
-| `None`
-
-| *env_name*
-| `BG_PARENT_HTTP_SSL_PRIVATE_KEY`
-
-| *required*
-| `False`
-
-| *cli_name*
-| `--parent-http-ssl-private-key`
-
-| *fallback*
-| `None`
-
-| *choices*
-| `None`
-|===
-
-You can set parent.http.ssl.private_key from the environment by setting the environment variable `BG_PARENT_HTTP_SSL_PRIVATE_KEY`
-
-You can set `parent.http.ssl.private_key` from the command-line by specifying `--parent-http-ssl-private-key` at Beer Garden's entrypoint.
-
-=== parent.http.ssl.public_key
-
-Path to a public key
-
-|===
-| Attribute | Value
-
-| *item_type*
-| `str`
-
-| *default*
-| `None`
-
-| *env_name*
-| `BG_PARENT_HTTP_SSL_PUBLIC_KEY`
-
-| *required*
-| `False`
-
-| *cli_name*
-| `--parent-http-ssl-public-key`
-
-| *fallback*
-| `None`
-
-| *choices*
-| `None`
-|===
-
-You can set parent.http.ssl.public_key from the environment by setting the environment variable `BG_PARENT_HTTP_SSL_PUBLIC_KEY`
-
-You can set `parent.http.ssl.public_key` from the command-line by specifying `--parent-http-ssl-public-key` at Beer Garden's entrypoint.
 
 === parent.http.url_prefix
 
@@ -2862,6 +3532,503 @@ You can set parent.http.url_prefix from the environment by setting the environme
 You can set `parent.http.url_prefix` from the command-line by specifying `--parent-http-url-prefix` at Beer Garden's entrypoint.
 
 If `parent.http.url_prefix` is not set in any of the sources listed, it will fallback to the default value `/`
+
+=== parent.http.username
+
+Username for authentication
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_PARENT_HTTP_USERNAME`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-http-username`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.http.username from the environment by setting the environment variable `BG_PARENT_HTTP_USERNAME`
+
+You can set `parent.http.username` from the command-line by specifying `--parent-http-username` at Beer Garden's entrypoint.
+
+=== parent.skip_events
+
+Events to be skipped
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `list`
+
+| *default*
+| `[]`
+
+| *env_name*
+| `None`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-skip-events`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set `parent.skip_events` from the command-line by specifying `--parent-skip-events` at Beer Garden's entrypoint.
+
+=== parent.stomp.enabled
+
+Publish events to parent garden over STOMP
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
+| `False`
+
+| *env_name*
+| `BG_PARENT_STOMP_ENABLED`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--parent-stomp-enabled`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.stomp.enabled from the environment by setting the environment variable `BG_PARENT_STOMP_ENABLED`
+
+You can set `parent.stomp.enabled` from the command-line by specifying `--parent-stomp-enabled` at Beer Garden's entrypoint.
+
+=== parent.stomp.headers
+
+Headers to be sent with messages. Follows standard YAML formatting for lists with two variables 'key' and 'value'
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `list`
+
+| *default*
+| `[]`
+
+| *env_name*
+| `None`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-stomp-headers`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set `parent.stomp.headers` from the command-line by specifying `--parent-stomp-headers` at Beer Garden's entrypoint.
+
+=== parent.stomp.host
+
+Broker hostname
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `localhost`
+
+| *env_name*
+| `BG_PARENT_STOMP_HOST`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--parent-stomp-host`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.stomp.host from the environment by setting the environment variable `BG_PARENT_STOMP_HOST`
+
+You can set `parent.stomp.host` from the command-line by specifying `--parent-stomp-host` at Beer Garden's entrypoint.
+
+If `parent.stomp.host` is not set in any of the sources listed, it will fallback to the default value `localhost`
+
+=== parent.stomp.password
+
+Password to use for authentication
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_PARENT_STOMP_PASSWORD`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-stomp-password`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.stomp.password from the environment by setting the environment variable `BG_PARENT_STOMP_PASSWORD`
+
+You can set `parent.stomp.password` from the command-line by specifying `--parent-stomp-password` at Beer Garden's entrypoint.
+
+=== parent.stomp.port
+
+Broker port
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `61613`
+
+| *env_name*
+| `BG_PARENT_STOMP_PORT`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--parent-stomp-port`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.stomp.port from the environment by setting the environment variable `BG_PARENT_STOMP_PORT`
+
+You can set `parent.stomp.port` from the command-line by specifying `--parent-stomp-port` at Beer Garden's entrypoint.
+
+If `parent.stomp.port` is not set in any of the sources listed, it will fallback to the default value `61613`
+
+=== parent.stomp.send_destination
+
+Topic where events are published
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_PARENT_STOMP_SEND_DESTINATION`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-stomp-send-destination`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.stomp.send_destination from the environment by setting the environment variable `BG_PARENT_STOMP_SEND_DESTINATION`
+
+You can set `parent.stomp.send_destination` from the command-line by specifying `--parent-stomp-send-destination` at Beer Garden's entrypoint.
+
+=== parent.stomp.ssl.ca_cert
+
+Path to certificate file containing the certificate of the authority that issued the message broker certificate
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_PARENT_STOMP_SSL_CA_CERT`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-stomp-ssl-ca-cert`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.stomp.ssl.ca_cert from the environment by setting the environment variable `BG_PARENT_STOMP_SSL_CA_CERT`
+
+You can set `parent.stomp.ssl.ca_cert` from the command-line by specifying `--parent-stomp-ssl-ca-cert` at Beer Garden's entrypoint.
+
+=== parent.stomp.ssl.client_cert
+
+Path to client public certificate to use when communicating with the message broker
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_PARENT_STOMP_SSL_CLIENT_CERT`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-stomp-ssl-client-cert`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.stomp.ssl.client_cert from the environment by setting the environment variable `BG_PARENT_STOMP_SSL_CLIENT_CERT`
+
+You can set `parent.stomp.ssl.client_cert` from the command-line by specifying `--parent-stomp-ssl-client-cert` at Beer Garden's entrypoint.
+
+=== parent.stomp.ssl.client_key
+
+Path to client private key to use when communicating with the message broker
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_PARENT_STOMP_SSL_CLIENT_KEY`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-stomp-ssl-client-key`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.stomp.ssl.client_key from the environment by setting the environment variable `BG_PARENT_STOMP_SSL_CLIENT_KEY`
+
+You can set `parent.stomp.ssl.client_key` from the command-line by specifying `--parent-stomp-ssl-client-key` at Beer Garden's entrypoint.
+
+=== parent.stomp.ssl.use_ssl
+
+Use SSL when connecting to message broker
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
+| `False`
+
+| *env_name*
+| `BG_PARENT_STOMP_SSL_USE_SSL`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--parent-stomp-ssl-use-ssl`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.stomp.ssl.use_ssl from the environment by setting the environment variable `BG_PARENT_STOMP_SSL_USE_SSL`
+
+You can set `parent.stomp.ssl.use_ssl` from the command-line by specifying `--parent-stomp-ssl-use-ssl` at Beer Garden's entrypoint.
+
+=== parent.stomp.subscribe_destination
+
+Topic to listen for operations
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_PARENT_STOMP_SUBSCRIBE_DESTINATION`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-stomp-subscribe-destination`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.stomp.subscribe_destination from the environment by setting the environment variable `BG_PARENT_STOMP_SUBSCRIBE_DESTINATION`
+
+You can set `parent.stomp.subscribe_destination` from the command-line by specifying `--parent-stomp-subscribe-destination` at Beer Garden's entrypoint.
+
+=== parent.stomp.username
+
+Username to use for authentication
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_PARENT_STOMP_USERNAME`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--parent-stomp-username`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.stomp.username from the environment by setting the environment variable `BG_PARENT_STOMP_USERNAME`
+
+You can set `parent.stomp.username` from the command-line by specifying `--parent-stomp-username` at Beer Garden's entrypoint.
+
+=== plugin.allow_command_updates
+
+Allow commands of non-dev systems to be updated
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
+| `False`
+
+| *env_name*
+| `BG_PLUGIN_ALLOW_COMMAND_UPDATES`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--plugin-allow-command-updates`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set plugin.allow_command_updates from the environment by setting the environment variable `BG_PLUGIN_ALLOW_COMMAND_UPDATES`
+
+You can set `plugin.allow_command_updates` from the command-line by specifying `--plugin-allow-command-updates` at Beer Garden's entrypoint.
+
+When False, this prevents changes to the command definitions of a registered version of a system. This means that the system will fail to start if the commands do not match what is on record for that version of the system. When True, the system will be allowed to start and the commands on record will be updated accordingly. NOTE: System versions containing 'dev' are exempt from this check.
 
 === plugin.local.auth.password
 
@@ -2993,27 +4160,27 @@ Host environment variables that will be propagated to local plugin processes
 
 You can set `plugin.local.host_env_vars` from the command-line by specifying `--plugin-local-host-env-vars` at Beer Garden's entrypoint.
 
-=== plugin.local.logging.stream_files
+=== plugin.local.logging.config_file
 
-Write plugin STDOUT to plugin.out and plugin STDERR to plugin.err
+Path to a logging configuration file for local plugins
 
 |===
 | Attribute | Value
 
 | *item_type*
-| `bool`
+| `str`
 
 | *default*
-| `False`
+| `None`
 
 | *env_name*
-| `BG_PLUGIN_LOCAL_LOGGING_STREAM_FILES`
+| `BG_PLUGIN_LOCAL_LOGGING_CONFIG_FILE`
 
 | *required*
-| `True`
+| `False`
 
 | *cli_name*
-| `--plugin-local-logging-stream-files`
+| `--plugin-local-logging-config-file`
 
 | *fallback*
 | `None`
@@ -3022,9 +4189,44 @@ Write plugin STDOUT to plugin.out and plugin STDERR to plugin.err
 | `None`
 |===
 
-You can set plugin.local.logging.stream_files from the environment by setting the environment variable `BG_PLUGIN_LOCAL_LOGGING_STREAM_FILES`
+You can set plugin.local.logging.config_file from the environment by setting the environment variable `BG_PLUGIN_LOCAL_LOGGING_CONFIG_FILE`
 
-You can set `plugin.local.logging.stream_files` from the command-line by specifying `--plugin-local-logging-stream-files` at Beer Garden's entrypoint.
+You can set `plugin.local.logging.config_file` from the command-line by specifying `--plugin-local-logging-config-file` at Beer Garden's entrypoint.
+
+=== plugin.local.logging.fallback_level
+
+Level that will be used with a default logging configuration if config_file is not specified
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `INFO`
+
+| *env_name*
+| `BG_PLUGIN_LOCAL_LOGGING_FALLBACK_LEVEL`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--plugin-local-logging-fallback-level`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `['DEBUG', 'INFO', 'WARN', 'WARNING', 'ERROR', 'CRITICAL']`
+|===
+
+You can set plugin.local.logging.fallback_level from the environment by setting the environment variable `BG_PLUGIN_LOCAL_LOGGING_FALLBACK_LEVEL`
+
+You can set `plugin.local.logging.fallback_level` from the command-line by specifying `--plugin-local-logging-fallback-level` at Beer Garden's entrypoint.
+
+If `plugin.local.logging.fallback_level` is not set in any of the sources listed, it will fallback to the default value `INFO`
 
 === plugin.local.timeout.shutdown
 
@@ -3096,7 +4298,44 @@ You can set `plugin.local.timeout.startup` from the command-line by specifying `
 
 If `plugin.local.timeout.startup` is not set in any of the sources listed, it will fallback to the default value `5`
 
-=== plugin.logging.config_file
+=== plugin.mq.host
+
+Globally resolvable host name of message broker
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `localhost`
+
+| *env_name*
+| `BG_PLUGIN_MQ_HOST`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--plugin-mq-host`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set plugin.mq.host from the environment by setting the environment variable `BG_PLUGIN_MQ_HOST`
+
+You can set `plugin.mq.host` from the command-line by specifying `--plugin-mq-host` at Beer Garden's entrypoint.
+
+If `plugin.mq.host` is not set in any of the sources listed, it will fallback to the default value `localhost`
+
+This will be supplied to all plugins as the location of the message broker. In order to support both local and remote plugins it's important that this value be universally resolvable.
+
+=== plugin.remote.logging.config_file
 
 Path to a logging configuration file for plugins
 
@@ -3110,13 +4349,13 @@ Path to a logging configuration file for plugins
 | `None`
 
 | *env_name*
-| `BG_PLUGIN_LOGGING_CONFIG_FILE`
+| `BG_PLUGIN_REMOTE_LOGGING_CONFIG_FILE`
 
 | *required*
 | `False`
 
 | *cli_name*
-| `--plugin-logging-config-file`
+| `--plugin-remote-logging-config-file`
 
 | *fallback*
 | `None`
@@ -3125,11 +4364,11 @@ Path to a logging configuration file for plugins
 | `None`
 |===
 
-You can set plugin.logging.config_file from the environment by setting the environment variable `BG_PLUGIN_LOGGING_CONFIG_FILE`
+You can set plugin.remote.logging.config_file from the environment by setting the environment variable `BG_PLUGIN_REMOTE_LOGGING_CONFIG_FILE`
 
-You can set `plugin.logging.config_file` from the command-line by specifying `--plugin-logging-config-file` at Beer Garden's entrypoint.
+You can set `plugin.remote.logging.config_file` from the command-line by specifying `--plugin-remote-logging-config-file` at Beer Garden's entrypoint.
 
-=== plugin.logging.fallback_level
+=== plugin.remote.logging.fallback_level
 
 Level that will be used with a default logging configuration if config_file is not specified
 
@@ -3143,13 +4382,13 @@ Level that will be used with a default logging configuration if config_file is n
 | `INFO`
 
 | *env_name*
-| `BG_PLUGIN_LOGGING_FALLBACK_LEVEL`
+| `BG_PLUGIN_REMOTE_LOGGING_FALLBACK_LEVEL`
 
 | *required*
 | `True`
 
 | *cli_name*
-| `--plugin-logging-fallback-level`
+| `--plugin-remote-logging-fallback-level`
 
 | *fallback*
 | `None`
@@ -3158,11 +4397,11 @@ Level that will be used with a default logging configuration if config_file is n
 | `['DEBUG', 'INFO', 'WARN', 'WARNING', 'ERROR', 'CRITICAL']`
 |===
 
-You can set plugin.logging.fallback_level from the environment by setting the environment variable `BG_PLUGIN_LOGGING_FALLBACK_LEVEL`
+You can set plugin.remote.logging.fallback_level from the environment by setting the environment variable `BG_PLUGIN_REMOTE_LOGGING_FALLBACK_LEVEL`
 
-You can set `plugin.logging.fallback_level` from the command-line by specifying `--plugin-logging-fallback-level` at Beer Garden's entrypoint.
+You can set `plugin.remote.logging.fallback_level` from the command-line by specifying `--plugin-remote-logging-fallback-level` at Beer Garden's entrypoint.
 
-If `plugin.logging.fallback_level` is not set in any of the sources listed, it will fallback to the default value `INFO`
+If `plugin.remote.logging.fallback_level` is not set in any of the sources listed, it will fallback to the default value `INFO`
 
 === plugin.status_heartbeat
 
@@ -3234,9 +4473,44 @@ You can set `plugin.status_timeout` from the command-line by specifying `--plugi
 
 If `plugin.status_timeout` is not set in any of the sources listed, it will fallback to the default value `30`
 
-=== publish_hostname
+=== request_validation.dynamic_choices.command.timeout
 
-Publicly accessible hostname for plugins to connect to
+Time to wait for a command-based choices validation
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `10`
+
+| *env_name*
+| `BG_REQUEST_VALIDATION_DYNAMIC_CHOICES_COMMAND_TIMEOUT`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--request_validation-dynamic_choices-command-timeout`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set request_validation.dynamic_choices.command.timeout from the environment by setting the environment variable `BG_REQUEST_VALIDATION_DYNAMIC_CHOICES_COMMAND_TIMEOUT`
+
+You can set `request_validation.dynamic_choices.command.timeout` from the command-line by specifying `--request_validation-dynamic_choices-command-timeout` at Beer Garden's entrypoint.
+
+If `request_validation.dynamic_choices.command.timeout` is not set in any of the sources listed, it will fallback to the default value `10`
+
+=== request_validation.dynamic_choices.url.ca_cert
+
+CA file for validating url-based choices
 
 |===
 | Attribute | Value
@@ -3245,51 +4519,49 @@ Publicly accessible hostname for plugins to connect to
 | `str`
 
 | *default*
-| `localhost`
+| `None`
 
 | *env_name*
-| `BG_PUBLISH_HOSTNAME`
+| `BG_REQUEST_VALIDATION_DYNAMIC_CHOICES_URL_CA_CERT`
 
 | *required*
+| `False`
+
+| *cli_name*
+| `--request_validation-dynamic_choices-url-ca-cert`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set request_validation.dynamic_choices.url.ca_cert from the environment by setting the environment variable `BG_REQUEST_VALIDATION_DYNAMIC_CHOICES_URL_CA_CERT`
+
+You can set `request_validation.dynamic_choices.url.ca_cert` from the command-line by specifying `--request_validation-dynamic_choices-url-ca-cert` at Beer Garden's entrypoint.
+
+=== request_validation.dynamic_choices.url.ca_verify
+
+Verify external certificates for url-based choices
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
 | `True`
 
-| *cli_name*
-| `--publish-hostname`
-
-| *fallback*
-| `None`
-
-| *choices*
-| `None`
-|===
-
-You can set publish_hostname from the environment by setting the environment variable `BG_PUBLISH_HOSTNAME`
-
-You can set `publish_hostname` from the command-line by specifying `--publish-hostname` at Beer Garden's entrypoint.
-
-If `publish_hostname` is not set in any of the sources listed, it will fallback to the default value `localhost`
-
-=== scheduler.auth.password
-
-Password that scheduler will use for authentication (needs bg-admin role)
-
-|===
-| Attribute | Value
-
-| *item_type*
-| `str`
-
-| *default*
-| `None`
-
 | *env_name*
-| `BG_SCHEDULER_AUTH_PASSWORD`
+| `BG_REQUEST_VALIDATION_DYNAMIC_CHOICES_URL_CA_VERIFY`
 
 | *required*
 | `False`
 
 | *cli_name*
-| `--scheduler-auth-password`
+| `--request_validation-dynamic_choices-url-no-ca-verify`
 
 | *fallback*
 | `None`
@@ -3298,42 +4570,11 @@ Password that scheduler will use for authentication (needs bg-admin role)
 | `None`
 |===
 
-You can set scheduler.auth.password from the environment by setting the environment variable `BG_SCHEDULER_AUTH_PASSWORD`
+You can set request_validation.dynamic_choices.url.ca_verify from the environment by setting the environment variable `BG_REQUEST_VALIDATION_DYNAMIC_CHOICES_URL_CA_VERIFY`
 
-You can set `scheduler.auth.password` from the command-line by specifying `--scheduler-auth-password` at Beer Garden's entrypoint.
+You can set `request_validation.dynamic_choices.url.ca_verify` from the command-line by specifying `--request_validation-dynamic_choices-url-no-ca-verify` at Beer Garden's entrypoint.
 
-=== scheduler.auth.username
-
-Username that scheduler will use for authentication (needs bg-admin role)
-
-|===
-| Attribute | Value
-
-| *item_type*
-| `str`
-
-| *default*
-| `None`
-
-| *env_name*
-| `BG_SCHEDULER_AUTH_USERNAME`
-
-| *required*
-| `False`
-
-| *cli_name*
-| `--scheduler-auth-username`
-
-| *fallback*
-| `None`
-
-| *choices*
-| `None`
-|===
-
-You can set scheduler.auth.username from the environment by setting the environment variable `BG_SCHEDULER_AUTH_USERNAME`
-
-You can set `scheduler.auth.username` from the command-line by specifying `--scheduler-auth-username` at Beer Garden's entrypoint.
+If `request_validation.dynamic_choices.url.ca_verify` is not set in any of the sources listed, it will fallback to the default value `True`
 
 === scheduler.job_defaults.coalesce
 
@@ -3440,77 +4681,9 @@ You can set `scheduler.max_workers` from the command-line by specifying `--sched
 
 If `scheduler.max_workers` is not set in any of the sources listed, it will fallback to the default value `10`
 
-=== validator.command.timeout
+=== ui.cors_enabled
 
-Time to wait for a command-based choices validation
-
-|===
-| Attribute | Value
-
-| *item_type*
-| `int`
-
-| *default*
-| `10`
-
-| *env_name*
-| `BG_VALIDATOR_COMMAND_TIMEOUT`
-
-| *required*
-| `False`
-
-| *cli_name*
-| `--validator-command-timeout`
-
-| *fallback*
-| `None`
-
-| *choices*
-| `None`
-|===
-
-You can set validator.command.timeout from the environment by setting the environment variable `BG_VALIDATOR_COMMAND_TIMEOUT`
-
-You can set `validator.command.timeout` from the command-line by specifying `--validator-command-timeout` at Beer Garden's entrypoint.
-
-If `validator.command.timeout` is not set in any of the sources listed, it will fallback to the default value `10`
-
-=== validator.url.ca_cert
-
-CA file for validating url-based choices
-
-|===
-| Attribute | Value
-
-| *item_type*
-| `str`
-
-| *default*
-| `None`
-
-| *env_name*
-| `BG_VALIDATOR_URL_CA_CERT`
-
-| *required*
-| `False`
-
-| *cli_name*
-| `--validator-url-ca-cert`
-
-| *fallback*
-| `None`
-
-| *choices*
-| `None`
-|===
-
-You can set validator.url.ca_cert from the environment by setting the environment variable `BG_VALIDATOR_URL_CA_CERT`
-
-You can set `validator.url.ca_cert` from the command-line by specifying `--validator-url-ca-cert` at Beer Garden's entrypoint.
-
-=== validator.url.ca_verify
-
-Verify external certificates for url-based choices
+Determine if CORS should be enabled
 
 |===
 | Attribute | Value
@@ -3519,16 +4692,16 @@ Verify external certificates for url-based choices
 | `bool`
 
 | *default*
-| `True`
-
-| *env_name*
-| `BG_VALIDATOR_URL_CA_VERIFY`
-
-| *required*
 | `False`
 
+| *env_name*
+| `BG_UI_CORS_ENABLED`
+
+| *required*
+| `True`
+
 | *cli_name*
-| `--validator-url-no-ca-verify`
+| `--ui-cors-enabled`
 
 | *fallback*
 | `None`
@@ -3537,8 +4710,144 @@ Verify external certificates for url-based choices
 | `None`
 |===
 
-You can set validator.url.ca_verify from the environment by setting the environment variable `BG_VALIDATOR_URL_CA_VERIFY`
+You can set ui.cors_enabled from the environment by setting the environment variable `BG_UI_CORS_ENABLED`
 
-You can set `validator.url.ca_verify` from the command-line by specifying `--validator-url-no-ca-verify` at Beer Garden's entrypoint.
+You can set `ui.cors_enabled` from the command-line by specifying `--ui-cors-enabled` at Beer Garden's entrypoint.
 
-If `validator.url.ca_verify` is not set in any of the sources listed, it will fallback to the default value `True`
+=== ui.debug_mode
+
+Run the application in debug mode
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
+| `False`
+
+| *env_name*
+| `BG_UI_DEBUG_MODE`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--ui-debug-mode`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set ui.debug_mode from the environment by setting the environment variable `BG_UI_DEBUG_MODE`
+
+You can set `ui.debug_mode` from the command-line by specifying `--ui-debug-mode` at Beer Garden's entrypoint.
+
+=== ui.execute_javascript
+
+Execute plugin-provided javascript
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
+| `False`
+
+| *env_name*
+| `BG_UI_EXECUTE_JAVASCRIPT`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--ui-execute-javascript`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set ui.execute_javascript from the environment by setting the environment variable `BG_UI_EXECUTE_JAVASCRIPT`
+
+You can set `ui.execute_javascript` from the command-line by specifying `--ui-execute-javascript` at Beer Garden's entrypoint.
+
+This is dangerous!! Setting this to true will instruct the browser to execute javascript provided by plugins. This means you MUST have control over all plugins running in the environment, otherwise this is a problem waiting to happen.
+
+=== ui.icon_default
+
+Default font-awesome icon to display
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `fa-beer`
+
+| *env_name*
+| `BG_UI_ICON_DEFAULT`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--ui-icon-default`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set ui.icon_default from the environment by setting the environment variable `BG_UI_ICON_DEFAULT`
+
+You can set `ui.icon_default` from the command-line by specifying `--ui-icon-default` at Beer Garden's entrypoint.
+
+If `ui.icon_default` is not set in any of the sources listed, it will fallback to the default value `fa-beer`
+
+=== ui.name
+
+The title to display on the GUI
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `Beer Garden`
+
+| *env_name*
+| `BG_UI_NAME`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--ui-name`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set ui.name from the environment by setting the environment variable `BG_UI_NAME`
+
+You can set `ui.name` from the command-line by specifying `--ui-name` at Beer Garden's entrypoint.
+
+If `ui.name` is not set in any of the sources listed, it will fallback to the default value `Beer Garden`

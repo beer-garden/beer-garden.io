@@ -103,7 +103,7 @@ background. Use Ctrl-C to kill them.
 cd beer-garden; bin/app.sh
 ----
 
-If you are utilizng NPM to server the website
+If you are utilizing NPM to serve the website
 
 [source]
 ----

@@ -30,7 +30,7 @@ Here is a quick breakdown:
 [TIP]
 .Pros of using remote plugins
 ====
-No real language restriction, only http(s) access to Beer Garden server required, you can provision the plugin with its own resources. No restrictions of how to start/configure your plugin
+Only http(s) access to Beer Garden server required, you can provision the plugin with its own resources. No restrictions of how to start/configure your plugin
 ====
 
 [CAUTION]
@@ -39,7 +39,7 @@ No real language restriction, only http(s) access to Beer Garden server required
 You are responsible for starting/monitoring/restarting your plugin. No way for Beer Garden to tell the plugin to reload it's configuration.
 ====
 
-Remote plugins refer to plugins that are not managed by Beer Garden itself. Remote plugins can exist on any machine that can make a http(s) connection to the Beer Garden web service. From a technical perspective, there are no restrictions on what language a remote plugin can be written in.
+Remote plugins refer to plugins that are not managed by Beer Garden itself. Remote plugins can exist on any machine that can make a http(s) connection to the Beer Garden web service.
 
 This does mean that the plugin developer is responsible for keeping the plugin process up and running. If the process dies for whatever reason, Beer Garden will not know how to restart it.
 
