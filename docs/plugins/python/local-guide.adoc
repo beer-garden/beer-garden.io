@@ -1,9 +1,6 @@
 = Python Plugin Guide (Local)
 :page-layout: docs
 :includedir: _includes
-:uri-install-guides: ../../installation-guides/
-
-// TODO Should we update this to include Namespace?
 
 The goal of this section is to help you write a local plugin from scratch. In order to write local plugins there are a few things that you need.
 
@@ -242,4 +239,4 @@ This will allow you to successfully load Fabric.
 include::{includedir}/descriptive-plugin.adoc[]
 
 == Customizing Command Form
-include::{includedir}/custom-display.adoc[]
+The ability to customize the command form is a deprecated feature that will be removed in the relatively near future. For now, the documentation regarding this feature is still available link:../../custom-display/[here].

@@ -20,4 +20,4 @@ if __name__ == "__main__":
     # Init your plugin as normal.
 ----
 
-This tells Beer Garden to setup a root logger based on what is returned from the endpoint at `api/v1/config/logging`. Checkout the link:../../configuration[configuration section] for more information on how to configure this. This is mostly useful for remote plugins.
+This tells Beer Garden to setup a root logger based on what is returned from the endpoint at `api/v1/config/logging`. Checkout the link:/docs/app/configuration[configuration section] for more information on how to configure this. This is mostly useful for remote plugins.

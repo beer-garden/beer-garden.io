@@ -1,0 +1,296 @@
+= Security
+:page-layout: docs
+:bg-github-uri: {git_group_uri}/beer-garden/tree/master/src/app
+
+== Authentication and Authorization
+
+Beer Garden supports some basic authentication and authorization features that
+allow you to create users and roles for the purposes of access control. This
+document will walk through how authentication and authorization work, as well as
+the various configuration options.
+
+These features are still in their infancy. As such, user fiendly methods of
+configuring the various options do not yet exist in many cases.
+
+== Authorization Basics
+
+Each API endpoint in Beer Garden is protected by a specific permission. A user
+attempting to access or modify data through an endpoint will first have to pass
+an access check, verifying that they have the required permission for the data
+that they are operating on. Details regarding the various permissions and how to
+assign them will be provided further on, but this is the basic principal on
+which the access control for Beer Garden operates. The Beer Garden UI works by
+making appropriate API calls behind the scenes. So too does the brewtils Plugin
+and EasyClient code. This means that access control for all aspects of Beer
+Garden is done through this permission checking that happens in the API.
+
+== Permissions
+
+Permissions are currently defined around typical CRUD operations for various
+entities. That is, for a given entity there is a "create", "read", "update", and
+"delete" permission. The current entities that exist are:
+
+* job
+* garden
+* queue
+* request
+* system
+* user
+
+Permissions are defined as strings of the format "<entity>:<operation>". For
+example: `garden:read`, `system:update`, `request:delete`.
+
+There are also a limited number of special permissions that do not map to a
+typical entity or operation. These currently include:
+
+* `event:forward` - This permission is required for garden-to-garden
+  communications. If your authorization is enabled on your remote gardens, this
+  permission must be assigned to the user account that your local garden uses to
+  communicate with those remote gardens. 
+
+CAUTION: Regular users should not have the `event:forward` permission, as it
+allows for the creation of requests against any garden or system.
+
+== Authentication Basics
+
+When authorization is enabled on your garden, users need a way to authenticate
+in order to access the garden using their account. From a user's perspective,
+this is done via the following:
+
+== Web UI Access
+
+When authorization is enabled, a "login" button will appear toward the top right
+of the page. Clicking this brings up a login box for the user to enter their
+credentials and sign in.
+
+== API Access
+
+For direct API access, a user would first send their credentials in a POST to
+`/api/v1/token`. This results in an access and refresh token being provided back
+in the response. The access token would then be provided by the user in
+subsequent API calls via the `Authorization: Bearer` header.
+
+This token retrieval and usage is handled for the user by the Web UI and
+EasyClient, but both use this API login and access token workflow behind the
+scenes.
+
+== Auth Settings
+
+Authorization and authentication settings are housed under a top level `auth`
+section of the main application configuration yaml file. Some general information
+about the settings is below, but for the full list of configuration options check
+out the link:../config_yaml/#auth-authentication_handlers-basic-enabled[configuration guide].
+
+=== Authentication Handlers
+
+This section allows you to configure the ways that users are able to
+authenticate to the garden. The available handlers are:
+
+* *basic* 
+* *trusted_header*
+
+Basic authentication allows users to login with a username and password.
+
+The trusted headers method allows for users to be authenticated via request
+headersthat get set via a trusted proxy. If your garden sits behind a proxy
+that will authenticate the user and place their username in a header,
+enabling this will tell the garden to use that provided username.
+
+When logging in via the UI, the login dialog will always show the input fields
+for username and password. If a user is authenticating by providing certificates
+on all requests that go through a proxy, these fields can safely be left blank.
+Since the trusted headers will be included on the login request, the user will
+still be able to login.
+
+NOTE: If you enable trusted headers authentication, it is imperative that users
+are required to access your garden through the proxy and do not have a means of
+accessing the garden directly. Direct garden access could allow users to set
+what are supposed to be trusted headers themselves. This would allow
+masquerading as whomever they wish.
+
+=== Default Admin Account
+
+A default admin user with the username "admin" and password "password" will be
+created when a garden is started for the first time. A superuser role will also
+be created and assigned to the admin user. The username and password for this
+account can be changed via the settings under `auth.default_admin`.
+
+=== Defining Roles
+
+Roles are simply groupings of permissions. Roles can contain whatever
+permissions you'd like, though it is generally advisable to construct your roles
+around the functionality that different types of users might need in order to
+perform their work on the garden.
+
+To define the roles that will be available in your garden, create a yaml file
+and set the `auth.role_definition_file` setting to the location of that file.
+The format of the file is simply a list of definitions containig a `name` and a
+list of `permissions`. Here are some excepts from the example `roles.yaml` file
+that you'll find in the link:{bg-github-uri}/example_configs[example configs.]
+
+[source,yaml]
+----
+- name: "job_manager"
+  permissions:
+    - "job:create"
+    - "job:read"
+    - "job:update"
+    - "job:delete"
+
+- name: "operator"
+  permissions:
+    - "garden:read"
+    - "request:create"
+    - "request:read"
+    - "system:read"
+
+- name: "read_only"
+  permissions:
+    - "job:read"
+    - "garden:read"
+    - "queue:read"
+    - "request:read"
+    - "system:read"
+----
+
+The available permissions are discussed in the earlier
+Permissions section.
+
+=== Assigning Roles
+
+Users are not granted permissions directly. Instead they are assigned roles in a
+specific domain, granting them all of the role's permissions in that domain.
+
+A domain is a set of gardens or systems (or the special "Global" domain scope,
+which provides universal access). When permissions get checked they follow a
+hierarchy, meaning access at the Global level confers access to all gardens and
+systems, access for a garden confers access for all systems in that garden, etc.
+
+Users can be assigned roles by logging into Beer Garden with an admin account
+and navigating to the Users section found in the Admin menu at the top right.
+This is also where you can create new users and reset a user's password.
+
+NOTE: Users will always have access to Requests that they have created, even
+without an explicit role assignment. This means that if a user creates a
+Request and then later the role granting them access to the Garden or System
+of the Request is revoked, the user will still have read access to that
+Request.
+
+=== Group Definition File
+
+When using the trusted header authentication handler, it is possible to have the
+groups listed in the configured `user_groups_header` mapped to Beer Garden role
+assignments. This is done via a group definition file, which looks like the
+following:
+
+[source,yaml]
+----
+- group: GLOBAL_SUPERUSER
+  role_assignments:
+    - role_name: superuser
+      domain:
+        scope: Global
+
+- group: DEFAULT_READ_ONLY
+  role_assignments:
+    - role_name: read_only
+      domain:
+        scope: Garden
+        identifiers:
+          name: default
+
+- group: DEFAULT_ECHO_JOB_MANAGER
+  role_assignments:
+    - role_name: job_manager
+      domain:
+        scope: System
+        identifiers:
+          name: echo
+          namespace: default
+    - role_name: read_only
+      domain:
+        scope: Garden
+        identifiers:
+          name: default
+----
+
+The example above shows how to define groups and the role assignments that will
+be mapped to them. The following is a brief description of each field.
+
+==== group
+
+The name of the assigned group that will be mapped. This is the name that will
+appear in the comma separated list of the header defined by
+`user_groups_header`.
+
+==== role_assignments
+
+A list of one or more role assignments to assign to users of the group. A role
+assignment is defined as:
+
+* *role_name:* The name of the role as defined in the role file that
+  `role_definition_file` points to.
+* *domain:* A domain is how we define the context in which the user has the
+  assigned roles. A domain consists of a scope and some identifiers.
+** *scope:* Can be one of _Global_ (universal access), _Garden_ (access
+   gardens matching the identifiers), or _System_ (access to systems matching
+   the identifiers).
+** *identifiers:* How to identify the items of the given scope that the user
+   should have access to. For _Global_, no identifiers are needed. _Garden_
+   requires a `name` identifier. _System_ requires at least a `name` and 
+   `namespace` and can optionally take a `version` as well. Providing fewer
+   identifiers results in a broader level of access being granted.
+
+=== Remote Gardens
+
+One very important note about authorization in Beer Garden is that it is only
+performed against the local garden. That is, the garden that the user is
+directly interacting with. If your garden has a remote garden connected to it,
+permissions for that remote garden should be assigned by a role assignment in an
+appropriate domain on the local garden.
+
+For instance, if you have a garden named "parent" and a remote garden connected
+to it named "child", you could have the following in your group definition file
+to assign access to the "child" garden:
+
+[source,yaml]
+----
+- group: CHILD_ECHO_OPERATOR
+  role_assignments:
+    - role_name: operator
+      domain:
+        scope: System
+        identifiers:
+          name: echo
+          namespace: child
+
+- group: CHILD_SUPERUSER
+  role_assignments:
+    - role_name: superuser
+      domain:
+        scope: Garden
+        identifiers:
+          name: child
+----
+
+It is important to note that no corresponding groups or users need to exist on
+the "child" garden. The remote garden effectively assumes that the local garden
+has already performed the necessary authorization checks and treats all
+forwarded operations as trusted.
+
+=== Syncing User Permissions
+
+It is possible to sync users, along with their permissions and password, from a
+local garden down to all known remote gardens. If your setup has remote gardens,
+a "Sync Users" button will present on the User Management page. This will allow
+you to initiate a sync that will make the user permission for remote garden
+match those of the local user.
+
+NOTE: The sync operation will overwrite any user on the remote garden with a
+username matching that of a user on the local garden. This means any roles
+that had been assigned on the remote garden will be removed, unless they had
+also been assigned on the local garden.
+
+The User Management page will list if a user is fully synced to all remote
+gardens. On the individual user page, a breakdown of which specific gardens
+are synced is available.

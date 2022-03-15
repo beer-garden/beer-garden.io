@@ -13,46 +13,6 @@ A Beer Garden Python installation requires a few things to work:
 
 Installing these is outside the scope of this documentation, so please refer to their installation instructions for
 detailed installation instructions/configuration.
-// TODO We need to add NPM UI installer
-== Installing Brew View
-
-We host `brew-view` on PyPi server. You can install it via:
-
-[source,subs="attributes"]
-----
-pip install brew-view
-----
-
-You can then start the application:
-
-[source]
-----
-brew-view
-----
-
-You should see a log message saying the application started up. You can now navigate to http://localhost:2337 and see the GUI.
-
-If you would like to configure the application differently, you can generate your own configuration:
-
-[source]
-----
-generate_brew_view_config -c config.json
-----
-
-This will place a config file in `config.json`. Feel free to edit this file however you would like. Read more about the brew-view configuration in the link:../../configuration[configuration section.] Then you can startup the application and point to that configuration.
-
-[source]
-----
-brew-view -c config.json
-----
-
-Everything that is in the config.json can be overriden from the command-line. See more information with:
-
-[source]
-----
-brew-view --help
-----
-
 
 == Installing Beer Garden ==
 
@@ -63,35 +23,33 @@ We host `beer-garden` on PyPi. You can install it via:
 pip install beer-garden
 ----
 
-You can then start the application:
+You can generate a configuration file by running:
 
 [source]
 ----
-beer-garden
+generate_config -c config.yaml
 ----
 
-That's it! Beer-Garden is up and running.
-
-If you would like to configure the application differently, you can generate your own configuration:
-
-// TODO: Update config generation comment
-[source]
-----
-generate_bartender_config -c config.json
-----
-
-This will place a config file in `config.json`. Feel free to edit this file however you would like. Read more about
-the bartender configuration in the link:../../configuration[configuration section.] Then you can startup the
-application and point to that configuration.
+This will place a config file in `config.yaml`. Feel free to edit this file however you would like. Most of the
+defaults are likely fine for now, though you will need to update connection information for your message broker
+and database. Read more about the beergarden configuration in the link:/docs/app/configuration[configuration section.]
+Then you can startup the application and point to that configuration.
 
 [source]
 ----
-beergarden -c config.json
+beergarden -c config.yaml
 ----
 
-Everything that is in the `config.json` can be overriden from the command-line. See more information with:
+Everything that is in the `config.yaml` can be overriden from the command-line. See more information with:
 
 [source]
 ----
-bartender --help
+beergarden --help
 ----
+
+== Installing the Beer Garden UI
+
+The Beer Garden UI is a separate javascript application that does not get installed with the python backend. To run the UI, it is recommended that you following the directions in one of the sections below:
+
+* link:../docker/[Docker / Docker Compose]
+* link:../git/[Development Setup]

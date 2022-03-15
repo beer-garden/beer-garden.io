@@ -1,5 +1,7 @@
-=== Connecting Gardens
+= Remote Gardens
 :page-layout: docs
+
+== Parent and Child Gardens
 
 Beer Garden has the ability to connect other Beer Gardens in a Parent-Child relationship. The approach Beer Garden takes
 for command and control is Parents can only send Operations to Children, and Children can only send Events to Parents.
@@ -12,7 +14,7 @@ execute against, not what systems are connected to itself and children. So if a 
 child tells the Parent it has the ability to route to all of the systems. The Parent will trust the Child Beer Garden to
 the routing appropriately.
 
-=== Internal Routing
+== Internal Routing
 
 The Router requires all objects to utilize the new standard Operation class.
 
@@ -25,13 +27,13 @@ Operations that can be forwarded include:
     GARDENS_SYNC
 
 
-==== How to determine where to route
+=== How to determine where to route
 
 Before any Operation is executed, Beer Garden has to determine if this is an Operation that it can fulfill. For all requests
 the Targeted Garden must be identified. If the Operation is not be forwarded, and is not for the local Beer Garden, then
 the Operation can not be routed. Each route-able Brewtils class has a different approach to determining the Target Beer Garden.
 
-==== Local Only Operations
+=== Local Only Operations
 
 There are a handful of Operations that will always be handled by the Local Beer Garden. The criteria utilized to determine
 this is:
@@ -42,13 +44,13 @@ this is:
 - Is the Operation kicking off Local Garden Actions?
 - Is the Operation managing local only resources?
 
-===== Systems and Instances
+==== Systems and Instances
 
 The combination of Namespace/System/Version is tied to a hosting Beer Garden. This information is stored within the Garden
 object. For System and Instance based Operations, this is a quick look up against the cached Garden information in the
 Router class.
 
-===== Requests
+==== Requests
 
 Operations to CREATE requests must first identify the Namespace/System/Version. Then that information is utilized to
 determine the Target Beer Garden, same as the Systems and Instances is looked up.

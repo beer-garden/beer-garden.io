@@ -1,4 +1,3 @@
-
 = Upgrading
 :page-layout: docs
 
@@ -6,10 +5,10 @@ Help with upgrading the Beer Garden application from 2.x to 3.x.
 
 == Should I Upgrade?
 
-It depends! In a nutshell, you should upgrade if you don't absolutely require functionality that was left on the cutting room floor during the jump to v3:
+For most users, the answer is yes. Beer Garden v2 is no longer supported and stopped receiving updates around the end of 2020. There are, however, changes in v3 that should be considered when making the upgrade decision. Specifically:
 
-- Users / Roles / Permissions. This functionality was very basic and will be completely rebuilt for version 3.1. As such, we decided that porting the current limited capability that existed in version 2 was not worth the effort.
-- Publishing events to a RabbitMQ topic. Again, this capability was fairly basic and will be getting an upgrade soon. If you depend on this capability it's best to hold off on upgrading. Also, be aware that the Event structure will most likely be different once this feature is re-enabled.
+- Users / Roles / Permissions. This has been completely rebuilt for v3 in a way that is fundamentally not compatible with what existed in v2. If you were using these features, be aware that you will need to recreate all users and roles. See the section on link:../security/[security] for more information.
+- Publishing events to a RabbitMQ topic. This capability was fairly basic, but was not carried over to v3. If you depend on this capability you would need to come up with an alternative solution in order to move to v3.
 
 == What's different?
 

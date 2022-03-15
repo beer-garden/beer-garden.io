@@ -1,6 +1,5 @@
 = Fedora/CentOS/RHEL Installation
 :page-layout: docs
-:uri-config: ../configuration
 
 This guide will take you through step-by-step installation instructions for a CentOS box.
 
@@ -135,7 +134,7 @@ You'll have to download our latest RPM. Then install with yum:
 sudo yum install beer-garden
 ----
 
-All Beer Garden configuration files are located in `/opt/beer-garden/conf`. Feel free to adjust the configuration as necessary. For more information on configuration see link:../../configuration/[Configuring Beer Garden].
+All Beer Garden configuration files are located in `/opt/beer-garden/conf`. Feel free to adjust the configuration as necessary. For more information on configuration see link:/docs/app/configuration/[Configuring Beer Garden].
 
 Next we just need to start the service and make sure it's running by default:
 

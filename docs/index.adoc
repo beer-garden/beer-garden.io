@@ -44,6 +44,9 @@ link:app/parent-child[Parent & Child Configurations]::
 link:app/configuration[Configuration Guide]::
   Help with Application configuration
 
+link:app/security[Security Guide]::
+  Help with Authentication and Authorization
+
 link:app/api-users-guide/[API Guide]::
     If you aren't writing plugins, but rather using them, this guide is for you
 

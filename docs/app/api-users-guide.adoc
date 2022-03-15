@@ -8,7 +8,7 @@ This guide is intended for people who would like to use Beer Garden's API. Basic
 NOTE: If you feel like you know REST pretty well, Beer Garden comes with OpenAPI (formerly known as Swagger) documentation that helps you explore the REST API yourself. You can find a SwaggerUI page linked from the About page of any Beer Garden web UI.
 
 TIP: This guide assumes you're at least somewhat aware of how Beer Garden is organized. If you need a refresher you should check out
-link:../what-is-beergarden/[what is Beer Garden?]
+link:/docs/startup/what-is-beergarden/[what is Beer Garden?]
 
 
 == Client Libraries

@@ -1,9 +1,6 @@
 = Python Plugin Guide (Remote)
 :page-layout: docs
 :includedir: _includes
-:uri-install-guides: ../../installation-guides/
-
-// TODO Should we update this to include Namespaces?
 
 The goal of this section is to help you write a remote plugin from scratch. In order to write remote plugins there are a few things that you need.
 
@@ -11,9 +8,9 @@ The goal of this section is to help you write a remote plugin from scratch. In o
 
 include::{includedir}/prereqs.adoc[]
 
-Now you're ready to start writing your plugin.
-
 NOTE: Don't forget, if you're writing a remote plugin, you'll need to be able to access the Beer Garden REST Service
+
+Now you're ready to start writing your plugin.
 
 == Hello World!
 This section will take you through setting up a simple Hello, World example.
@@ -69,7 +66,7 @@ include::{includedir}/exceptions.adoc[]
 include::{includedir}/descriptive-plugin.adoc[]
 
 == Customizing Command Form
-include::{includedir}/custom-display.adoc[]
+The ability to customize the command form is a deprecated feature that will be removed in the relatively near future. For now, the documentation regarding this feature is still available link:../../custom-display/[here].
 
 == External Logging
 include::{includedir}/external-logging.adoc[]

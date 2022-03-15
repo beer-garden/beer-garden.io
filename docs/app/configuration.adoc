@@ -10,9 +10,9 @@ In this guide, we will go over the configuration options in Beer Garden and how 
 talk about the configuration at a high level, but we assume you have installed Beer Garden somehow.
 
 If you would like to jump straight to the definitions of `{bg-config}`, please redirect to
-link:/config_yaml.adoc[Config User Manual]
+link:../config_yaml/[Config User Manual]
 
-== Configuration Files ==
+== Configuration Files
 
 There are 3 configuration files that come installed with Beer Garden. If you installed an RPM, you will find these in
 `{rpm-config-home}`.
@@ -23,37 +23,25 @@ The default names are:
 * `{app-log-config}`
 * `{plugin-log-config}`
 
-////
-== Logging Configuration ==
-
-The logging configuration uses the standard python logging information. This can be edited as you see fit. If nothing is specified, Beer Garden will fall back to some basic defaults. You can generate a logging file through:
-
-[source,subs="attributes"]
-----
-generate_bartender_log_config -l {bt-log-config}
-generate_brew_view_log_config -l {bv-log-config}
-----
-////
-
-== Beer Garden Configuration ==
+== Beer Garden Configuration
 
 If you do not have a `{bg-config}` file, then you can generate one via:
 
 [source,subs="attributes"]
 ----
-generate_bartender_config -c {bg-config}
+generate_config -c {bg-config}
 ----
 
 If you already have a `{bg-config}` file, then you can upgrade it to the latest version via:
 
 [source,subs="attributes"]
 ----
-migrate_bartender_config -c {bg-config}
+migrate_config -c {bg-config}
 ----
 
-To see all of the definitions of `{bg-config}`, please checkout our link:user_manual/config_yaml.adoc[Config User Manual]
+To see all of the definitions of `{bg-config}`, please checkout our link:../config_yaml/[Config User Manual]
 
-== Beer Garden Logging Configuration ==
+== Beer Garden Logging Configuration
 
 As of Beer Garden 3.0.0, there is a new configuration file for plugin logging configurations. If this file is not
 included, a logging configuration is inferred from the logging configuration defined in {bg-config}.
@@ -77,7 +65,7 @@ The `handlers` section is a dictionary which may contain one of the following ke
 * `file`
 * `logstash`
 
-== Plugin Logging Configuration ==
+== Plugin Logging Configuration
 
 As of Beer Garden 3.0.0, there is a new configuration file for plugin logging configurations. If this file is not
 included, a logging configuration is inferred from the logging configuration defined in `{bg-config}`.
