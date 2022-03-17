@@ -28,14 +28,12 @@ On the other hand, if you're still unsure of exactly what Beer Garden is and wha
 
 Finally, if you're looking for specific info, trying to figure out how to do something, or wondering if Beer Garden can do the neat thing you thought of the best place to look is the link:docs[User Manual].
 
-CAUTION: We're excited to announce Beer Garden v3 has been released! Check out the link:docs/app/upgrading[Application] and link:docs/plugins/upgrading[Plugin] upgrade guides if you'd like to learn more.
+TIP: We're excited to announce Beer Garden v3 has been released! Check out the link:docs/app/upgrading[Application] and link:docs/plugins/upgrading[Plugin] upgrade guides if you'd like to learn more.
+
 
 == Getting Help
 
-We want Beer Garden to make your life easier. If there's anything that's unclear or difficult (or broken!) we want to know about it! Here are the best ways to get in touch with us:
-
-* Talk to us in {chat_uri}[Gitter]
-* Submit an issue to the {issues_uri}[Issue Tracker]
+If you encounter issues or have suggestions on how to make Beer Garden even better, please feel free to submit an issue to the {issues_uri}[Issue Tracker].
 
 
 === Contributing

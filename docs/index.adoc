@@ -3,8 +3,6 @@
 
 The starting point for all your Beer Garden needs!
 
-TIP: Can't find the information you need? Reach out to project members and users via {chat_uri}[Gitter]
-
 == Getting Started
 
 Discover Beer Garden and how it can help you.
