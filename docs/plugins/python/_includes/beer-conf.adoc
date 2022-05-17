@@ -42,33 +42,33 @@ REQUIRES=['foo']
 METADATA = {'foo': 'bar'}
 ----
 
-=== NAME entry
+=== NAME
 
 The `NAME` entry is pretty straight-forward. It is the system name that will be used to identify your system.
 
-=== VERSION entry
+=== VERSION
 
 The `VERSION` entry is supposed to be a semantic-version. That means something that looks like `X.X.X` where `X` can be any number. The version is important to Beer Garden, and it will not let you upload two systems with the same version that has different command/parameters.
 
 TIP: If you are in the process of developing a plugin, and want to change commands or parameters, you can name your version `X.X.X.dev0` which will allow you to overwrite command and parameters in place.
 
-=== PLUGIN_ENTRY entry
+=== PLUGIN_ENTRY
 
 The `PLUGIN_ENTRY` entry in the `beer.conf` file is simply the python script that will execute `plugin.run()` That's really all there is to this.
 
-=== DESCRIPTION entry
+=== DESCRIPTION
 
 Again, a pretty straight-forward field. This is the system description that you'll see in the GUI/ReST API.
 
-=== METADATA entry
+=== METADATA
 
 The `METADATA` field allows you to associate METADATA with your system. This can be helpful for service-discovery type information or anything else specific with your system that you would like programmatically discoverable.
 
-=== DISPLAY_NAME entry
+=== DISPLAY_NAME
 
 This is the name the system will appear under in the GUI.
 
-=== ENVIRONMENT entry
+=== ENVIRONMENT
 
 If there is some reason you cannot or do not want to pass your information in through the command line or through a file of your choosing, you can choose to set variables in your environment using the `ENVIRONMENT` portion of the `beer.conf` file. The `ENVIRONMENT` entry is simply a dictionary that contains all the ENVIRONMENT Variables you want. Please note that all ENVIRONMENT variables will be converted to strings before they are included. You can also utilize other environment variables that you know are set. For example, the `BG_PLUGIN_PATH`:
 
@@ -82,11 +82,11 @@ ENVIRONMENT={
 
 Pretty Cool, right?
 
-=== INSTANCES entry
+=== INSTANCES
 
 Whether or not you know it, your plugin will have instances. If you do not provide Beer Garden with the `INSTANCES` key, then it will assume you only want one instance of the plugin and will create it with a plugin with a single instance named `default`. Entries in the `INSTANCES` section will be validated against entries in <<plugin_args>> section.
 
-=== PLUGIN_ARGS entry
+=== PLUGIN_ARGS
 
 If you want something to be easily changeable, this is something you may be interested in. Often times, this can be used as a way to pass in a configuration file. For Example:
 
@@ -147,7 +147,7 @@ PLUGIN_ARGS = {
 }
 ----
 
-=== REQUIRES entry
+=== REQUIRES
 
 If you are writing a plugin that interacts with other plugins, then you should note this dependency in the `REQUIRES` field. Simply, if you are writing a plugin 'bar' that relies on foo add:
 
