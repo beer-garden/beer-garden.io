@@ -1,14 +1,13 @@
 [source,python]
 .plugin.py
 ----
-from brewtils import command, system, Plugin
+from brewtils import Plugin, command
 
 
-@system
 class HelloWorldClient(object):
 
-    @command
-    def hello_world(self):
+    @command <1>
+    def say_hello(self):
         greeting = "Hello, World!"
 
         print(greeting)
@@ -20,11 +19,11 @@ def main():
     client = HelloWorldClient()
 
     plugin = Plugin(
-        client,
-        name='hello-world',
-        version='1.0.0',
-        description='My First Plugin',
-        bg_host="<HOST>",
+        client=client,
+        name="hello-world", <2>
+        version="1.0.0",
+        description="My First Plugin",
+        bg_host="<HOST>", <3>
         bg_port="<PORT>",
         ssl_enabled=<SSL_ENABLED>,
     )
@@ -34,5 +33,8 @@ def main():
 if __name__ == "__main__":
     main()
 ----
+<1> The `@command` decorator marks this method as a Command that's part of the enclosing Client.
+<2> The values defined here determine how the plugin is listed in the UI.
+<3> Be sure to replace `<HOST>`, `<PORT>`, and `<SSL_ENABLED>` with appropriate values for your garden.
 
 To review what's happening here: we added an import `Plugin` at the top of our file and created a standard main method. In that method we created a `HelloWorldClient` object and a `Plugin` object. Notice that when we create the `Plugin` we pass it the client and some additional parameters. Don't worry too much about the additional paramters - we'll cover them later.

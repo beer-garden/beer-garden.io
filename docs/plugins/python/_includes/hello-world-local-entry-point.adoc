@@ -1,15 +1,33 @@
 [source,python]
-.plugin.py
+.main.py
 ----
-from brewtils import Plugin
+from brewtils import Plugin, command
 
-# Your implementation of the client goes here
+
+class HelloWorldClient(object):
+
+    @command <1>
+    def say_hello(self):
+        greeting = "Hello, World!"
+
+        print(greeting)
+
+        return greeting
+
 
 def main():
     client = HelloWorldClient()
-    plugin = Plugin(client)
+
+    plugin = Plugin(
+        client=client,
+        name="hello-world", <2>
+        version="1.0",
+        description="Say hello"
+    )
     plugin.run()
 
 if __name__ == "__main__":
     main()
 ----
+<1> The `@command` decorator marks this method as a Command that's part of the enclosing Client.
+<2> The values defined here determine how the plugin is listed in the UI.

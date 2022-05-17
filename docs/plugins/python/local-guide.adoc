@@ -19,10 +19,6 @@ Plugins are just classes with methods that you would like to expose. This sectio
 
 Use your favorite text editor and open up a file called `main.py` and add the following:
 
-include::{includedir}/hello-world-client.adoc[]
-
-Once we have the client, we now need to create our entry point. Let's open back up the previous file and add the following:
-
 include::{includedir}/hello-world-local-entry-point.adoc[]
 
 === Configure your plugin
@@ -39,18 +35,16 @@ Now that you've written your code and `beer.conf`, you'll need to find a way to 
 [source,python]
 .setup.py
 ----
-import sys
-import os
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
-requirements = ['brewtils']
+requirements = ["brewtils"]
 
 setup_args = {
-  'name'             : 'my_plugin',
-  'description'      : 'My Cool Plugin that does stuff',
-  'version'          : '1.0.0',
-  'pacakges'         : find_packages(exclude=['test','test.*']),
-  'install_requires' : requirements
+    "name": "hello_world",
+    "description": "Say hello",
+    "version": "1.0",
+    "packages": find_packages(exclude=["test", "test.*"]),
+    "install_requires": requirements,
 }
 
 setup(**setup_args)
@@ -82,12 +76,12 @@ Take your `tar.gz` file, and copy it to the plugins directory of Beer Garden. Th
 
 [source]
 ----
-cp dist/my-plugin-0.0.1.tar.gz /opt/beer-garden/plugins/
+cp dist/hello_world-1.0.tar.gz /opt/beer-garden/plugins/
 cd /opt/beer-garden/plugins/
-tar -zxvf my-plugin-0.0.1.tar.gz
+tar -zxvf hello_world-1.0.tar.gz
 ----
 
-Now go to the Beer Garden GUI under `Administration -> Systems Management` and click `Rescan System Directory` in the top right. This will instruct Beer Garden to scan the plugins directory for new plugins and start them. You should see your plugin appear. Once it is up, you can go to `Systems` then your system and see the command `hello_world`! Click `Make it Happen!` then `Make Request` to see your plugin in action.
+Now go to the Beer Garden GUI under `Admin -> Systems` and click `Rescan Plugin Directory` in the top right. This will instruct Beer Garden to scan the plugins directory for new plugins and start them. You should see your plugin appear. Once it is up, you can go to the `Systems` page, click `Explore` next to the `hello-world` System, and see the command `say_hello`! Click `Make it Happen!` then `Make Request` to see your plugin in action.
 
 That's it!
 
@@ -111,19 +105,7 @@ The only thing in this directory structure that should look non-standard is the 
 
 === beer.conf
 
-The `beer.conf` file is a minimal configuration file that specifies to Beer Garden how to configure and start up the plugin. The beer.conf file has minimal options. Below is an expanded beer.conf file that explains all the possible values.
-
-
-    NAME = "my-plugin"                           # The name of your plugin
-    DISPLAY_NAME = "My Plugin"                   # The name shown in the GUI
-    VERSION = "0.0.1"                            # The version of your plugin
-    DESCRIPTION = "My plugin does cool stuff"    # A description of your plugin
-    PLUGIN_ENTRY = 'main.py'                     # Defines way to run the plugin
-    INSTANCES = ["i1", "i2"]                     # The instances to define
-    PLUGIN_ARGS = ['arg1']                       # Command line arguments to each instance
-    ENVIRONMENT = {'MY_PASSWORD':'sup3r$ecret'}  # Environment variables
-    REQUIRES = ['foo']                           # Defines relationship to 'foo' plugin
-
+The `beer.conf` file is a minimal configuration file that specifies to Beer Garden how to configure and start up the plugin. More information is available below in the <<plugin-configuration>> section.
 
 === MANIFEST.in
 
@@ -161,7 +143,7 @@ include::{includedir}/exceptions.adoc[]
 
 For Local plugins, Beer Garden will attempt to make decent decisions about where it should log. For example, if Beer Garden is configured to log to `STDOUT` or `STDERR` then your plugin will log there as well. If, however, Beer Garden is configured to log to a file (the default behavior for RPMs), then it will give each unique plugin its own log file. If you would like to log, you can either print to `STDOUT` or `STDERR`. The `LocalPlugin` will take care of everything else.
 
-INFO: Use STDOUT or STDERR for logging
+NOTE: Use STDOUT or STDERR for logging
 
 You can use the python logging to log to stderr with your own format if you'd like via:
 

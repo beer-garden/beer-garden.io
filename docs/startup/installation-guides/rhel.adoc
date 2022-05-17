@@ -168,6 +168,6 @@ tar -zxvf my-plugin-0.0.1.tar.gz
 Edit any configuration files necessary for the plugin. You can start the new plugin through the GUI:
 
 * Navigate to the beer-garden GUI
-* Select Administration -> Systems Management
-* Click "Rescan System Directory"
+* Select Admin -> Systems
+* Click "Rescan Plugin Directory"
 * You should see your plugin appear!
