@@ -115,9 +115,11 @@ NOTE: Currently you must use a command from the same system (this restriction wi
 
 
 ==== Choice parameters
-It's often useful to have the choices for one parameter depend on the current value of another. To do that you can use choice parameters.
+It's often useful to have the choices for one parameter depend on the current value of another. To do that you can use choice parameters. 
 
-To create a reference on another parameter enclose its key in `${}`. How the parameter is passed depends on what choice source is being used.
+To create a reference on another parameter enclose its key in `${}`. How the parameter is passed depends on what choice source is being used. 
+
+NOTE: When initializing the command creation page, BeerGarden will attempt to update all dependencies for choice parameters at once. If the dependent parameters are defined in such a way that causes side effects inside the command (for example, if A is a choice parameter that depends on B and C, but updating C changes an internal value A and B need), this could lead to unintended consequences or destructive behavior during command load.
 
 For 'command' types the parameter will be passed as an argument to the command. For example, suppose you have two parameters: `day_type` and `day_of_week`. You'd like the choices for `day_of_week` to depend on what the user has selected for `day_type`:
 [source,python]
