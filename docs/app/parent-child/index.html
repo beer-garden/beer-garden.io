@@ -1,0 +1,422 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Remote Gardens</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/app/parent-child.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/app/parent-child.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/app/parent-child.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#parent-and-child-gardens">Parent and Child Gardens</a></li>
+<li><a href="#internal-routing">Internal Routing</a>
+<ul class="sectlevel2">
+<li><a href="#how-to-determine-where-to-route">How to determine where to route</a></li>
+<li><a href="#local-only-operations">Local Only Operations</a>
+<ul class="sectlevel3">
+<li><a href="#systems-and-instances">Systems and Instances</a></li>
+<li><a href="#requests">Requests</a></li>
+</ul>
+</li>
+<li><a href="#what-does-a-child-emit-to-the-parent">What does a Child emit to the Parent?</a></li>
+<li><a href="#how-does-a-parent-connect-to-a-child">How does a Parent connect to a Child?</a></li>
+<li><a href="#how-does-a-child-connect-to-a-parent">How does a Child connect to a Parent?</a></li>
+<li><a href="#filtering-events">Filtering Events</a>
+<ul class="sectlevel3">
+<li><a href="#filtering-events-based-on-commands">Filtering Events Based on Commands</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div class="sect1">
+<h2 id="parent-and-child-gardens"><a class="anchor" href="#parent-and-child-gardens"></a>Parent and Child Gardens</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Beer Garden has the ability to connect other Beer Gardens in a Parent-Child relationship. The approach Beer Garden takes
+for command and control is Parents can only send Operations to Children, and Children can only send Events to Parents.</p>
+</div>
+<div class="paragraph">
+<p>Another design approach is that Children have no true concept of Parents, only a location to publish events. Child Beer
+Gardens do not know what plugins are deployed on the Parent and can not create a System Client connection to Parents.</p>
+</div>
+<div class="paragraph">
+<p>Another design approach is that Parents have no concept of Grand Children. Beer Garden promotes all Systems that it can
+execute against, not what systems are connected to itself and children. So if a Child has 3 Beer Gardens connected, the
+child tells the Parent it has the ability to route to all of the systems. The Parent will trust the Child Beer Garden to
+the routing appropriately.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="internal-routing"><a class="anchor" href="#internal-routing"></a>Internal Routing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Router requires all objects to utilize the new standard Operation class.</p>
+</div>
+<div class="paragraph">
+<p>Operations that can be forwarded include:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>INSTANCE_START
+INSTANCE_STOP
+REQUEST_CREATE
+SYSTEM_DELETE
+GARDENS_SYNC</pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="how-to-determine-where-to-route"><a class="anchor" href="#how-to-determine-where-to-route"></a>How to determine where to route</h3>
+<div class="paragraph">
+<p>Before any Operation is executed, Beer Garden has to determine if this is an Operation that it can fulfill. For all requests
+the Targeted Garden must be identified. If the Operation is not be forwarded, and is not for the local Beer Garden, then
+the Operation can not be routed. Each route-able Brewtils class has a different approach to determining the Target Beer Garden.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="local-only-operations"><a class="anchor" href="#local-only-operations"></a>Local Only Operations</h3>
+<div class="paragraph">
+<p>There are a handful of Operations that will always be handled by the Local Beer Garden. The criteria utilized to determine
+this is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Is the Operation a READ from the database?</p>
+</li>
+<li>
+<p>Is the Operation managing scheduled jobs?</p>
+</li>
+<li>
+<p>Is the Operation managing Gardens?</p>
+</li>
+<li>
+<p>Is the Operation kicking off Local Garden Actions?</p>
+</li>
+<li>
+<p>Is the Operation managing local only resources?</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="systems-and-instances"><a class="anchor" href="#systems-and-instances"></a>Systems and Instances</h4>
+<div class="paragraph">
+<p>The combination of Namespace/System/Version is tied to a hosting Beer Garden. This information is stored within the Garden
+object. For System and Instance based Operations, this is a quick look up against the cached Garden information in the
+Router class.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="requests"><a class="anchor" href="#requests"></a>Requests</h4>
+<div class="paragraph">
+<p>Operations to CREATE requests must first identify the Namespace/System/Version. Then that information is utilized to
+determine the Target Beer Garden, same as the Systems and Instances is looked up.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="what-does-a-child-emit-to-the-parent"><a class="anchor" href="#what-does-a-child-emit-to-the-parent"></a>What does a Child emit to the Parent?</h3>
+<div class="paragraph">
+<p>Children forward all internal events to their Parents. If there are events that should not be forwarded, then that can
+be configured in the configuration of Beer Garden.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="how-does-a-parent-connect-to-a-child"><a class="anchor" href="#how-does-a-parent-connect-to-a-child"></a>How does a Parent connect to a Child?</h3>
+<div class="paragraph">
+<p>Child configuration is done through the User Interface. If an administrator does not configure the child connection
+class, then the Systems connected through that Child are inaccessible. These Systems will appear on the UI, and a user
+can create Requests against them, but will be prompted with an error message stating the invalid connection.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="how-does-a-child-connect-to-a-parent"><a class="anchor" href="#how-does-a-child-connect-to-a-parent"></a>How does a Child connect to a Parent?</h3>
+<div class="paragraph">
+<p>Parent configuration is down through the Child&#8217;s config.yaml file. This configuration sets a destination in which to
+fowward the internal events. Then the parent can receive/process those events to maintain synchronization with the child.</p>
+</div>
+<div class="paragraph">
+<p>Things to highlight in the configuration of the Child.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The enabled flag must be set to True for the events to be forwarded</p>
+</li>
+<li>
+<p>SSL Configuration is not inherited from other sections on the config, so set it if it is required.</p>
+</li>
+<li>
+<p>If SSL is required for the Parent, and not for the Child, setting SSL on the Parent config does not enable SSL for the Childs API</p>
+</li>
+<li>
+<p>STOMP only requires the SEND destination to be populated.</p>
+</li>
+<li>
+<p>STOMP HEADERS field will populate all outbound messages with those header properties.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="filtering-events"><a class="anchor" href="#filtering-events"></a>Filtering Events</h3>
+<div class="paragraph">
+<p>The default operating procedure is to forward all events generated by the Child to the Parent. That way the events
+can be utilized to recreate the transactions that occurred. If you are running in an environment that has limited bandwidth,
+the Events can be filtered down in the Parent Configuration.</p>
+</div>
+<div class="listingblock">
+<div class="title">config.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">parent</span>:
+  <span class="key">http</span>:
+    <span class="key">skip_events</span>:
+    - <span class="string"><span class="content">INSTANCE_INITIALIZED</span></span>
+    - <span class="string"><span class="content">REQUEST_STARTED</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is a partial list of the events that are generated and the impact if filtered.</p>
+</div>
+<div class="paragraph">
+<p>Critical = Blocks expected behaviors</p>
+</div>
+<div class="paragraph">
+<p>Awareness = Utilized for informational events</p>
+</div>
+<div class="paragraph">
+<p>None = Not utilized by Parent</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Event</th>
+<th class="tableblock halign-left valign-top">Skip Event Impact</th>
+<th class="tableblock halign-left valign-top">Justification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQUEST_COMPLETED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Critical</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If request is spawned by Parent, the parent will never receive Completion event to return to System Client or User Interface</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQUEST_CANCELED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Critical</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If request is spawned by Parent, the parent will never receive Cancellation event to return to System Client or User Interface</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GARDEN_UPDATED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Critical</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">These updates are utilized for Routing decisions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GARDEN_SYNC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Critical</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">These updates are utilized for Routing decisions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQUEST_CREATED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Awareness</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If skipped, Request will appear during REQUEST_STARTED, REQUEST_UPDATED, or REQUEST_COMPLETED</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQUEST_STARTED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Awareness</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If skipped, Request will appear during REQUEST_UPDATED, or REQUEST_COMPLETED</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">REQUEST_UPDATED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Awareness</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If skipped, Request will appear during REQUEST_COMPLETED</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">INSTANCE_UPDATED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Awareness</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If skipped, status changes will not be updated on Parent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SYSTEM_CREATED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Awareness</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If skipped, new deployed systems will not appear on the Parent. Will require
+Garden Sync to get the latest values</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SYSTEM_UPDATED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Awareness</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If skipped, status and instance changes will not be updated on Parent. Will require
+Garden Sync to get the latest values</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SYSTEM_REMOVED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Awareness</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If skipped, deleted systems will not appear on the Parent. Will require
+Garden Sync to get the latest values</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GARDEN_STARTED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Awareness</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">These are utilized to update the status of the Garden, but does not impact routing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GARDEN_STOPPED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Awareness</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">These are utilized to update the status of the Garden, but does not impact routing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">INSTANCE_INITIALIZED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">INSTANCE_STARTED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">INSTANCE_STOPPED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">QUEUE_CLEARED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ALL_QUEUES_CLEARED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GARDEN_CREATED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GARDEN_REMOVED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GARDEN_UNREACHABLE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GARDEN_ERROR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GARDEN_NOT_CONFIGURED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENTRY_STARTED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ENTRY_STOPPED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JOB_CREATED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JOB_DELETED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JOB_PAUSED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JOB_RESUMED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PLUGIN_LOGGER_FILE_CHANGE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RUNNER_STARTED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RUNNER_STOPPED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RUNNER_REMOVED</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Utilized for internal processes only</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Filtering events is at your own risk. Beer Garden reserves the right to utilize these events in the future for critical operations
+between Parent and Children. If you are running into bandwidth issues or want to limit the number of events being processed.
+Below is the current list of events that are safe to skip in Beer Garden V3.1.</p>
+</div>
+<div class="listingblock">
+<div class="title">config.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">parent</span>:
+  <span class="key">http</span>:
+    <span class="key">skip_events</span>:
+    - <span class="string"><span class="content">INSTANCE_INITIALIZED</span></span>
+    - <span class="string"><span class="content">INSTANCE_STARTED</span></span>
+    - <span class="string"><span class="content">INSTANCE_STOPPED</span></span>
+    - <span class="string"><span class="content">QUEUE_CLEARED</span></span>
+    - <span class="string"><span class="content">ALL_QUEUES_CLEARED</span></span>
+    - <span class="string"><span class="content">GARDEN_CREATED</span></span>
+    - <span class="string"><span class="content">GARDEN_REMOVED</span></span>
+    - <span class="string"><span class="content">GARDEN_UNREACHABLE</span></span>
+    - <span class="string"><span class="content">GARDEN_ERROR</span></span>
+    - <span class="string"><span class="content">GARDEN_NOT_CONFIGURED</span></span>
+    - <span class="string"><span class="content">ENTRY_STARTED</span></span>
+    - <span class="string"><span class="content">ENTRY_STOPPED</span></span>
+    - <span class="string"><span class="content">JOB_CREATED</span></span>
+    - <span class="string"><span class="content">JOB_DELETED</span></span>
+    - <span class="string"><span class="content">JOB_PAUSED</span></span>
+    - <span class="string"><span class="content">JOB_RESUMED</span></span>
+    - <span class="string"><span class="content">PLUGIN_LOGGER_FILE_CHANGE</span></span>
+    - <span class="string"><span class="content">RUNNER_STARTED</span></span>
+    - <span class="string"><span class="content">RUNNER_STOPPED</span></span>
+    - <span class="string"><span class="content">RUNNER_REMOVED</span></span></code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="filtering-events-based-on-commands"><a class="anchor" href="#filtering-events-based-on-commands"></a>Filtering Events Based on Commands</h4>
+<div class="paragraph">
+<p>There is a Command Publishing Blocklist that allows commands to be added to the list through the UI found in the admin section of the navigation bar under Command Publishing Blocklist. Any events involving requests for commands in the blocklist will be filtered out and not sent to the parent.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Once a command has been added to the blocklist, tasking status will no longer be available on the parent garden. If a blocked command is tasked through the parent garden, the request will still be forwarded to the child and executed. However, the parent will always show a status of CREATED, as the child will no longer be publishing task updates back up to the parent.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

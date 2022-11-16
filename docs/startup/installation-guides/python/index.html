@@ -1,0 +1,98 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Native Python Installation</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/startup/installation-guides/python.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/startup/installation-guides/python.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/startup/installation-guides/python.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#installing-beer-garden">Installing Beer Garden</a></li>
+<li><a href="#installing-the-beer-garden-ui">Installing the Beer Garden UI</a></li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This guide will take you through step-by-step installation instructions via python.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="prerequisites"><a class="anchor" href="#prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A Beer Garden Python installation requires a few things to work:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Python 3.7+</p>
+</li>
+<li>
+<p>Connectivity to MongoDB 3.2+</p>
+</li>
+<li>
+<p>Connectivity to RabbitMQ</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Installing these is outside the scope of this documentation, so please refer to their installation instructions for
+detailed installation instructions/configuration.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-beer-garden"><a class="anchor" href="#installing-beer-garden"></a>Installing Beer Garden</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We host <code>beer-garden</code> on PyPi. You can install it via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>pip install beer-garden</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can generate a configuration file by running:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>generate_config -c config.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will place a config file in <code>config.yaml</code>. Feel free to edit this file however you would like. Most of the
+defaults are likely fine for now, though you will need to update connection information for your message broker
+and database. Read more about the beergarden configuration in the <a href="/docs/app/configuration">configuration section.</a>
+Then you can startup the application and point to that configuration.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>beergarden -c config.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Everything that is in the <code>config.yaml</code> can be overriden from the command-line. See more information with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>beergarden --help</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="installing-the-beer-garden-ui"><a class="anchor" href="#installing-the-beer-garden-ui"></a>Installing the Beer Garden UI</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Beer Garden UI is a separate javascript application that does not get installed with the python backend. To run the UI, it is recommended that you following the directions in one of the sections below:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../docker/">Docker / Docker Compose</a></p>
+</li>
+<li>
+<p><a href="../git/">Development Setup</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

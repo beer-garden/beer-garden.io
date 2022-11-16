@@ -1,0 +1,108 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Local vs Remote Plugins</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/plugins/local-vs-remote.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/plugins/local-vs-remote.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/plugins/local-vs-remote.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#local-plugins">Local Plugins</a></li>
+<li><a href="#remote-plugins">Remote Plugins</a></li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>It&#8217;s important to understand the fundamental difference between local and remote plugins. Deciding which plugin you would like to run will influence the way you write your plugins and even what language your plugin can be written in. They each also have their own set of restrictions and ways you can deploy to them.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="local-plugins"><a class="anchor" href="#local-plugins"></a>Local Plugins</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is a quick breakdown:</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Pros of using local plugins</div>
+<div class="paragraph">
+<p>Plugin management (monitoring, restarting/reloading) You don&#8217;t have to worry about standing up a new machine to run your plugin, logging gets taken care of by Beer Garden</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="title">Cons of using local plugins</div>
+<div class="paragraph">
+<p>Restricted to the python version running on the Beer Garden server, you must have access to the Beer Garden server, you share resources with Beer Garden itself, you must structure the code in a particular way</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Local plugins refer to plugins that are managed by Beer Garden itself. Local plugins exist on the same machine as Beer Garden. That is, the deployed software is actually on the same server as the Beer Garden service. In addition, the software is assumed to be compatible in the same python version that powers Beer Garden.</p>
+</div>
+<div class="paragraph">
+<p>What you get as a result of being on the same server, is that Beer Garden can easily manage maintenance of your plugin. If the process dies, Beer Garden will restart it. Beer Garden has "tight" control over your plugin, in that it knows more-or-less what it&#8217;s doing.</p>
+</div>
+<div class="paragraph">
+<p>If you are running your own Beer Garden, then the local plugin will probably just work for you. If so, you can start looking at the <a href="../python/local-guide/">writing local plugins</a> section.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="remote-plugins"><a class="anchor" href="#remote-plugins"></a>Remote Plugins</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is a quick breakdown:</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="title">Pros of using remote plugins</div>
+<div class="paragraph">
+<p>Only http(s) access to Beer Garden server required, you can provision the plugin with its own resources. No restrictions of how to start/configure your plugin</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="title">Cons of using remote plugins</div>
+<div class="paragraph">
+<p>You are responsible for starting/monitoring/restarting your plugin. No way for Beer Garden to tell the plugin to reload it&#8217;s configuration.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Remote plugins refer to plugins that are not managed by Beer Garden itself. Remote plugins can exist on any machine that can make a http(s) connection to the Beer Garden web service.</p>
+</div>
+<div class="paragraph">
+<p>This does mean that the plugin developer is responsible for keeping the plugin process up and running. If the process dies for whatever reason, Beer Garden will not know how to restart it.</p>
+</div>
+<div class="paragraph">
+<p>If your Beer Garden is being run by someone else, or if you don&#8217;t want to worry about getting access to the Beer Garden server, or if you want to write your plugin in something other than the python running Beer Garden, then a remote plugin is for you. In which case, you should start looking at the <a href="../python/remote-guide">writing remote plugins</a> section.</p>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

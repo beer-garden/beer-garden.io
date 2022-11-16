@@ -1,0 +1,95 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Contributing to Beer Garden</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/contributing.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/contributing.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/contributing.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#license-agreement">License Agreement</a></li>
+<li><a href="#submitting-an-issue">Submitting an Issue</a></li>
+<li><a href="#submitting-a-pull-request">Submitting a Pull Request</a></li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>We would love for you to help us make Beer Garden better. There are a seemingly infinite number of features that would be great to add. Remember, <em>no contribution is too small</em>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="license-agreement"><a class="anchor" href="#license-agreement"></a>License Agreement</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>By contributing to any of the Beer Garden repositories, you agree to license your contributions under the <a href="https://github.com/beer-garden/beer-garden/blob/master/LICENSE.md">MIT license</a>. This ensures your contributions have the same license as the project and that the community is free to use your contributions. You also assert that you are the original author of the work you are contributing unless otherwise stated.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="submitting-an-issue"><a class="anchor" href="#submitting-an-issue"></a>Submitting an Issue</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you have the next cool idea for Beer Garden, we want to hear about it. We use the <a href="https://github.com/beer-garden/beer-garden/issues">issue tracker on GitHub</a> to track bugs/features. Before you submit a request or bug, please make sure it has not already been submitted.</p>
+</div>
+<div class="paragraph">
+<p>Our ideal feature request comes in with a merge request for a way to implement the feature, but feature requests should at least come with an explanation of how you want the app to behave differently than the current implementation.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;ve found a bug in Beer Garden, we would love for you to submit a bug report. When submitting a bug report, please include a <a href="https://gist.github.com">Snippet</a> that includes any details that may help reproduce the bug, including your version of Beer Garden, language, language version and operating system.</p>
+</div>
+<div class="paragraph">
+<p>Most importantly, since Beer Garden is a plugin framework, <em>do not</em> submit bugs with particular plugins in the Beer Garden issue tracker.</p>
+</div>
+<div class="paragraph">
+<p>Ideal bug reports include a merge request with a failing test.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="submitting-a-pull-request"><a class="anchor" href="#submitting-a-pull-request"></a>Submitting a Pull Request</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This information is generic on purpose. Each repository in Beer Garden&#8217;s components will have their own way to run tests. Please refer to the specific project for detailed information on how to write/run tests for that particular project.
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Fork the repository. This will vary based on what project you are working on.</p>
+</li>
+<li>
+<p>Install the latest development dependencies (usually <code>make deps</code>)</p>
+</li>
+<li>
+<p>Create a topic branch (use the pattern <code>feature/XYZ</code> where <code>XYZ</code> is the
+issue number)</p>
+</li>
+<li>
+<p>Add tests for your unimplemented feature or bug fix.</p>
+</li>
+<li>
+<p>Run the tests, if your tests pass, return to step 4</p>
+</li>
+<li>
+<p>Implement your feature or bug fix</p>
+</li>
+<li>
+<p>Run the tests, if your test fail, return to step 6</p>
+</li>
+<li>
+<p>Add documentation for your feature or bug fix</p>
+</li>
+<li>
+<p>Add, commit, and push your changes.</p>
+</li>
+<li>
+<p>Submit a pull request</p>
+</li>
+</ol>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

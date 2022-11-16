@@ -1,0 +1,1241 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Python Plugin Guide (Remote)</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/plugins/python/remote-guide.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/plugins/python/remote-guide.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/plugins/python/remote-guide.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#hello-world">Hello World!</a>
+<ul class="sectlevel2">
+<li><a href="#write-the-code">Write the code</a></li>
+<li><a href="#run-the-code">Run the code</a></li>
+<li><a href="#use-the-code">Use the code</a></li>
+<li><a href="#stop-the-code">Stop the code</a></li>
+</ul>
+</li>
+<li><a href="#exception-handling">Exception Handling</a></li>
+<li><a href="#making-your-plugin-more-descriptive">Making your plugin more descriptive</a>
+<ul class="sectlevel2">
+<li><a href="#adding-a-command-description">Adding a command description</a></li>
+<li><a href="#describing-a-parameter">Describing a parameter</a>
+<ul class="sectlevel3">
+<li><a href="#plugin-param-key">Key argument</a></li>
+<li><a href="#plugin-param-type">Type argument</a></li>
+<li><a href="#plugin-param-multi">Multi argument</a></li>
+<li><a href="#plugin-param-display-name">Display name argument</a></li>
+<li><a href="#plugin-param-optional">Optional argument</a></li>
+<li><a href="#plugin-param-default">Default argument</a></li>
+<li><a href="#plugin-param-description">Description argument</a></li>
+<li><a href="#plugin-param-choices">Choices argument</a></li>
+<li><a href="#basic-usage">Basic Usage</a></li>
+<li><a href="#additional-configuration">Additional Configuration</a></li>
+<li><a href="#choice-sources">Choice Sources</a></li>
+<li><a href="#choice-parameters">Choice parameters</a></li>
+<li><a href="#plugin-param-is-kwarg">Is kwarg argument</a></li>
+<li><a href="#plugin-param-model">Model argument</a></li>
+<li><a href="#plugin-param-nullable">Nullable argument</a></li>
+<li><a href="#plugin-param-maximum">Maximum argument</a></li>
+<li><a href="#plugin-param-minimum">Minimum argument</a></li>
+<li><a href="#plugin-param-regex">Regex argument</a></li>
+<li><a href="#plugin-param-form-input-type">Form Input Type Argument</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#customizing-command-form">Customizing Command Form</a></li>
+<li><a href="#external-logging">External Logging</a></li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The goal of this section is to help you write a remote plugin from scratch. In order to write remote plugins there are a few things that you need.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="prerequisites"><a class="anchor" href="#prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to build a plugin you&#8217;ll need a functioning Python environment. Setting that up is outside the scope of this tutorial; we recommend <a href="https://github.com/pyenv/pyenv">pyenv</a>. You&#8217;ll also need access to a functioning Beer Garden. Check out the <a href="/docs/startup/installation-guides/">installation instructions</a> for ways to stand up your own Beer Garden.</p>
+</div>
+<div class="paragraph">
+<p>The simplest way to get started is to use the utility package we&#8217;ve created to make plugin building as easy as possible. The package is called <code>brewtils</code> and lives on PyPI. You can find <a href="https://brewtils.readthedocs.io">Brewtils API Documentation here</a>. Add it to your environment like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">pip install brewtils</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Don&#8217;t forget, if you&#8217;re writing a remote plugin, you&#8217;ll need to be able to access the Beer Garden REST Service
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now you&#8217;re ready to start writing your plugin.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="hello-world"><a class="anchor" href="#hello-world"></a>Hello World!</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section will take you through setting up a simple Hello, World example.</p>
+</div>
+<div class="sect2">
+<h3 id="write-the-code"><a class="anchor" href="#write-the-code"></a>Write the code</h3>
+<div class="paragraph">
+<p>Plugins are basically just classes that you would like to expose over the network. So let&#8217;s create a simple, and classic "Hello, World!" example. Use your favorite text editor and open up a file called <code>plugin.py</code> and add the following:</p>
+</div>
+<div class="listingblock">
+<div class="title">plugin.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">from</span> <span class="include">brewtils</span> <span class="keyword">import</span> <span class="include">Plugin</span>, <span class="include">command</span>
+
+
+<span class="keyword">class</span> <span class="class">HelloWorldClient</span>(<span class="predefined">object</span>):
+
+    <span class="decorator">@command</span> <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="keyword">def</span> <span class="function">say_hello</span>(<span class="predefined-constant">self</span>):
+        greeting = <span class="string"><span class="delimiter">&quot;</span><span class="content">Hello, World!</span><span class="delimiter">&quot;</span></span>
+
+        print(greeting)
+
+        <span class="keyword">return</span> greeting
+
+
+<span class="keyword">def</span> <span class="function">main</span>():
+    client = HelloWorldClient()
+
+    plugin = Plugin(
+        client=client,
+        name=<span class="string"><span class="delimiter">&quot;</span><span class="content">hello-world</span><span class="delimiter">&quot;</span></span>, <i class="conum" data-value="2"></i><b>(2)</b>
+        version=<span class="string"><span class="delimiter">&quot;</span><span class="content">1.0.0</span><span class="delimiter">&quot;</span></span>,
+        description=<span class="string"><span class="delimiter">&quot;</span><span class="content">My First Plugin</span><span class="delimiter">&quot;</span></span>,
+        bg_host=<span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;HOST&gt;</span><span class="delimiter">&quot;</span></span>, <i class="conum" data-value="3"></i><b>(3)</b>
+        bg_port=<span class="string"><span class="delimiter">&quot;</span><span class="content">&lt;PORT&gt;</span><span class="delimiter">&quot;</span></span>,
+        ssl_enabled=&lt;SSL_ENABLED&gt;,
+    )
+    plugin.run()
+
+
+<span class="keyword">if</span> __name__ == <span class="string"><span class="delimiter">&quot;</span><span class="content">__main__</span><span class="delimiter">&quot;</span></span>:
+    main()</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>@command</code> decorator marks this method as a Command that&#8217;s part of the enclosing Client.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>The values defined here determine how the plugin is listed in the UI.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Be sure to replace <code>&lt;HOST&gt;</code>, <code>&lt;PORT&gt;</code>, and <code>&lt;SSL_ENABLED&gt;</code> with appropriate values for your garden.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To review what&#8217;s happening here: we added an import <code>Plugin</code> at the top of our file and created a standard main method. In that method we created a <code>HelloWorldClient</code> object and a <code>Plugin</code> object. Notice that when we create the <code>Plugin</code> we pass it the client and some additional parameters. Don&#8217;t worry too much about the additional paramters - we&#8217;ll cover them later.</p>
+</div>
+<div class="paragraph">
+<p>That&#8217;s all the code you need!</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="run-the-code"><a class="anchor" href="#run-the-code"></a>Run the code</h3>
+<div class="paragraph">
+<p>Run the plugin like this:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>python plugin.py</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It will start up and print some logging showing the plugin registering with Beer Garden. Congratulations! You&#8217;ve just deployed your first plugin!</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="use-the-code"><a class="anchor" href="#use-the-code"></a>Use the code</h3>
+<div class="paragraph">
+<p>At this point you should see your plugin on the <code>Systems</code> page in <code>Beer Garden</code>. Click the big blue <code>Explore</code> button next to <code>hello-world</code> to see a list of all commands available for the Plugin you made.</p>
+</div>
+<div class="paragraph">
+<p>Since we only defined one command as part of this tutorial the only command listed should be the <code>say_hello</code> command. Click the <code>Make it Happen!</code> button to go to the page for that command.</p>
+</div>
+<div class="paragraph">
+<p>The command page is where you can specify options and customization for individual executions of that command. Since we didn&#8217;t define any options (this command always prints 'Hello World!') the only customization available is the comment field. You can add free-form text here and it will be included as part of the request you&#8217;re about to generate.</p>
+</div>
+<div class="paragraph">
+<p>Are you ready? Click the <code>Make Request</code> button once you&#8217;re ready.</p>
+</div>
+<div class="paragraph">
+<p>Making a request takes you to the Request page for the request you just generated. You can see the unique ID as part of the page title. You should see the status start as <code>IN PROGRESS</code> and then change to <code>SUCCESS</code> once the request completes. Also notice that the output changes when the request is finished.</p>
+</div>
+<div class="paragraph">
+<p>If you didn&#8217;t catch those changes on the first try, don&#8217;t worry. Use the <code>Pour it Again</code> button in the top-right corner to go back to the command screen you just left. From here you can use the <code>Make Request</code> button to make another request.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This command doesn&#8217;t have any parameters, but for commands that do the <code>Pour it Again</code> button will default them to exactly how they were for the original request.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="stop-the-code"><a class="anchor" href="#stop-the-code"></a>Stop the code</h3>
+<div class="paragraph">
+<p>The best way to stop a plugin is to use the Systems Management page to send a stop message. In <code>Beer Garden</code> find the <code>Systems</code> option under the <code>Admin</code> menu. Then click the stop icon next to the <code>hello-world</code> listing.</p>
+</div>
+<div class="paragraph">
+<p>You should see your plugin log that it has terminated and stop executing, and if you go to the <code>Admin &#8594; Systems</code> page in <code>Beer Garden</code> you should see the <code>hello-world</code> plugin is 'STOPPED'.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can also use Ctrl-c to stop the plugin from the terminal. This works, but it doesn&#8217;t tell Beer Garden that the plugin is stopping. You&#8217;ll still see the plugin terminate and stop executing, but the status in <code>Brew View</code> will still be 'RUNNING'. After a short period the status will change to 'UNRESPONSIVE'.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="exception-handling"><a class="anchor" href="#exception-handling"></a>Exception Handling</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It is important to be able to tell Beer Garden when something on your system goes wrong. <code>brewtils</code> takes advantage of Python&#8217;s exceptions in order to handle command malfunctions. So if you have a function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">def</span> <span class="function">my_error</span>(<span class="predefined-constant">self</span>):
+    <span class="keyword">raise</span> <span class="exception">ValueError</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Something went wrong!</span><span class="delimiter">&quot;</span></span>)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will result in the request status turning to "ERROR" and its output will be <code>Something went wrong!</code>. It is expected that plugins will throw errors as a way to notify Beer Garden that something has gone wrong.</p>
+</div>
+<div class="paragraph">
+<p>If you choose to handle errors and not throw, you will notice something that may be quite confusing to your plugins users. Let&#8217;s have an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">def</span> <span class="function">my_error</span>(<span class="predefined-constant">self</span>, x):
+  <span class="keyword">if</span> x <span class="keyword">is</span> <span class="predefined-constant">None</span>:
+    <span class="comment"># This is actually an error, but we will short-circuit</span>
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">An error occurred.</span><span class="delimiter">&quot;</span></span>
+  <span class="keyword">return</span> x</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If <code>x</code> being <code>None</code> is an error, then you should throw an error. Otherwise, the request will be marked as <code>SUCCESS</code> while the output will say <code>An error occurred</code></p>
+</div>
+<div class="paragraph">
+<p>If your command has a <code>JSON</code> output type, then Beer Garden will attempt to format your exception as a JSON error message. Here&#8217;s an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@command</span>(command_type=<span class="string"><span class="delimiter">&quot;</span><span class="content">JSON</span><span class="delimiter">&quot;</span></span>)
+<span class="keyword">def</span> <span class="function">my_error</span>(<span class="predefined-constant">self</span>):
+  <span class="keyword">raise</span> <span class="exception">ValueError</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Error Message</span><span class="delimiter">&quot;</span></span>)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you call this method, you&#8217;ll still notice a status of <code>ERROR</code> but the output will be something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "message": "Error Message",
+  "attributes": {}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re asking what the <code>attributes</code> entry is supposed to represent, it will take the <code><em>dict</em></code> of the exception and attempt to jsonify it. Let&#8217;s say you have a custom exception class like the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">class</span> <span class="class">MyError</span>(<span class="exception">Exception</span>):
+  <span class="keyword">def</span> <span class="function">__init__</span>(<span class="predefined-constant">self</span>, *args, **kwargs):
+    <span class="predefined-constant">self</span>.foo = kwargs.pop(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>)
+    <span class="predefined-constant">self</span>.bar = kwargs.pop(<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then you throw that error during a command, Beer Garden will modify the output as per the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>{
+  "message": "Error Message"
+  "attributes": {"foo": "foo_value", "bar": "bar_value"}
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+If your attributes are not JSON serializable, then a string representation of the dictionary will be provided to the attributes.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="making-your-plugin-more-descriptive"><a class="anchor" href="#making-your-plugin-more-descriptive"></a>Making your plugin more descriptive</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to help users of Beer Garden understand how to utilize your plugin, you&#8217;ll need to provide some basic information about your plugins. There are lots of ways to specify lots of different information that your plugin can do. So we&#8217;ll take it one at a time.</p>
+</div>
+<div class="sect2">
+<h3 id="adding-a-command-description"><a class="anchor" href="#adding-a-command-description"></a>Adding a command description</h3>
+<div class="paragraph">
+<p>There are two ways you can add a description to your command. One way is by using pydoc comments</p>
+</div>
+<div class="listingblock">
+<div class="title">Pydoc example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">class</span> <span class="class">HelloWorldClient</span>(<span class="predefined">object</span>):
+
+  <span class="decorator">@command</span>
+  <span class="keyword">def</span> <span class="function">hello_world</span>(<span class="predefined-constant">self</span>):
+    <span class="docstring"><span class="delimiter">&quot;&quot;&quot;</span><span class="content">Prints Hello, World!</span><span class="delimiter">&quot;&quot;&quot;</span></span>
+    print(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello, World!</span><span class="delimiter">&quot;</span></span>)</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The description will only take the first line of your comment
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Or you can specify a description via the <code>@command</code> decorator</p>
+</div>
+<div class="listingblock">
+<div class="title">Register example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">class</span> <span class="class">HelloWorldClient</span>(<span class="predefined">object</span>):
+
+  <span class="decorator">@command</span>(description=<span class="string"><span class="delimiter">&quot;</span><span class="content">Prints Hello, World!</span><span class="delimiter">&quot;</span></span>)
+  <span class="keyword">def</span> <span class="function">hello_world</span>(<span class="predefined-constant">self</span>):
+    print(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello, World!</span><span class="delimiter">&quot;</span></span>)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="describing-a-parameter"><a class="anchor" href="#describing-a-parameter"></a>Describing a parameter</h3>
+<div class="paragraph">
+<p>Obviously, most methods will have required arguments. You can utilize the <code>@parameter</code> decorator to describe the argument as in the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">class</span> <span class="class">HelloWorldClient</span>(<span class="predefined">object</span>):
+
+  <span class="decorator">@command</span>(description=<span class="string"><span class="delimiter">&quot;</span><span class="content">Echos the message you pass to it</span><span class="delimiter">&quot;</span></span>)
+  <span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>,
+                description=<span class="string"><span class="delimiter">&quot;</span><span class="content">Message to print and return</span><span class="delimiter">&quot;</span></span>)
+  <span class="keyword">def</span> <span class="function">echo</span>(<span class="predefined-constant">self</span>, message):
+    print(message)
+    <span class="keyword">return</span> message</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@parameter</code> only requires the <code>key</code> option be passed to it. The <code>key</code> must match the parameter&#8217;s name in the method. There are lots of different options when considering the <code>@parameter</code>. Check out the following table for a high- level summary:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Plugin Param Arguments</caption>
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Argument</th>
+<th class="tableblock halign-left valign-top">Required?</th>
+<th class="tableblock halign-left valign-top">Options</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-key">key</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the Argument Name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-type">type</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[String, Integer, Float, Boolean, Any, Dictionary, Base64]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the type of Parameter</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-multi">multi</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[True, False]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies if the parameter is a list</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-display-name">display_name</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">key</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies a Pretty way to refer to the key</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-optional">optional</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[True, False]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies if the parameter is required</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-default">default</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Default value of the Parameter</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-description">description</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A short Description of the Parameter</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-choices">choices</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A list of possible values</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-is-kwarg">is_kwarg</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If parameter comes in as a kwarg</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-model">model</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A python Object that has a parameters list</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-nullable">nullable</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[True, False]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies if this parameter can be null</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-maximum">maximum</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies maximum (See detailed for more info)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-minimum">minimum</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies minimum (See detailed for more info)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-regex">regex</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies regex to validate against this value</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#plugin-param-form-input-type">form_input_type</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[textarea]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the form type to render for this plugin</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="plugin-param-key"><a class="anchor" href="#plugin-param-key"></a>Key argument</h4>
+<div class="paragraph">
+<p>The <code>key</code> argument to <code>@parameter</code> is the only required parameter. It must match the name of an argument in whatever method it is decorating. This is how users of your plugin will identify the parameter they would like to set.</p>
+</div>
+<div class="listingblock">
+<div class="title">Key argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>)
+<span class="keyword">def</span> <span class="function">do_something</span>(<span class="predefined-constant">self</span>, message):
+    print(message)
+    <span class="keyword">return</span> message</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-type"><a class="anchor" href="#plugin-param-type"></a>Type argument</h4>
+<div class="paragraph">
+<p>Setting the <code>type</code> field for a Parameter will let Beer Garden do a couple of things.</p>
+</div>
+<div class="paragraph">
+<p>First, it lets Beer Garden perform type validation on that parameter. If the value does not match the type (and can&#8217;t be converted sensibly) then the Request will be rejected.</p>
+</div>
+<div class="paragraph">
+<p>Second, it allows the UI to use the best form element for that type of data. For example, you <em>could</em> use a string to represent a date, but setting <code>type</code> to 'date' means the UI will use a nice datepicker form element.</p>
+</div>
+<div class="paragraph">
+<p>Finally, several validation constraints can only be applied to specific types. The <a href="#plugin-param-minimum">minimum</a> and <a href="#plugin-param-maximum">maximum</a> constraints are good examples of this - they don&#8217;t make sense for booleans, but they definitely do for integers!</p>
+</div>
+<div class="listingblock">
+<div class="title">Type argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">number</span><span class="delimiter">&quot;</span></span>, type=<span class="string"><span class="delimiter">&quot;</span><span class="content">Integer</span><span class="delimiter">&quot;</span></span>)
+<span class="keyword">def</span> <span class="function">multiply_by_zero</span>(<span class="predefined-constant">self</span>, number):
+    <span class="keyword">return</span> number * <span class="integer">0</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This table outlines the valid <code>type</code> options.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Valid Constraints</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">minimum, maximum, regex</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Minimum and Maximum refer to length</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">minimum, maximum</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Float</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">minimum, maximum</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Date</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Form control will not have 'time' option</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DateTime</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dictionary</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JSON Object</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Base64</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allows the user to upload a file as a parameter. This is provided as a file-like object to the plugin.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Valid JSON (Object, Array, String), number, literal <code>null</code>, <code>true</code>, <code>false</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+The default <code>type</code> is <code>Any</code>. This gives the most flexibility, but it&#8217;s a good idea to always specify a <code>type</code> to take advantage of the benefits described above.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-multi"><a class="anchor" href="#plugin-param-multi"></a>Multi argument</h4>
+<div class="paragraph">
+<p>The <code>multi</code> field let&#8217;s Beer Garden know that the parameter should be a list. Most of the other fields stay the same and continue to describe the individual items in the list.</p>
+</div>
+<div class="listingblock">
+<div class="title">Multi argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">list_of_strings</span><span class="delimiter">&quot;</span></span>, multi=<span class="predefined-constant">True</span>, type=<span class="string"><span class="delimiter">&quot;</span><span class="content">String</span><span class="delimiter">&quot;</span></span>)
+<span class="keyword">def</span> <span class="function">do_something</span>(<span class="predefined-constant">self</span>, list_of_strings):
+    <span class="keyword">for</span> s <span class="keyword">in</span> list_of_strings:
+        print(s)</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Some of the fields do change meaning when you&#8217;ve specified that multi
+is true. See the below table for a more detailed description.
+</td>
+</tr>
+</table>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Multi Changes These Arguments</caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Argument</th>
+<th class="tableblock halign-left valign-top">How is it changed?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">choices</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Choices specify the only valid values, no value can be repeated.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">maximum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies Maximum length of the list</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">minimum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies Minimum length of the list</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-display-name"><a class="anchor" href="#plugin-param-display-name"></a>Display name argument</h4>
+<div class="paragraph">
+<p>The <code>display_name</code> field allows you control over how Beer Garden renders the name of the field. This is useful if your argument has a less-than-useful name from the end-users perspective.</p>
+</div>
+<div class="listingblock">
+<div class="title">Display name argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, display_name=<span class="string"><span class="delimiter">&quot;</span><span class="content">Name</span><span class="delimiter">&quot;</span></span>)
+<span class="keyword">def</span> <span class="function">do_something</span>(<span class="predefined-constant">self</span>, foo):
+    print(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hi!, my name is: %s</span><span class="delimiter">&quot;</span></span> % foo)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-optional"><a class="anchor" href="#plugin-param-optional"></a>Optional argument</h4>
+<div class="paragraph">
+<p>The <code>optional</code> field allows you to specify whether or not the parameter is optional or required. The default depends on if there is a default value in the method definition.</p>
+</div>
+<div class="listingblock">
+<div class="title">Optional argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, optional=<span class="predefined-constant">True</span>, nullable=<span class="predefined-constant">True</span>))
+<span class="keyword">def</span> <span class="function">do_something</span>(<span class="predefined-constant">self</span>, foo):
+    <span class="comment"># By default, foo would not be optional but</span>
+    <span class="comment"># it is specified in the param so it's assumed</span>
+    <span class="comment"># the developer will handle the None case.</span>
+    <span class="keyword">if</span> foo <span class="keyword">is</span> <span class="predefined-constant">None</span>:
+        print(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo is empty!</span><span class="delimiter">&quot;</span></span>)
+    <span class="keyword">else</span>:
+        print(foo)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If a default is passed in, then optional will be set to True by default.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If you specify that something is optional, then it must also be nullable if no default is specified.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-default"><a class="anchor" href="#plugin-param-default"></a>Default argument</h4>
+<div class="paragraph">
+<p>The <code>default</code> field allows you to specify the default value for a parameter if it is not given by a user. If there is a default value in the method definition then it will use that.</p>
+</div>
+<div class="listingblock">
+<div class="title">Default argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>)
+<span class="keyword">def</span> <span class="function">do_something</span>(<span class="predefined-constant">self</span>, foo=<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>):
+  print(foo)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the above case, if someone utilizes this command but does not pass Beer Garden the <code>foo</code> parameter, then Beer Garden will default it to <code>bar</code>. Below is another example of how to use the default argument.</p>
+</div>
+<div class="listingblock">
+<div class="title">Default argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, default=<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>))
+<span class="keyword">def</span> <span class="function">do_something</span>(<span class="predefined-constant">self</span>, foo):
+    print(foo)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These are functionally equivalent for Beer Garden.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-description"><a class="anchor" href="#plugin-param-description"></a>Description argument</h4>
+<div class="paragraph">
+<p>The <code>description</code> field adds a description to the plugin parameter you are defining.</p>
+</div>
+<div class="listingblock">
+<div class="title">Description argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, description=<span class="string"><span class="delimiter">&quot;</span><span class="content">Your first name</span><span class="delimiter">&quot;</span></span>)
+<span class="keyword">def</span> <span class="function">do_something</span>(<span class="predefined-constant">self</span>, foo):
+    <span class="keyword">pass</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-choices"><a class="anchor" href="#plugin-param-choices"></a>Choices argument</h4>
+<div class="paragraph">
+<p>The <code>choices</code> field allows you to specify possible values for a parameter.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="basic-usage"><a class="anchor" href="#basic-usage"></a>Basic Usage</h4>
+<div class="paragraph">
+<p>The easiest way to use <code>choices</code> is to pass a list of values:</p>
+</div>
+<div class="listingblock">
+<div class="title">Choices list example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">output_type</span><span class="delimiter">&quot;</span></span>, choices=[<span class="string"><span class="delimiter">&quot;</span><span class="content">json</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">xml</span><span class="delimiter">&quot;</span></span>])
+<span class="keyword">def</span> <span class="function">format</span>(<span class="predefined-constant">self</span>, obj, output_type):
+    <span class="keyword">if</span> output_type == <span class="string"><span class="delimiter">&quot;</span><span class="content">json</span><span class="delimiter">&quot;</span></span>:
+        <span class="keyword">return</span> jsonify(obj)
+    <span class="keyword">elif</span> output_type == <span class="string"><span class="delimiter">&quot;</span><span class="content">xml</span><span class="delimiter">&quot;</span></span>:
+        <span class="keyword">return</span> xmlify(obj)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Sometimes it&#8217;s useful to have the display text (what shows up in the UI) be different from the 'real' value (what gets sent to the plugin). To do this, instead of a list of literal values just pass a list of objects with <code>text</code> and <code>value</code> keys:</p>
+</div>
+<div class="listingblock">
+<div class="title">Choices rename example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">output_type</span><span class="delimiter">&quot;</span></span>, choices=[
+    {<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">The best</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">value</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">json</span><span class="delimiter">&quot;</span></span>},
+    {<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">The worst</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">value</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">xml</span><span class="delimiter">&quot;</span></span>}])
+<span class="keyword">def</span> <span class="function">format</span>(<span class="predefined-constant">self</span>, output_type):
+    <span class="keyword">pass</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="additional-configuration"><a class="anchor" href="#additional-configuration"></a>Additional Configuration</h4>
+<div class="paragraph">
+<p>There are some configuration options that control how <code>choices</code> works. Beer Garden will pick sensible defaults, but to tweak them pass a dictionary to <code>choices</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">Choices Dictionary example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">output_type</span><span class="delimiter">&quot;</span></span>,
+           choices={<span class="string"><span class="delimiter">'</span><span class="content">type</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">static</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>: [<span class="string"><span class="delimiter">'</span><span class="content">json</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">xml</span><span class="delimiter">'</span></span>]})
+<span class="keyword">def</span> <span class="function">format</span>(<span class="predefined-constant">self</span>, output_type):
+    ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That way you can add additional key/value pairs to the choices dictionary.</p>
+</div>
+<div class="sect4">
+<h5 id="choices-type"><a class="anchor" href="#choices-type"></a>Choices Type</h5>
+<div class="paragraph">
+<p>You probably noticed the <code>'type': 'static'</code> entry above. Beer Garden is able to figure out exactly what to do when you pass a list of values to <code>choices</code>, but it needs a hint when you use the dictionary configuration. There are a couple of other ways to populate the choices list (more on those in a bit) so you need to be explicit.</p>
+</div>
+<div class="paragraph">
+<p>The example above is using the <code>static</code> type, which tells Beer Garden to expect a list of values in the <code>value</code> attribute. This is functionally identical to passing a list of values to <code>choices</code> directly.</p>
+</div>
+<div class="paragraph">
+<p>The other choice types will be explained in detail in the <a href="#choice-sources">Choice Sources</a> section.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="display"><a class="anchor" href="#display"></a>Display</h5>
+<div class="paragraph">
+<p>When you use <code>choices</code> the UI form control can be a typeahead or a select. To specify which to use just set the <code>display</code> key:</p>
+</div>
+<div class="listingblock">
+<div class="title">Choices Typeahead example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">output_type</span><span class="delimiter">&quot;</span></span>,
+           choices={<span class="string"><span class="delimiter">'</span><span class="content">type</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">static</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>: [<span class="string"><span class="delimiter">'</span><span class="content">json</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">xml</span><span class="delimiter">'</span></span>],
+                    <span class="string"><span class="delimiter">'</span><span class="content">display</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">typeahead</span><span class="delimiter">'</span></span>})
+<span class="keyword">def</span> <span class="function">format</span>(<span class="predefined-constant">self</span>, output_type):
+    ...</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="strictness"><a class="anchor" href="#strictness"></a>Strictness</h5>
+<div class="paragraph">
+<p>The <code>strict</code> configuration controls whether values that aren&#8217;t explicitly listed are allowed. Setting <code>strict</code> to False will result in a typeahead control that will use the <code>choices</code> values but still allow any text to be submitted.</p>
+</div>
+<div class="listingblock">
+<div class="title">Choices Non-strict example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">output_type</span><span class="delimiter">&quot;</span></span>,
+           choices={<span class="string"><span class="delimiter">'</span><span class="content">type</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">static</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>: [<span class="string"><span class="delimiter">'</span><span class="content">json</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">xml</span><span class="delimiter">'</span></span>],
+                    <span class="string"><span class="delimiter">'</span><span class="content">strict</span><span class="delimiter">'</span></span>: <span class="predefined-constant">False</span>})
+<span class="keyword">def</span> <span class="function">format</span>(<span class="predefined-constant">self</span>, output_type):
+    ...</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Setting <code>strict</code> to False for a select won&#8217;t affect the display, but the <code>strict</code> value also controls validation on the backend.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="choice-sources"><a class="anchor" href="#choice-sources"></a>Choice Sources</h4>
+<div class="paragraph">
+<p>In all the examples so far the list of choices has been a literal list of values. That&#8217;s useful, but it&#8217;s also useful to have values that can change at runtime. In order to do that you need to provide <code>choices</code> with instructions on how to populate the choice list instead of the list itself.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+In all cases the result of the <code>choices</code> operation must be a valid choices list.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect4">
+<h5 id="url"><a class="anchor" href="#url"></a>URL</h5>
+<div class="paragraph">
+<p>Specifying a URL will tell the browser to load choices using an HTTP GET request. You can use type 'url' if using dictionary configuration or just pass the URL as a string:</p>
+</div>
+<div class="listingblock">
+<div class="title">Choices URL example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">p1</span><span class="delimiter">&quot;</span></span>, choices=<span class="string"><span class="delimiter">'</span><span class="content">https://test.com/p1.json</span><span class="delimiter">'</span></span>)
+<span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">p2</span><span class="delimiter">&quot;</span></span>, choices={<span class="string"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">url</span><span class="delimiter">&quot;</span></span>,
+                              <span class="string"><span class="delimiter">&quot;</span><span class="content">value</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">https://test.com/p2.json</span><span class="delimiter">'</span></span>})
+<span class="keyword">def</span> <span class="function">format</span>(<span class="predefined-constant">self</span>, p1, p2):
+    ...</code></pre>
+</div>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+Be aware that the user&#8217;s browser will be making this request. So if the Beer Garden UI is being accessed at a secure (https) address then a request to a non-secure (http) URL will likely fail due to mixed-content restrictions.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect4">
+<h5 id="command"><a class="anchor" href="#command"></a>Command</h5>
+<div class="paragraph">
+<p>Specifying a command will load choices by making a request to the current system. You can use type 'command' if using dictionary configuration or just pass the command as a string. If you&#8217;re not using choice parameters (more on those in a minute) you can omit the parenthesis for brevity.</p>
+</div>
+<div class="listingblock">
+<div class="title">Choices Command example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">p1</span><span class="delimiter">&quot;</span></span>, choices=<span class="string"><span class="delimiter">&quot;</span><span class="content">get_choices()</span><span class="delimiter">&quot;</span></span>)
+<span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">p2</span><span class="delimiter">&quot;</span></span>, choices={<span class="string"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">command</span><span class="delimiter">&quot;</span></span>,
+                              <span class="string"><span class="delimiter">&quot;</span><span class="content">value</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">get_choices</span><span class="delimiter">&quot;</span></span>})
+<span class="keyword">def</span> <span class="function">format</span>(<span class="predefined-constant">self</span>, p1, p2):
+    ...
+
+<span class="decorator">@command</span>
+<span class="keyword">def</span> <span class="function">get_choices</span>(<span class="predefined-constant">self</span>):
+    <span class="keyword">return</span> [
+        {<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">The best</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">value</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">json</span><span class="delimiter">&quot;</span></span>},
+        {<span class="string"><span class="delimiter">&quot;</span><span class="content">text</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">The worst</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">value</span><span class="delimiter">&quot;</span></span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">xml</span><span class="delimiter">&quot;</span></span>}
+    ]</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Currently you must use a command from the same system (this restriction will be removed in a future release - see <a href="https://github.com/beer-garden/beer-garden/issues/269">issue 269</a>).
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="choice-parameters"><a class="anchor" href="#choice-parameters"></a>Choice parameters</h4>
+<div class="paragraph">
+<p>It&#8217;s often useful to have the choices for one parameter depend on the current value of another. To do that you can use choice parameters.</p>
+</div>
+<div class="paragraph">
+<p>To create a reference on another parameter enclose its key in <code>${}</code>. How the parameter is passed depends on what choice source is being used.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+When initializing the command creation page, BeerGarden will attempt to update all dependencies for choice parameters at once. If the dependent parameters are defined in such a way that causes side effects inside the command (for example, if A is a choice parameter that depends on B and C, but updating C changes an internal value A and B need), this could lead to unintended consequences or destructive behavior during command load.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For 'command' types the parameter will be passed as an argument to the command. For example, suppose you have two parameters: <code>day_type</code> and <code>day_of_week</code>. You&#8217;d like the choices for <code>day_of_week</code> to depend on what the user has selected for <code>day_type</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">Choices Command Parameter example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@command</span>
+<span class="keyword">def</span> <span class="function">get_days</span>(<span class="predefined-constant">self</span>, <span class="predefined">type</span>):
+    <span class="keyword">if</span> type == <span class="string"><span class="delimiter">&quot;</span><span class="content">Weekday</span><span class="delimiter">&quot;</span></span>:
+        <span class="keyword">return</span> [<span class="string"><span class="delimiter">&quot;</span><span class="content">Monday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Tuesday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Wednesday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Thursday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Friday</span><span class="delimiter">&quot;</span></span>]
+    <span class="keyword">elif</span> type == <span class="string"><span class="delimiter">&quot;</span><span class="content">Weekend</span><span class="delimiter">&quot;</span></span>:
+        <span class="keyword">return</span> [<span class="string"><span class="delimiter">&quot;</span><span class="content">Saturday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Sunday</span><span class="delimiter">&quot;</span></span>]
+    <span class="keyword">else</span>:
+      <span class="keyword">raise</span> <span class="exception">Exception</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">Huh?</span><span class="delimiter">&quot;</span></span>)
+
+<span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">day_type</span><span class="delimiter">&quot;</span></span>, choices=[<span class="string"><span class="delimiter">&quot;</span><span class="content">Weekday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Weekend</span><span class="delimiter">&quot;</span></span>])
+<span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">day_of_week</span><span class="delimiter">&quot;</span></span>, choices=<span class="string"><span class="delimiter">&quot;</span><span class="content">get_days(type=${day_type})</span><span class="delimiter">&quot;</span></span>)
+<span class="keyword">def</span> <span class="function">my_command</span>(<span class="predefined-constant">self</span>, day_type, day_of_week):
+    do_something(day_of_week)
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">All done!</span><span class="delimiter">&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For 'url' types the choice parameter should be used as a query parameter:</p>
+</div>
+<div class="listingblock">
+<div class="title">Choices URL Parameter example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">day_type</span><span class="delimiter">&quot;</span></span>, choices=[<span class="string"><span class="delimiter">&quot;</span><span class="content">Weekday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Weekend</span><span class="delimiter">&quot;</span></span>])
+<span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">day_of_week</span><span class="delimiter">&quot;</span></span>,
+           choices=<span class="string"><span class="delimiter">&quot;</span><span class="content">https://getthedays.com?type=${day_type}</span><span class="delimiter">&quot;</span></span>)
+<span class="keyword">def</span> <span class="function">my_command</span>(<span class="predefined-constant">self</span>, day_type, day_of_week):
+    do_something(day_of_week)
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">All done!</span><span class="delimiter">&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Choice parameters also enable using a static choices dictionary with one parameter used as the dictionary key. To do this use type <code>static</code> and pass the dictionary as the value. Since we can construct the dictionary before defining the <code>command</code> we can rework the <code>day_of_week</code> example to look like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">Choices Dictionary example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python">day_dict = {
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">Weekday</span><span class="delimiter">&quot;</span></span>: [<span class="string"><span class="delimiter">&quot;</span><span class="content">Monday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Tuesday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Wednesday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Thursday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Friday</span><span class="delimiter">&quot;</span></span>],
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">Weekend</span><span class="delimiter">&quot;</span></span>: [<span class="string"><span class="delimiter">&quot;</span><span class="content">Saturday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Sunday</span><span class="delimiter">&quot;</span></span>]
+}
+
+<span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">day_type</span><span class="delimiter">&quot;</span></span>, choices=[<span class="string"><span class="delimiter">&quot;</span><span class="content">Weekday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Weekend</span><span class="delimiter">&quot;</span></span>])
+<span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">day_of_week</span><span class="delimiter">&quot;</span></span>, choices={<span class="string"><span class="delimiter">'</span><span class="content">type</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">static</span><span class="delimiter">'</span></span>,
+                                       <span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>: day_dict,
+                                       <span class="string"><span class="delimiter">'</span><span class="content">key_reference</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">${day_type}</span><span class="delimiter">'</span></span>})
+<span class="keyword">def</span> <span class="function">my_command</span>(<span class="predefined-constant">self</span>, day_type, day_of_week):
+    do_something(day_of_week)
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">All done!</span><span class="delimiter">&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When using a choices dictionary the <code>None</code> key can be used to specify the allowed values when the reference key is <code>null</code>. For example, if we wanted to modify the <code>day_of_week</code> example to additionally allow <em>any</em> day to be selected if <code>day_type</code> was <code>null</code> we could do this:</p>
+</div>
+<div class="listingblock">
+<div class="title">Choices Dictionary with None example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python">day_dict = {
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">Weekday</span><span class="delimiter">&quot;</span></span>: [<span class="string"><span class="delimiter">&quot;</span><span class="content">Monday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Tuesday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Wednesday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Thursday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Friday</span><span class="delimiter">&quot;</span></span>],
+    <span class="string"><span class="delimiter">&quot;</span><span class="content">Weekend</span><span class="delimiter">&quot;</span></span>: [<span class="string"><span class="delimiter">&quot;</span><span class="content">Saturday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Sunday</span><span class="delimiter">&quot;</span></span>],
+    <span class="predefined-constant">None</span>: [<span class="string"><span class="delimiter">&quot;</span><span class="content">Monday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Tuesday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Wednesday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Thursday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Friday</span><span class="delimiter">&quot;</span></span>,
+           <span class="string"><span class="delimiter">&quot;</span><span class="content">Saturday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Sunday</span><span class="delimiter">&quot;</span></span>]
+}
+
+<span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">day_type</span><span class="delimiter">&quot;</span></span>, choices=[<span class="string"><span class="delimiter">&quot;</span><span class="content">Weekday</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Weekend</span><span class="delimiter">&quot;</span></span>],
+           nullable=<span class="predefined-constant">True</span>)
+<span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">day_of_week</span><span class="delimiter">&quot;</span></span>, choices={<span class="string"><span class="delimiter">'</span><span class="content">type</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">static</span><span class="delimiter">'</span></span>,
+                                       <span class="string"><span class="delimiter">'</span><span class="content">value</span><span class="delimiter">'</span></span>: day_dict,
+                                       <span class="string"><span class="delimiter">'</span><span class="content">key_reference</span><span class="delimiter">'</span></span>: <span class="string"><span class="delimiter">'</span><span class="content">${day_type}</span><span class="delimiter">'</span></span>})
+<span class="keyword">def</span> <span class="function">my_command</span>(<span class="predefined-constant">self</span>, day_type, day_of_week):
+    do_something(day_of_week)
+    <span class="keyword">return</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">All done!</span><span class="delimiter">&quot;</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-is-kwarg"><a class="anchor" href="#plugin-param-is-kwarg"></a>Is kwarg argument</h4>
+<div class="paragraph">
+<p>The <code>is_kwarg</code> argument allows you to name a keyword argument that is otherwise unspecified. This is useful if you take keyword args, but want to call out the normal use-case ones more explicitly while still being compatible to other python libraries calling you.</p>
+</div>
+<div class="listingblock">
+<div class="title">Is kwarg argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, is_kwarg=<span class="predefined-constant">True</span>)
+<span class="keyword">def</span> <span class="function">do_something</span>(<span class="predefined-constant">self</span>, **kwarg):
+    foo = kwarg.pop(<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>)
+    print(foo)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-model"><a class="anchor" href="#plugin-param-model"></a>Model argument</h4>
+<div class="paragraph">
+<p>The <code>model</code> argument allows you to specify some structure for a complicated object. Have a look at the following for an example of how to use the <code>model</code> field.</p>
+</div>
+<div class="listingblock">
+<div class="title">Model argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">from</span> <span class="include">brewtils.models</span> <span class="keyword">import</span> <span class="include">Parameter</span>
+<span class="keyword">class</span> <span class="class">Person</span>(<span class="predefined">object</span>):
+
+  name = Parameter(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">name</span><span class="delimiter">&quot;</span></span>,
+                   type=<span class="string"><span class="delimiter">&quot;</span><span class="content">String</span><span class="delimiter">&quot;</span></span>,
+                   description=<span class="string"><span class="delimiter">&quot;</span><span class="content">Person's name</span><span class="delimiter">&quot;</span></span>)
+  age = Parameter(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">age</span><span class="delimiter">&quot;</span></span>,
+                  type=<span class="string"><span class="delimiter">&quot;</span><span class="content">Integer</span><span class="delimiter">&quot;</span></span>,
+                  description=<span class="string"><span class="delimiter">&quot;</span><span class="content">Person's age</span><span class="delimiter">&quot;</span></span>)
+
+<span class="keyword">class</span> <span class="class">ExampleClient</span>(<span class="predefined">object</span>):
+
+    <span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">person</span><span class="delimiter">&quot;</span></span>, model=Person)
+    <span class="keyword">def</span> <span class="function">greet</span>(<span class="predefined-constant">self</span>, person):
+        print(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello %s</span><span class="delimiter">&quot;</span></span> % person.name)</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+It is assumed that if you have a model, that the type is "Dictionary"
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-nullable"><a class="anchor" href="#plugin-param-nullable"></a>Nullable argument</h4>
+<div class="paragraph">
+<p>The <code>nullable</code> argument allows you to specify if the parameter can be null. If the argument is allowed to be null, then you must tell us this is possible. The default is assuming that parameters cannot be null.</p>
+</div>
+<div class="paragraph">
+<p>If there is a default value for a parameter, then <code>nullable</code> is set to True.</p>
+</div>
+<div class="listingblock">
+<div class="title">Nullable argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, nullable=<span class="predefined-constant">True</span>))
+<span class="keyword">def</span> <span class="function">do_something</span>(<span class="predefined-constant">self</span>, foo):
+    <span class="keyword">if</span> foo <span class="keyword">is</span> <span class="predefined-constant">None</span>:
+        print(<span class="string"><span class="delimiter">&quot;</span><span class="content">That's ok!</span><span class="delimiter">&quot;</span></span>)
+    <span class="keyword">else</span>:
+        print(<span class="string"><span class="delimiter">&quot;</span><span class="content">That's ok too!</span><span class="delimiter">&quot;</span></span>)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-maximum"><a class="anchor" href="#plugin-param-maximum"></a>Maximum argument</h4>
+<div class="paragraph">
+<p>The <code>maximum</code> argument allows you to specify the maximum value for a parameter. This meaning changes based on the <code>type</code> and whether or not the <code>multi</code> flag is enabled. If the <code>multi</code> flag is enabled, then maximum is referring to the list length maximum. Otherwise, if <code>type</code> is integer, it will compare the value of the parameter to the maximum. Otherwise if the <code>type</code> is a string, it will ensure the length of the string is within bounds.</p>
+</div>
+<div class="listingblock">
+<div class="title">Maximum argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, type=<span class="string"><span class="delimiter">&quot;</span><span class="content">String</span><span class="delimiter">&quot;</span></span>, maximum=<span class="integer">1</span>)
+<span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, type=<span class="string"><span class="delimiter">&quot;</span><span class="content">Integer</span><span class="delimiter">&quot;</span></span>, maximum=<span class="integer">1</span>)
+<span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">bazs</span><span class="delimiter">&quot;</span></span>, type=<span class="string"><span class="delimiter">&quot;</span><span class="content">String</span><span class="delimiter">&quot;</span></span>, maximum=<span class="integer">1</span>)
+<span class="keyword">def</span> <span class="function">do_something</span>(<span class="predefined-constant">self</span>, foo, bar, bazs):
+    <span class="comment"># guarantees that foo is 1 character at most</span>
+    <span class="comment"># guarantees that bar is no more than 1</span>
+    <span class="comment"># guarantees that bazs is no more than 1 item long</span>
+    print(foo)
+    print(bar)
+    print(bazs)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-minimum"><a class="anchor" href="#plugin-param-minimum"></a>Minimum argument</h4>
+<div class="paragraph">
+<p>The <code>minimum</code> argument allows you to specify the minimum value for a parameter. This meaning changes based on the <code>type</code> and whether or not the <code>multi</code> flag is enabled. If the <code>multi</code> flag is enabled, then minimum is referring to the list length minimum. Otherwise, if <code>type</code> is integer, it will compare the value of the parameter to the minimum. Otherwise if the <code>type</code> is a string, it will ensure the length of the string is within bounds.</p>
+</div>
+<div class="listingblock">
+<div class="title">Minimum argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">foo</span><span class="delimiter">&quot;</span></span>, type=<span class="string"><span class="delimiter">&quot;</span><span class="content">String</span><span class="delimiter">&quot;</span></span>, minimum=<span class="integer">1</span>)
+<span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">bar</span><span class="delimiter">&quot;</span></span>, type=<span class="string"><span class="delimiter">&quot;</span><span class="content">Integer</span><span class="delimiter">&quot;</span></span>, minimum=<span class="integer">1</span>)
+<span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">bazs</span><span class="delimiter">&quot;</span></span>, type=<span class="string"><span class="delimiter">&quot;</span><span class="content">String</span><span class="delimiter">&quot;</span></span>, minimum=<span class="integer">1</span>)
+<span class="keyword">def</span> <span class="function">do_something</span>(<span class="predefined-constant">self</span>, foo, bar, bazs):
+    <span class="comment"># guarantees that foo is at least 1 character</span>
+    <span class="comment"># guarantees that bar is no less than 1</span>
+    <span class="comment"># guarantees that bazs is no less than 1 item long</span>
+    print(foo)
+    print(bar)
+    print(bazs)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-regex"><a class="anchor" href="#plugin-param-regex"></a>Regex argument</h4>
+<div class="paragraph">
+<p>The <code>regex</code> argument allows you to specify a regex that the parameter must pass in order to be considered valid.</p>
+</div>
+<div class="listingblock">
+<div class="title">Regex argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">ip</span><span class="delimiter">&quot;</span></span>, regex=<span class="string"><span class="modifier">r</span><span class="delimiter">'</span><span class="content">^</span><span class="content">\d</span><span class="content">{1,3}</span><span class="content">\.</span><span class="content">\d</span><span class="content">{1,3}</span><span class="content">\.</span><span class="content">\d</span><span class="content">{1,3}</span><span class="content">\.</span><span class="content">\d</span><span class="content">{1,3}$</span><span class="delimiter">'</span></span>)
+<span class="keyword">def</span> <span class="function">do_something</span>(<span class="predefined-constant">self</span>, ipv4):
+    print(<span class="string"><span class="delimiter">&quot;</span><span class="content">This is a valid IPv4: %s</span><span class="delimiter">&quot;</span></span> % ipv4)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="plugin-param-form-input-type"><a class="anchor" href="#plugin-param-form-input-type"></a>Form Input Type Argument</h4>
+<div class="paragraph">
+<p>The <code>form_input_type</code> field allows you control over how Beer Garden renders the text-field. This is useful if you have some string field that is actually quite long. Currently the only supported type is <code>textarea</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Input Form Type argument example</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">comment</span><span class="delimiter">&quot;</span></span>, type=<span class="string"><span class="delimiter">&quot;</span><span class="content">String</span><span class="delimiter">&quot;</span></span>, form_input_type=<span class="string"><span class="delimiter">&quot;</span><span class="content">textarea</span><span class="delimiter">&quot;</span></span>)
+<span class="keyword">def</span> <span class="function">do_something</span>(<span class="predefined-constant">self</span>, comment):
+    print(<span class="string"><span class="delimiter">&quot;</span><span class="content">This is a long comment: %s</span><span class="delimiter">&quot;</span></span> % comment)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="customizing-command-form"><a class="anchor" href="#customizing-command-form"></a>Customizing Command Form</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The ability to customize the command form is a deprecated feature that will be removed in the relatively near future. For now, the documentation regarding this feature is still available <a href="../../custom-display/">here</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="external-logging"><a class="anchor" href="#external-logging"></a>External Logging</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Starting in Beer Garden 2.1.0, it is possible to tell your plugins how to log from the Beer Garden application itself. Beer Garden provides a new api (<code>/api/v1/config/logging</code>) which will respond with a logging configuration that plugins can optionally use. Checkout our Swagger documentation for the complete details of this new endpoint.</p>
+</div>
+<div class="paragraph">
+<p>This allows you to do one-time configuration of a logger in Beer Garden configuration files and propagate that logging configuration to all of your plugins. To use it, you simply add the following to your entry point.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">from</span> <span class="include">brewtils.log</span> <span class="keyword">import</span> <span class="include">setup_logger</span>
+
+<span class="comment"># Your client definition Here</span>
+
+<span class="keyword">if</span> __name__ == <span class="string"><span class="delimiter">&quot;</span><span class="content">__main__</span><span class="delimiter">&quot;</span></span>:
+    setup_logger(
+        bg_host=<span class="string"><span class="delimiter">'</span><span class="content">localhost</span><span class="delimiter">'</span></span>,
+        bg_port=<span class="integer">2337</span>,
+        system_name=<span class="string"><span class="delimiter">'</span><span class="content">my_name</span><span class="delimiter">'</span></span>,
+        ca_cert=<span class="predefined-constant">None</span>,
+        client_cert=<span class="predefined-constant">None</span>,
+        ssl_enabled=<span class="predefined-constant">None</span>,
+    )
+    <span class="comment"># Init your plugin as normal.</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This tells Beer Garden to setup a root logger based on what is returned from the endpoint at <code>api/v1/config/logging</code>. Checkout the <a href="/docs/app/configuration">configuration section</a> for more information on how to configure this. This is mostly useful for remote plugins.</p>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

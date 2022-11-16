@@ -1,0 +1,130 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Decorators</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/plugins/decorators.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/plugins/decorators.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/plugins/decorators.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#classmethod">Classmethod</a></li>
+<li><a href="#staticmethod">Staticmethod</a></li>
+<li><a href="#custom-decorators">Custom Decorators</a></li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Decorators are a super useful thing to use. They&#8217;re how you tell Beer Garden about your commands.</p>
+</div>
+<div class="paragraph">
+<p>Things start to get tricky when you need to combine decorators. This is because normal decorator behavior is to replace one function object with another. The problem (from Beer Garden&#8217;s perspective) arises when the decorator implementation doesn&#8217;t properly preserve function metadata. To understand what&#8217;s happening we need a quick primer on how the Beer Garden decorators work. Consider this example:</p>
+</div>
+<div class="listingblock">
+<div class="title">info_command.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@system</span>
+<span class="keyword">class</span> <span class="class">TimeClient</span>(<span class="predefined">object</span>):
+
+    <span class="decorator">@command</span>
+    <span class="keyword">def</span> <span class="function">time</span>(<span class="predefined-constant">self</span>):
+        <span class="keyword">return</span> <span class="predefined">str</span>(datetime.utcnow())</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So what&#8217;s actually going on here? You&#8217;ve defined a class <code>TimeClient</code> with an instance method <code>time</code> that does something useful(ish). What&#8217;s less clear is what the decorators are doing.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re familiar with Python decorators you probably know that decorators are used to replace one function with another. That allows for "wrapping" the original function, usually to provide additional functionality and then invoking the original function. However, there&#8217;s no requirement to call the original function. It&#8217;s totally possible to define a decorator that will replace the decorated function with one that always returns "foo", for example.</p>
+</div>
+<div class="paragraph">
+<p>All that to say: Python decorators are very powerful and flexible. When using them it&#8217;s important to remember that and take steps to ensure that all important metadata is preserved.</p>
+</div>
+<div class="paragraph">
+<p>Beer Garden decorators use the <a href="https://wrapt.readthedocs.io/en/latest/">wrapt</a> library to ensure that decorated functions remain accurate. Wrapt is an object proxy library with a focus on ensuring correctness above and beyond what standard decorators provide. This is important because Beer Garden depends heavily on function attributes being correct.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="classmethod"><a class="anchor" href="#classmethod"></a>Classmethod</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Right now <code>@classmethod</code> decorators need to be the outermost decorator:</p>
+</div>
+<div class="listingblock">
+<div class="title">classmethod.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@system</span>
+<span class="keyword">class</span> <span class="class">TimeClient</span>(<span class="predefined">object</span>):
+
+    <span class="decorator">@classmethod</span>
+    <span class="decorator">@command</span>
+    <span class="keyword">def</span> <span class="function">time</span>(cls):
+        <span class="keyword">return</span> <span class="predefined">str</span>(datetime.utcnow())</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="staticmethod"><a class="anchor" href="#staticmethod"></a>Staticmethod</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Right now <code>@staticmethod</code> decorators don&#8217;t work at all. We&#8217;re <a href="https://github.com/beer-garden/beer-garden/issues/281">working on it</a>!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="custom-decorators"><a class="anchor" href="#custom-decorators"></a>Custom Decorators</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Custom decorators can work, but you&#8217;ll need to take a little extra care to preserve function attributes that Beer Garden cares about. We strongly recommend using the wrapt library to create your decorators. It&#8217;s already a brewtils dependency, so anywhere you can <code>import brewtils</code> you&#8217;ll also be able to <code>import wrapt</code>. Here&#8217;s an example of decorator that can be applied to a Beer Garden command:</p>
+</div>
+<div class="listingblock">
+<div class="title">decorator.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">def</span> <span class="function">bg_decorator</span>(_wrapped=<span class="predefined-constant">None</span>, subject=<span class="string"><span class="delimiter">&quot;</span><span class="content">Beer Garden!</span><span class="delimiter">&quot;</span></span>):
+    <span class="docstring"><span class="delimiter">&quot;&quot;&quot;</span><span class="content">Decorator that will print a message before and after command execution</span><span class="content">
+</span><span class="content">
+</span><span class="content">    Args:</span><span class="content">
+</span><span class="content">        _wrapped: Function to be wrapped. Don't ever set this yourself!</span><span class="content">
+</span><span class="content">        subject: The message subject.</span><span class="content">
+</span><span class="content">
+</span><span class="content">    Returns:</span><span class="content">
+</span><span class="content">        The decorated command.</span><span class="content">
+</span><span class="content">
+</span><span class="content">    </span><span class="delimiter">&quot;&quot;&quot;</span></span>
+    <span class="keyword">if</span> _wrapped <span class="keyword">is</span> <span class="predefined-constant">None</span>:
+        <span class="keyword">return</span> functools.partial(bg_decorator, subject=subject)
+
+    <span class="decorator">@wrapt.decorator</span>
+    <span class="keyword">def</span> <span class="function">wrapper</span>(wrapped, _, args, kwargs):
+        print(<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello, </span><span class="delimiter">&quot;</span></span> + subject)
+
+        return_value = wrapped(*args, **kwargs)
+
+        print(<span class="string"><span class="delimiter">&quot;</span><span class="content">Goodbye, </span><span class="delimiter">&quot;</span></span> + subject)
+
+        <span class="keyword">return</span> return_value
+
+    <span class="keyword">return</span> wrapper(_wrapped)
+
+<span class="decorator">@system</span>
+<span class="keyword">class</span> <span class="class">TimeClient</span>(<span class="predefined">object</span>):
+
+    <span class="decorator">@bg_decorator</span>(subject=<span class="string"><span class="delimiter">&quot;</span><span class="content">Matt!</span><span class="delimiter">&quot;</span></span>)
+    <span class="decorator">@command</span>
+    <span class="keyword">def</span> <span class="function">time</span>(<span class="predefined-constant">self</span>):
+        <span class="keyword">return</span> <span class="predefined">str</span>(datetime.utcnow())</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is a little complicated, so let&#8217;s break down what&#8217;s happening:</p>
+</div>
+<div class="paragraph">
+<p>This decorator can take an optional keyword argument, <code>subject</code>. This means that the decorator can be applied with that argument specified (like above), in which case <code>bg_decorator</code> will actually be called twice: Once with <code>_wrapped=None, subject="Matt!"</code> and once with <code>_wrapped=&lt;function time&gt;</code>. To handle this sequence correctly we return a partial when the decorator is called for the first time.</p>
+</div>
+<div class="paragraph">
+<p>It can also be applied without any arguments (aka, no parenthesis following <code>bg_decorator</code>). In that case <code>bg_decorator</code> will only be invoked once, this time with <code>_wrapped=&lt;function time&gt;</code>. This case doesn&#8217;t require any special handling.</p>
+</div>
+<div class="paragraph">
+<p>We then define a wrapt decorator that will be returned from the decorator. A full discussion of wrapt decorators is outside the scope of this guide, but the important part is the call to <code>wrapped(*args, **kwargs)</code>. This is what actually calls the decorated function.</p>
+</div>
+<div class="paragraph">
+<p>More info on wrapt can be found on Read the Docs: <a href="https://wrapt.readthedocs.io/en/latest/decorators.html" class="bare">https://wrapt.readthedocs.io/en/latest/decorators.html</a>.</p>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

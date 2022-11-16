@@ -1,0 +1,198 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Beer Garden Architecture</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/app/architecture/index.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/app/architecture/index.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/app/architecture/index.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#components">Components</a>
+<ul class="sectlevel2">
+<li><a href="#ui">UI</a></li>
+<li><a href="#application">Application</a></li>
+<li><a href="#database">Database</a></li>
+<li><a href="#message-broker">Message Broker</a></li>
+</ul>
+</li>
+<li><a href="#lifecycles">Lifecycles</a>
+<ul class="sectlevel2">
+<li><a href="#request">Request</a></li>
+<li><a href="#plugins">Plugins</a>
+<ul class="sectlevel3">
+<li><a href="#remote">Remote</a></li>
+<li><a href="#local">Local</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you&#8217;d like to work on Beer Garden itself, or want to get a better understanding of what&#8217;s going on behind the scenes, this is the place for you!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="components"><a class="anchor" href="#components"></a>Components</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Beer Garden is actually a collection of several different components. In this section we&#8217;ll discuss each one individually and how each fit into the larger picture.</p>
+</div>
+<div class="sect2">
+<h3 id="ui"><a class="anchor" href="#ui"></a>UI</h3>
+<div class="paragraph">
+<p>The Beer Garden user interface frontend is an AngularJS application. It&#8217;s built with <code>webpack</code> and can be served by any static resource serving platform. We recommend using <code>nginx</code> in a production setting and <code>webpack-dev-server</code> for development.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="application"><a class="anchor" href="#application"></a>Application</h3>
+<div class="paragraph">
+<p>The Beer Garden application is responsible for several things:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Routing requests to plugins</p>
+</li>
+<li>
+<p>RabbitMQ communication</p>
+</li>
+<li>
+<p>Managing plugin status</p>
+</li>
+<li>
+<p>Removing old requests</p>
+</li>
+<li>
+<p>Controlling local plugins</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The application receives instructions through Entry Points (more on that later). You can think of the application as the brains of Beer Garden.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="database"><a class="anchor" href="#database"></a>Database</h3>
+<div class="paragraph">
+<p>MongoDB is the Beer Garden database. You&#8217;ll need to tell the application where the database lives, but Beer Garden will do most admin-type tasks (creating collections, adding indexes, etc.) for you.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="message-broker"><a class="anchor" href="#message-broker"></a>Message Broker</h3>
+<div class="paragraph">
+<p>Beer Garden uses a message broker to get messages from the application to the plugins. Currently Beer Garden only supports RabbitMQ as the message broker implementation.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="lifecycles"><a class="anchor" href="#lifecycles"></a>Lifecycles</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Beer Garden has two main lifecycles - the request lifecycle and the plugin lifecycle.</p>
+</div>
+<div class="sect2">
+<h3 id="request"><a class="anchor" href="#request"></a>Request</h3>
+<div class="paragraph">
+<p>Requests are created by POSTing to the <code>/api/v1/requests/</code> endpoint. The HTTP request body will be used to construct the Beer Garden request. The body needs to be either <code>application/json</code> (preferred) or <code>application/x-www-form-urlencoded</code>. Both the Beer Garden frontend and the brewtils <code>SystemClient</code> are making a POST to this endpoint under the hood.</p>
+</div>
+<div class="paragraph">
+<p>Beer Garden takes the request body and attempts to transform it into the <code>Operation</code> object to determine routing.
+After the object is evaluated, if it is determined to be forwarded to a child Beer Garden the forwarding logic is invoked,
+else it is passed for local processing.</p>
+</div>
+<div class="paragraph">
+<p>Beer Garden takes the request body and attempts to parse it into a valid Beer Garden request and save it to Mongo. These steps require passing the first-level validation check. This ensures that the request is syntactically valid and meets certain basic requirements (such as the <code>status</code> field being a valid value).  If it fails at this it will return a 400 status code, otherwise the request ID is passed to Bartender for processing.</p>
+</div>
+<div class="paragraph">
+<p>Beer Garden then  <strong>validates</strong> the request (either locally or on child Beer Garden). This validation is significantly more involved than the preliminary validation done by Brew View. Here are some of the validation steps:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ensure that a system (which the correct version) exists that can service the request</p>
+</li>
+<li>
+<p>That system has an instance matching the instance the request is addressed to</p>
+</li>
+<li>
+<p>That system has a command matching the request&#8217;s command</p>
+</li>
+<li>
+<p>The request&#8217;s command parameters meet all the constraints placed on them by the command definition</p>
+</li>
+<li>
+<p>There are no extra command parameters</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If all of these conditions are met Bartender will send the request to RabbitMQ using a routing key that ensures the request will be processed by the correct plugin.</p>
+</div>
+<div class="paragraph">
+<p>RabbitMQ will place the request in the specified plugin&#8217;s request queue.</p>
+</div>
+<div class="paragraph">
+<p>Plugins maintain a consumer connection to RabbitMQ awaiting messages. When a new message is placed in their queue the plugin does several things. First, it attempts to parse the message into a valid Beer Garden request. If that&#8217;s successful then it checks that the request is correctly addressed. If either of those checks fail the message is discarded.</p>
+</div>
+<div class="paragraph">
+<p>If the requests passes those checks then the plugin is able to process the request. The first step is to send an update to Beer Garden setting the status for that request to <code>IN_PROGRESS</code>. The plugin then invokes the actual command method and captures the return value. The plugin then sends an update to Beer Garden with the results and output of the method invocation.</p>
+</div>
+<div class="paragraph">
+<p>If the 'final' update fails then the completed request is placed back on the RabbitMQ queue. This is to take advantage of RabbitMQ&#8217;s message durability - if the plugin goes down at this point the request completion and output will be preserved. The request will be read from the queue and placed into a periodic retry loop. The plugin will reattempt to update the request status up to a maximum of <code>max_attempts</code> times, waiting an increasing amount of time between attempts (up to <code>max_timeout</code>). Requests that fail to update before reaching <code>max_attempts</code> will be discarded. Note that a request in this state does not prevent processing of additional requests.</p>
+</div>
+<div class="paragraph">
+<p>If the 'final' update succeeds the plugin will send an acknowledgement of the message to RabbitMQ. This lets RabbitMQ know the message was successfully processed, which ends the request lifecycle.</p>
+</div>
+<div class="paragraph">
+<p>If at any time an attempt to update a request fails because Brew View appears to be down the plugin will enter a wait state. While in this state no new requests will be processed (since status can&#8217;t be communicated to Beer Garden). The plugin will periodically attempt to contact Brew View and will resume normal operation once successful.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="plugins"><a class="anchor" href="#plugins"></a>Plugins</h3>
+<div class="paragraph">
+<p>We&#8217;ll start by talking about remote plugins and touch on the differences with local plugins at the end.</p>
+</div>
+<div class="sect3">
+<h4 id="remote"><a class="anchor" href="#remote"></a>Remote</h4>
+<div class="paragraph">
+<p>Remote plugins are just Python processes that expect to communicate with Beer Garden. When they&#8217;re created they need to be provided with all the parameters necessary to connect to a Beer Garden. This can be as simple as a <code>bg_host</code>, but can be more complicated based on the Beer Garden configuration.</p>
+</div>
+<div class="paragraph">
+<p>When a plugin is started it will immediately try to register itself with Beer Garden. This involves:
+- The plugin will first check to see if a system with this name and version is already registered with Beer Garden
+- If a system already exists the plugin will attempt to update certain fields (such as commands and metadata) for that system
+- The plugin will make sure an instance with its name exists on the system. If it&#8217;s unsuccessful due to a max_instance constraint the plugin will error.
+- The plugin will then send an initialization request to Beer Garden.</p>
+</div>
+<div class="paragraph">
+<p>When Beer Garden receives an initialization request it:
+- Verifies that the plugin exists in the database
+- Creates the message queue for the plugin if it doesn&#8217;t already exist
+- Creates an admin queue for the plugin
+- Sets the status of the plugin to 'INITIALIZING'
+- Places a start message on the plugin&#8217;s admin queue</p>
+</div>
+<div class="paragraph">
+<p>Beer Garden then returns a description of the plugin that was just initialized. This includes connection information for the RabbitMQ queues the plugin is expected to listen on. The plugin uses this to create two listeners - one on each RabbitMQ queue.</p>
+</div>
+<div class="paragraph">
+<p>The plugin then continues listening on its queues until it receives a stop message on its admin queue, the plugin process receives a SIGINT (Ctrl-c), or it encounters a fatal exception.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="local"><a class="anchor" href="#local"></a>Local</h4>
+<div class="paragraph">
+<p>Local plugins use the same underlying implementation as remote plugins. The difference is that local plugins are packaged with some additional metadata that allows Beer Garden to manage the plugin process for you.</p>
+</div>
+<div class="paragraph">
+<p>When Beer Garden starts it will attempt to start all the plugins in its configured plugins directory. Since Beer Garden is the one starting the process you don&#8217;t need to worry about providing Beer Garden connection information - Beer Garden already knows how to talk to Brew View and will pass that information to the plugin by setting the correct environment variables. Beer Garden will read a special file named <code>beer.conf</code> and use it to pass additional parameter to the plugin as well.</p>
+</div>
+<div class="paragraph">
+<p>The actual implementation of starting, initialization, running, and stopping is exactly the same for local plugins as it is for remote plugins. The difference is how the Python process is created. With remote plugins starting the plugin process is the plugin developer&#8217;s responsibility, but with local plugins Beer Garden assumes that responsibility.</p>
+</div>
+<div class="paragraph">
+<p>Since Beer Garden knows how to start the plugin process it&#8217;s possible to use the <code>start</code> feature on the administration page. With remote plugins, once the plugin is stopped Beer Garden has no way to start it again.  Beer Garden will also monitor the plugin process and will attempt to restart the plugin if it dies unexpectedly.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

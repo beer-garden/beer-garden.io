@@ -1,0 +1,198 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Docker/Docker Compose Installation Guide</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/startup/installation-guides/docker.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/startup/installation-guides/docker.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/startup/installation-guides/docker.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#docker-compose-file">Docker-compose file</a></li>
+<li><a href="#configuration">Configuration</a></li>
+<li><a href="#run">Run</a></li>
+<li><a href="#test-your-installation">Test your installation</a></li>
+<li><a href="#start-a-remote-plugin">Start a Remote Plugin</a></li>
+<li><a href="#start-a-local-plugin">Start a Local Plugin</a></li>
+<li><a href="#stop">Stop</a></li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This guide provides step-by-step instructions for installing and running Beer Garden using docker. It covers both docker-compose and using the individual docker images.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="prerequisites"><a class="anchor" href="#prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For this guide we assume you have the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Docker (<a href="https://docs.docker.com/install/">Install instructions</a>)</p>
+</li>
+<li>
+<p>Docker Compose (<a href="https://docs.docker.com/compose/install/">Install instructions</a>)</p>
+</li>
+<li>
+<p>Git (<a href="https://git-scm.com/downloads/">Download</a>)</p>
+</li>
+<li>
+<p>Access to <a href="https://github.com">GitHub</a> (An account is helpful, but not required)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="docker-compose-file"><a class="anchor" href="#docker-compose-file"></a>Docker-compose file</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The first step is to clone the git repository that contains the <code>docker-compose.yml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone git@github.com:beer-garden/beer-garden.git
+
+cd beer-garden/docker/docker-compose</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this directory you will see a <code>docker-compose.yml</code> file that describes the different components of Beer Garden and how they fit together.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuration"><a class="anchor" href="#configuration"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before we can run Beer Garden we need to make one small change to the configuration.</p>
+</div>
+<div class="paragraph">
+<p>Beer Garden needs to tell plugins the hostname of a RabbitMQ broker where they&#8217;ll listen for messages. This value is set as <code>BG_PLUGIN_MQ_HOST</code> in the environment or <code>--plugin-mq-host</code> on the command line. The default value in <code>docker-compose.yml</code> is <code>localhost</code> - this allows containers running outside of the compose network with <code>--network host</code> (as in the quickstart) to work. However, running this way is not really appropriate in most cases.</p>
+</div>
+<div class="paragraph">
+<p>To allow Beer Garden to work in <strong>all</strong> cases you&#8217;ll need to set this value to something that will resolve to the machine you&#8217;re currently using. Ideally this will be a fully-qualified name, but an IP address would work as well.</p>
+</div>
+<div class="paragraph">
+<p>To change the value open <code>docker-compose.yml</code> and find the line near the top that says <code>BG_PLUGIN_MQ_HOST: localhost</code>. Change "localhost" to whatever value makes sense for your specific setup.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+If you intend for plugins to connect to this Beer Garden from a different machine make sure you use a name or IP address that&#8217;s resolvable from the plugin&#8217;s perspective.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>That&#8217;s it! You&#8217;ve configured Beer Garden!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="run"><a class="anchor" href="#run"></a>Run</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Then run this command to start Beer Garden:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker-compose up -d</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That&#8217;s it! Once that finishes Beer Garden will be running in the background. Point a browser at <code><a href="http://localhost" class="bare">http://localhost</a></code> and you&#8217;ll see a message letting you know that Beer Garden couldn&#8217;t find any systems. That&#8217;s OK - you&#8217;re about to add one!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="test-your-installation"><a class="anchor" href="#test-your-installation"></a>Test your installation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have a docker image with a very simple plugin you can use to test out your Beer Garden. Run it with this command:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>docker run bgio/example-plugin --bg-host &lt;IP-ADDRESS&gt; --ssl-disabled</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Where &lt;IP-ADDRESS&gt; is the same value you used during the configuration file step earlier.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The --ssl-disabled is necessary because your brand new Beer Garden
+doesn&#8217;t have a valid server certificate.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="start-a-remote-plugin"><a class="anchor" href="#start-a-remote-plugin"></a>Start a Remote Plugin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you have a remote plugin, you simply need to start it and point it to the host you just stood up!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="start-a-local-plugin"><a class="anchor" href="#start-a-local-plugin"></a>Start a Local Plugin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you have a local plugin, then this Beer Garden is ready to deploy it. Simply copy your plugin into the <code>./plugins/</code>
+then navigate to <code><a href="http://&lt;IP-ADDRESS&gt;:80" class="bare">http://&lt;IP-ADDRESS&gt;:80</a></code> then:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click on Administration on the left side of the page</p>
+</li>
+<li>
+<p>Click on System Administration</p>
+</li>
+<li>
+<p>Click Rescan System Directory at the top right of the screen</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>You should see your plugin appear!</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+If your plugin does not appear, be sure to checkout the logs using:
+<code>docker-compose logs -f beer-garden</code>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="stop"><a class="anchor" href="#stop"></a>Stop</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Run this command to stop Beer Garden.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>docker-compose down</pre>
+</div>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

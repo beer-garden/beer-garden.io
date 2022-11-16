@@ -1,0 +1,169 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Beer Garden in 7 minutes</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/secure-quickstart.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/secure-quickstart.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/secure-quickstart.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#out-with-the-old">Out with the old</a></li>
+<li><a href="#place-your-certs">Place your certs</a></li>
+<li><a href="#update-the-compose">Update the compose</a></li>
+<li><a href="#start-it-up">Start it up</a></li>
+<li><a href="#tweak-your-plugin">Tweak your plugin</a></li>
+<li><a href="#use-it">Use it</a></li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Get up and running with Beer Garden securely!</p>
+</div>
+<div class="paragraph">
+<p>This guide is designed to provide a secure alternative to the Beer-Garden installation from the Quickstart. If you haven&#8217;t gone through the Quickstart go ahead and run though that first.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="out-with-the-old"><a class="anchor" href="#out-with-the-old"></a>Out with the old</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before we can bring up a secure Beer-Garden we need to bring down the non-secure one:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd beer-garden/docker/docker-compose
+
+docker-compose down</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="place-your-certs"><a class="anchor" href="#place-your-certs"></a>Place your certs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to operate securely you MUST be using TLS, which means you&#8217;ll need a certificate. How to obtain a certificate is outside the scope of this tutorial, but a good place to start is <a href="https://letsencrypt.org">Let&#8217;s Encrypt</a>.</p>
+</div>
+<div class="paragraph">
+<p>In the <code>beer-garden/docker/docker-compose/data</code> directory there&#8217;s a <code>certs</code> directory with several files. These need to be overwritten with your specific files:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>server_key.pem: The private portion of the server certificate</p>
+</li>
+<li>
+<p>server_certificate.pem: The public portion of the server certificate</p>
+</li>
+<li>
+<p>ca_certificate.pem: If your certificate is issued by a non-standard Certificate Authority you&#8217;ll need to replace this. Otherwise, remove it completely.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="update-the-compose"><a class="anchor" href="#update-the-compose"></a>Update the compose</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To operate in secure mode we need to use a slightly different docker-compose file. The file comes with several defaults that need to be changed in order to be acutally secure, so we need to do that next. Open the docker-compose.yml file that&#8217;s in the <code>tls</code> directory.</p>
+</div>
+<div class="paragraph">
+<p>Your TLS certificate will be issued for a specific host name. That name needs to be set for these three items (indicated with a <code># Replace</code> comment in the compose file):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>BG_HOSTNAME</p>
+</li>
+<li>
+<p>BG_MQ_HOST</p>
+</li>
+<li>
+<p>BG_WEB_HOST</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Connecting to RabbitMQ is controlled by a username and password. These have default values in the compose file that need to be changed. Note that the same user/password combination should be used for all three entries:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>BG_MQ_CONNECTIONS_ADMIN_USER</p>
+</li>
+<li>
+<p>BG_MQ_CONNECTIONS_ADMIN_PASSWORD</p>
+</li>
+<li>
+<p>BG_MQ_CONNECTIONS_MESSAGE_USER</p>
+</li>
+<li>
+<p>BG_MQ_CONNECTIONS_MESSAGE_PASSWORD</p>
+</li>
+<li>
+<p>RABBITMQ_DEFAULT_USER</p>
+</li>
+<li>
+<p>RABBITMQ_DEFAULT_PASS</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="start-it-up"><a class="anchor" href="#start-it-up"></a>Start it up</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Great! Now you can start up the new docker-compose environment (make sure you&#8217;re in the <code>tls</code> directory):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>cd beer-garden/docker/docker-compose/tls
+
+docker-compose up -d</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tweak-your-plugin"><a class="anchor" href="#tweak-your-plugin"></a>Tweak your plugin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The plugin you created in the original quickstart needs a slight modification in order to work with this Beer-garden. When you define your <code>Plugin</code> class you&#8217;ll need to  remove the <code>ssl_enabled</code> keyword parameter. The default is <code>True</code>, which is what we want in this case.</p>
+</div>
+<div class="paragraph">
+<p>You&#8217;ll also need to modify the <code>bg_host</code> paramter to be the correct hostname according to your TLS certificate.</p>
+</div>
+<div class="paragraph">
+<p>Finally, if you&#8217;re using a non-standard Certificate Authority (you replaced ca_certificate.pem instead of removing it) you&#8217;ll need to add a <code>ca_cert</code> keyword parameter with the path to that file.</p>
+</div>
+<div class="paragraph">
+<p>Your new <code>Plugin</code> definition should look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python">plugin = Plugin(
+    client,
+    name=<span class="string"><span class="delimiter">&quot;</span><span class="content">hello-world</span><span class="delimiter">&quot;</span></span>,
+    version=<span class="string"><span class="delimiter">&quot;</span><span class="content">0.0.1.dev0</span><span class="delimiter">&quot;</span></span>,
+    bg_host=<span class="string"><span class="delimiter">'</span><span class="content">&lt;Hostname&gt;</span><span class="delimiter">'</span></span>,
+    bg_port=<span class="integer">2337</span>,
+    ca_cert=<span class="string"><span class="delimiter">'</span><span class="content">/path/to/ca_certificate.pem</span><span class="delimiter">'</span></span>,
+)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You run your plugin in the exact same way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker run -v $(pwd):/src --network host bgio/plugins</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="use-it"><a class="anchor" href="#use-it"></a>Use it</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>At this point the Beer-garden server will be running on port 2337. Point your web browser at it using the domain name on your TLS certificate and you should be good to go!</p>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

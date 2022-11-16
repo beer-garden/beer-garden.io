@@ -1,0 +1,778 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">V3 Architecture Work</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/app/architecture/v3.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/app/architecture/v3.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/app/architecture/v3.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#overview">Overview</a></li>
+<li><a href="#golden-rules">Golden Rules</a></li>
+<li><a href="#marshaler">Marshaler</a>
+<ul class="sectlevel2">
+<li><a href="#marshaler-api">Marshaler API</a></li>
+<li><a href="#marshaler-dependencies">Marshaler Dependencies</a></li>
+</ul>
+</li>
+<li><a href="#configuration">Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#configuration-api">Configuration API</a></li>
+<li><a href="#configuration-dependencies">Configuration Dependencies</a></li>
+</ul>
+</li>
+<li><a href="#persistence-layer">Persistence Layer</a>
+<ul class="sectlevel2">
+<li><a href="#persistence-layer-api">Persistence Layer API</a></li>
+<li><a href="#persistence-layer-dependencies">Persistence Layer Dependencies</a></li>
+</ul>
+</li>
+<li><a href="#plugin-state-manager">Plugin State Manager</a>
+<ul class="sectlevel2">
+<li><a href="#plugin-state-manager-api">Plugin State Manager API</a></li>
+<li><a href="#plugin-state-manager-dependencies">Plugin State Manager Dependencies</a></li>
+</ul>
+</li>
+<li><a href="#queue">Queue</a>
+<ul class="sectlevel2">
+<li><a href="#queue-api">Queue API</a></li>
+<li><a href="#queue-dependencies">Queue Dependencies</a></li>
+</ul>
+</li>
+<li><a href="#event">Event</a>
+<ul class="sectlevel2">
+<li><a href="#event-api">Event API</a></li>
+<li><a href="#event-dependencies">Event Dependencies</a></li>
+</ul>
+</li>
+<li><a href="#local-plugin">Local Plugin</a>
+<ul class="sectlevel2">
+<li><a href="#local-plugin-api">Local Plugin API</a></li>
+<li><a href="#local-plugin-dependencies">Local Plugin Dependencies</a></li>
+</ul>
+</li>
+<li><a href="#request">Request</a>
+<ul class="sectlevel2">
+<li><a href="#request-api">Request API</a></li>
+<li><a href="#request-dependencies">Request Dependencies</a></li>
+</ul>
+</li>
+<li><a href="#scheduler">Scheduler</a>
+<ul class="sectlevel2">
+<li><a href="#scheduler-api">Scheduler API</a></li>
+<li><a href="#scheduler-dependencies">Scheduler Dependencies</a></li>
+</ul>
+</li>
+<li><a href="#subsystemname">SUBSYSTEMNAME</a>
+<ul class="sectlevel2">
+<li><a href="#subsystemname-api">SUBSYSTEMNAME API</a></li>
+<li><a href="#subsystemname-dependencies">SUBSYSTEMNAME Dependencies</a></li>
+</ul>
+</li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In addition to some cool new features, version 3 of Beer Garden aims to create formalized internal APIs. We have found that as the application has grown, we&#8217;ve needed some more formal structure to define the subsystems that make up Beer Garden. This is a living document as we formalize the internal components of Beer Garden.</p>
+</div>
+<div class="paragraph">
+<p>This document is intended more for Beer Garden developers than just users. It attempts to explain the main design concepts of Beer Garden rather than the external facing API. These APIs may change from version to version but they should not represent an interruption to our main APIs. For more information on the actual API, checkout that documentation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="overview"><a class="anchor" href="#overview"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The end-goal of this overview section is to provide a high-level picture of the breakdown of Beer Garden into its subsystems. Essentially, it should be an architecture diagram.</p>
+</div>
+<div class="paragraph">
+<p>There are some words in this document that are worth defining formally to avoid any confusion.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Subsystem</dt>
+<dd>
+<p>While we figure out what (if anything) needs to live in a separate process, this is the word we are using to describe a function that Beer Garden needs to provide. It does not insinuate <strong>anything</strong> about the code.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Each subsystem will have its own section with the following information:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>A high level description of the reason the subsystem exists.</p>
+</li>
+<li>
+<p>A formal API contract</p>
+</li>
+<li>
+<p>A list of subsystem dependencies</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="golden-rules"><a class="anchor" href="#golden-rules"></a>Golden Rules</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>These are rules that we have come up with during the design process that have fairly large implications. We use them as guiding elements when making additional design decisions. They are <strong>not</strong> set in stone, but should be carefully considered before change.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Namespace + System + System Version + Instance has a one-to-one mapping with a queue.</p>
+</li>
+<li>
+<p>Entries in the database are supposed to be there, we may need to add additional information based on monitoring, but we should not need to remove it.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="marshaler"><a class="anchor" href="#marshaler"></a>Marshaler</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The marshaler subsystem is in charge of object serialization and deserialization. It is in charge of taking storage or transmission versions of an object (e.g. JSON), converting it into an internal representation of the same object and vice versa.</p>
+</div>
+<div class="sect2">
+<h3 id="marshaler-api"><a class="anchor" href="#marshaler-api"></a>Marshaler API</h3>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+This API is not finalized. It is just a working copy of where we are so far.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>marshal(obj: Any, output_format="json": str)</code> - Take the object and return a serialized version of it. If the output is a non-binary format (e.g. JSON) then the output will be a utf-8 encoded string. The default format is JSON.</p>
+</li>
+<li>
+<p><code>unmarshal(data: Any, klazz: Union[str,object])</code> - Take the storage/transmission data representation and turn it into an instance of the klazz.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If the data is invalid for any reason, the marshaler is responsible for raising an error indicating what the underlying problem was.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="marshaler-dependencies"><a class="anchor" href="#marshaler-dependencies"></a>Marshaler Dependencies</h3>
+<div class="paragraph">
+<p>None.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuration"><a class="anchor" href="#configuration"></a>Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The configuration subsystem is responsible for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Loading configuration files</p>
+</li>
+<li>
+<p>Migration configuration files between Beer Garden versions</p>
+</li>
+<li>
+<p>Getting configuration values</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="configuration-api"><a class="anchor" href="#configuration-api"></a>Configuration API</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>load(args: List[str])</code> - Called once on startup. Args are command-line arguments. Loads configuration from environment variables, command-line arguments and configuration file.</p>
+</li>
+<li>
+<p><code>migrate(filename: str)</code> - Migrate a previous configuration file to the new configuration specification.</p>
+</li>
+<li>
+<p><code>get(key: str)</code> - Get a specific configuration value for the given key. All defaults should be specified in the specification and not in calling code.</p>
+</li>
+<li>
+<p><code>generate_app_logging(args: Sequence[str]):</code> - Generate and save application logging configuration file.</p>
+</li>
+<li>
+<p><code>generate_plugin_logging(args: Sequence[str])</code> - Generate and save plugin logging configuration file.</p>
+</li>
+<li>
+<p><code>assign(new_config: Box, force: bool = False)</code> - This methods sets the global configuration to the given Box object. This method is
+only intended to be used in a subprocess context where reconstructing the
+configuration using <code>load</code> would be inadvisable.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuration-dependencies"><a class="anchor" href="#configuration-dependencies"></a>Configuration Dependencies</h3>
+<div class="paragraph">
+<p>None.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="persistence-layer"><a class="anchor" href="#persistence-layer"></a>Persistence Layer</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The persistence layer is responsible for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Querying the database</p>
+</li>
+<li>
+<p>Create, Update, and Delete operations on the database</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This layer should allow us to swap out databases without the rest of the system knowing/caring. Objects coming out of the persistence layer should have nothing to do with the underlying data store. Access to the persistence layer assumes you have already authenticated/authorized a user.</p>
+</div>
+<div class="paragraph">
+<p>The persistence layer is also responsible for saving/retrieving files.</p>
+</div>
+<div class="sect2">
+<h3 id="persistence-layer-api"><a class="anchor" href="#persistence-layer-api"></a>Persistence Layer API</h3>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+This API is not finalized. It is just a working copy of where we are so far.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>query(model_class: ModelType, **kwargs)</code> - Query a collection</p>
+</li>
+<li>
+<p><code>query_unique(model_class: ModelType, raise_missing=False, **kwargs)</code> - Query a collection for a unique item</p>
+</li>
+<li>
+<p><code>create(obj: ModelItem)</code> - Create the object given. The object&#8217;s class will be inspected to determine the correct place to save it.</p>
+</li>
+<li>
+<p><code>delete(obj: ModelItem)</code> - Delete an item from the database</p>
+</li>
+<li>
+<p><code>update(obj: ModelItem)</code> - Update the given object such that all attributes on the obj replace the current values in the database.</p>
+</li>
+<li>
+<p><code>modify(obj: ModelItem, query=None, **kwargs)</code> - Modify an item in the database based on the kwargs provided</p>
+</li>
+<li>
+<p><code>count(model_class: ModelType, **kwargs)</code> - Count the number of items matching a query</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="persistence-layer-dependencies"><a class="anchor" href="#persistence-layer-dependencies"></a>Persistence Layer Dependencies</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Marshaler - Will need to convert internal models into database representations and back.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="plugin-state-manager"><a class="anchor" href="#plugin-state-manager"></a>Plugin State Manager</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The PSM subsystem is responsible for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Plugin Registration</p>
+</li>
+<li>
+<p>Plugin Monitoring</p>
+</li>
+<li>
+<p>Plugin Removal</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Plugins in this case are the abstract concept of plugins. That is to say, the PSM doesn&#8217;t know anything about the actual process that is running.  The only distinction the Plugin State Manager makes is about downstream vs upstream plugins.</p>
+</div>
+<div class="paragraph">
+<p>It is completely up to the PSM to change a plugin&#8217;s state (i.e. is the plugin unresponsive? healthy? running? stopped? etc.)</p>
+</div>
+<div class="paragraph">
+<p>While the plugin state manager is responsible for initiating status messages, it will delegate requesting information from the plugin to the request subsystem.</p>
+</div>
+<div class="paragraph">
+<p>Here are some additional notes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>PATCH</code> on a system is equivalent to a <code>PATCH</code> on all instances.</p>
+</li>
+<li>
+<p><code>PATCH</code> is used for start/stop</p>
+</li>
+<li>
+<p><code>DELETE</code> is used for removal of a particular plugin.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="plugin-state-manager-api"><a class="anchor" href="#plugin-state-manager-api"></a>Plugin State Manager API</h3>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+The target input values for this API is <code>system</code> and <code>instance</code>. If System is not provided, it will be derived from
+<code>instance</code> or <code>instance_id</code>. If <code>instance</code> is not provided, it will be derived from <code>system</code> + <code>instance_name</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>initialize(instance_id: str = None, instance: Instance = None, system: System = None, runner_id: str = None, **_,)</code> - Create a queue if required, Update DB.</p>
+</li>
+<li>
+<p><code>start(instance_id: str = None, instance: Instance = None, system: System = None)</code> - Attempt to start a plugin. Only guarantees that we attempted, not that the plugin will actually start. In <code>start</code>, <code>stop</code>, and <code>kill</code>, if <code>instances</code> is specified, the action will only be applied to those specific instances. If it not provided, it will apply to all <code>instances</code> on the <code>System</code> object passed in.</p>
+</li>
+<li>
+<p><code>stop(instance_id: str = None, instance: Instance = None, system: System = None)</code> - Attempt to stop a plugin. Only guarantees that we attempted, not that the plugin is actually stopped.</p>
+</li>
+<li>
+<p><code>update(instance_id: str = None, instance: Instance = None, system: System = None, new_status: str = None, metadata: dict = None, update_heartbeat: bool = True,**_,)</code> - When updating an instance, has the flag to update the heartbeat to the current timestamp.</p>
+</li>
+<li>
+<p><code>remove(system: System, instances=None)</code> - Called for instance removal or system removal. Will attempt to <code>stop</code>, if this is not successful, it will not remove the plugin, if it is successful, then it will also remove the plugin and cleanup the queue if required.</p>
+</li>
+<li>
+<p><code>heartbeat(instance_id: str = None,instance: Instance = None,system: System = None,**_,)</code> - Update the last updated time for an instance. Indicates the plugin has responded to a status message.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The monitoring happens as a background process and provides no formal API to the rest of the system. It uses the database as the source of truth and expects the PSM to update the status as responses come from the API.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="plugin-state-manager-dependencies"><a class="anchor" href="#plugin-state-manager-dependencies"></a>Plugin State Manager Dependencies</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Persistence Layer - Will need to create, remove, and update <code>System</code> and <code>Instance</code> objects.</p>
+</li>
+<li>
+<p>Queue - Will need to create, and remove queues.</p>
+</li>
+<li>
+<p>Request - Will need to request status from plugins</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="queue"><a class="anchor" href="#queue"></a>Queue</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The queue subsystem is responsible for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Queue CRUD operations</p>
+</li>
+<li>
+<p>Publishing requests</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Much like the persistence layer, the queue subsystem helps keep the rest of the subsystems from understanding anything about the queueing mechanism being used by a particular system. As such, it is responsible for providing an API which is consistent across each queue technology we use.</p>
+</div>
+<div class="sect2">
+<h3 id="queue-api"><a class="anchor" href="#queue-api"></a>Queue API</h3>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+This API is not finalized. It is just a working copy of where we are so far.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>create(instance: Instance)</code> - Creates a queue for the given instance. Remember queues are unique for an instance/system pair. Guarantees that the queue actually exists, and that we can communicate with it.</p>
+</li>
+<li>
+<p><code>put(request: Request, instance: Instance)</code> - Put the request on the specified instance&#8217;s queue. If the instance&#8217;s queue does not exist, will error. If returns successfully, then the plugin will receive this request.</p>
+</li>
+<li>
+<p><code>remove(instance: Instance)</code> - Removes the queue for a specific instance. Guarantees that the queue no longer exists.</p>
+</li>
+<li>
+<p><code>clear(instance: Instance)</code> - Remove all unreceived messages from the given instance&#8217;s queue.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="queue-dependencies"><a class="anchor" href="#queue-dependencies"></a>Queue Dependencies</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Persistence Layer (?) - It is possible the queue API will need to generate username/passwords for given instances and save them to the DB.</p>
+</li>
+<li>
+<p>Event - It will publish events whenever it does any of the 4 main things.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="event"><a class="anchor" href="#event"></a>Event</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The event subsystem is responsible for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Internal events</p>
+</li>
+<li>
+<p>Publishing external events</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Ultimately, many parts of Beer Garden are going to rely on the event subsystem. There will be an internal event bus that will publish events not intended for external use. There is a second part of the event subsystem that publishes event intended for external use. This portion can be toggled on or off based on configuration settings.</p>
+</div>
+<div class="sect2">
+<h3 id="event-api"><a class="anchor" href="#event-api"></a>Event API</h3>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+This API is not finalized. It is just a working copy of where we are so far.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>publish(event: Event)</code></p>
+</li>
+<li>
+<p><code>subscribe(event_type: str)</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="event-dependencies"><a class="anchor" href="#event-dependencies"></a>Event Dependencies</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>None</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="local-plugin"><a class="anchor" href="#local-plugin"></a>Local Plugin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The local plugin subsystem is responsible for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Monitoring a directory</p>
+</li>
+<li>
+<p>Monitoring local plugin processes</p>
+</li>
+<li>
+<p>Load a plugin from disk</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>One note here is that it does <strong>process</strong> monitoring <strong>not</strong> plugin monitoring.</p>
+</div>
+<div class="sect2">
+<h3 id="local-plugin-api"><a class="anchor" href="#local-plugin-api"></a>Local Plugin API</h3>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+This API is not finalized. It is just a working copy of where we are so far.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>scan()</code> - scans the local plugin directory for new plugins.</p>
+</li>
+<li>
+<p><code>start()</code> - Start the local plugin subsystem.</p>
+</li>
+<li>
+<p><code>stop()</code> - Stop the local plugin subsystem.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The Local Plugin subsystem doesn&#8217;t have much of an API. Everything it does is in a background process. It will listen to events to determine when it is time to stop caring if a local plugin process is dead.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="local-plugin-dependencies"><a class="anchor" href="#local-plugin-dependencies"></a>Local Plugin Dependencies</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Event - It will listen to events to determine when things should no longer be monitored.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="request"><a class="anchor" href="#request"></a>Request</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The request subsystem is responsible for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Validating requests</p>
+</li>
+<li>
+<p>Request routing/delivery</p>
+</li>
+<li>
+<p>Request completion notification</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The request subsystem needs to be aware of how to get a request to the given system. Whether that is publishing events for a downstream Beer Garden or using the queue API.</p>
+</div>
+<div class="sect2">
+<h3 id="request-api"><a class="anchor" href="#request-api"></a>Request API</h3>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+This API is not finalized. It is just a working copy of where we are so far.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>validate(request: Request)</code> - Validates that the given request can be made.</p>
+</li>
+<li>
+<p><code>execute(request: Request)</code> - Execute the given request by routing it to the plugin</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The request subsystem may expose synchronous and asynchronous versions of the its API. In the async versions, it will respond as quickly as possible, however in the synchronous versions, it will use the event subsystem as its callback for requests finishing.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="request-dependencies"><a class="anchor" href="#request-dependencies"></a>Request Dependencies</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Persistence Layer</p>
+</li>
+<li>
+<p>Queue</p>
+</li>
+<li>
+<p>Event</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="scheduler"><a class="anchor" href="#scheduler"></a>Scheduler</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The scheduler subsystem is responsible for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Creation of new jobs</p>
+</li>
+<li>
+<p>Pausing/Starting jobs</p>
+</li>
+<li>
+<p>Deleting jobs</p>
+</li>
+<li>
+<p>Executing new jobs based on their interval</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="scheduler-api"><a class="anchor" href="#scheduler-api"></a>Scheduler API</h3>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+This API is not finalized. It is just a working copy of where we are so far.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>create(job: Job)</code> - Create the given job in the scheduler.</p>
+</li>
+<li>
+<p><code>pause(job: Job)</code> - Pause the given job</p>
+</li>
+<li>
+<p><code>start(job: Job)</code> - Start the given job</p>
+</li>
+<li>
+<p><code>delete(job: Job)</code> - Delete the given job</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The Scheduler will have a background thread that is actually responsible for kicking of new requests.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="scheduler-dependencies"><a class="anchor" href="#scheduler-dependencies"></a>Scheduler Dependencies</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Persistence Layer</p>
+</li>
+<li>
+<p>Request</p>
+</li>
+<li>
+<p>Marshaler</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="subsystemname"><a class="anchor" href="#subsystemname"></a>SUBSYSTEMNAME</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The SUBSYSTEMNAME subsystem is responsible for:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>TODO: Fill this out.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="subsystemname-api"><a class="anchor" href="#subsystemname-api"></a>SUBSYSTEMNAME API</h3>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+This API is not finalized. It is just a working copy of where we are so far.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>TODO: Fill this out.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="subsystemname-dependencies"><a class="anchor" href="#subsystemname-dependencies"></a>SUBSYSTEMNAME Dependencies</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>TODO: Fill this out</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

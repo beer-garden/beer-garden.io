@@ -1,0 +1,81 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Reverse Proxy</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/app/reverse_proxy.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/app/reverse_proxy.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/app/reverse_proxy.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#url-prefix">URL Prefix</a></li>
+<li><a href="#websockets">Websockets</a></li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Beer Garden tries to make running its webserver component (Brew-view) as easy as possible. However, sometimes it makes a lot of sense to run behind a reverse proxy. A full discussion of the costs and benefits of this approach are beyond the scope of this user manual, but here are some things to keep in mind if you want to run behind a proxy.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The examples below are for <a href="https://www.nginx.com/">Nginx</a>. Other webservers are lovely, the Beer Garden team just has less experience with them.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="url-prefix"><a class="anchor" href="#url-prefix"></a>URL Prefix</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, you&#8217;ll want to be aware of the <code>web.url_prefix</code> configuration option in both Bartender and Brew-view configs. This value tells Brew-view how to listen for incoming requests and tells Bartender what path to use when talking to Brew-view. If they don&#8217;t match, you&#8217;ll probably have a bad time. Note that this can be set even if you&#8217;re not using a reverse proxy, it&#8217;s just generally less useful if you aren&#8217;t. For example, setting</p>
+</div>
+<div class="listingblock">
+<div class="title">brew-view-config.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">web</span>:
+  <span class="key">url_prefix</span>: <span class="string"><span class="content">beer</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>will tell Brew-view to adjust the URL mappings to include a leading "/beer/". Whatever value is given is normalized to have a single leading and trailing slash, which is what Beer Garden expects. So where you would normally access the systems API with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">curl http://localhost:2337/api/v1/systems</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the <code>web.url_prefix</code> set to <code>beer</code> you would request:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">curl http://localhost:2337/beer/api/v1/systems/</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="websockets"><a class="anchor" href="#websockets"></a>Websockets</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Beer Garden publishes events to a websocket (/api/v1/socket/events/). The UI uses this to display changes that occur but a reverse proxy will generally not work correctly without passing the correct headers. Add the headers to the location block like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>location /beer/ {
+    proxy_pass http://localhost:2337;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "Upgrade";
+}
+
+This assumes Nginx is running on some port besides 2337 and that your Beer Garden is running on the same server on port 2337. Note that both Bartener and Brew-view should be configured with "beer" as their `url_prefix` here.
+
+While it's also possible to use rewrite rules to prevent having to set the `url_prefix`, that generally doesn't work as well. Beer Garden uses the `url_prefix` when passing out URLs describing how to connect to it (like in published events), so those will be incorrect.</code></pre>
+</div>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

@@ -1,0 +1,148 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Beer Garden in 5 minutes</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/startup/quickstart.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/startup/quickstart.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/startup/quickstart.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#install-beer-garden">Install Beer Garden</a></li>
+<li><a href="#create-your-first-plugin">Create your first plugin</a></li>
+<li><a href="#use-your-plugin">Use your plugin</a></li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Get up and running with Beer Garden!</p>
+</div>
+<div class="paragraph">
+<p>This guide is designed to get you up and running with Beer Garden in the fastest possible way. We&#8217;ll install Beer Garden, write a simple plugin, and exercise it.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s dive in!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="prerequisites"><a class="anchor" href="#prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For this guide we assume you have the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Docker (<a href="https://docs.docker.com/install/">Install instructions</a>)</p>
+</li>
+<li>
+<p>Docker Compose (<a href="https://docs.docker.com/compose/install/">Install instructions</a>)</p>
+</li>
+<li>
+<p>Git (<a href="https://git-scm.com/downloads/">Download</a>)</p>
+</li>
+<li>
+<p>Access to <a href="https://github.com">GitHub</a> (An account is helpful, but not required)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="install-beer-garden"><a class="anchor" href="#install-beer-garden"></a>Install Beer Garden</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To start we&#8217;re going to use <code>docker</code> and <code>docker-compose</code> to install and run Beer Garden.</p>
+</div>
+<div class="paragraph">
+<p>The first step is to clone the git repository that contains the <code>docker-compose.yml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>git clone git@github.com:beer-garden/beer-garden.git
+
+cd beer-garden/docker/docker-compose</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then run this command to start Beer Garden:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker-compose up -d</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That&#8217;s it! Once that finishes Beer Garden will be running in the background. Point a browser at <code><a href="http://localhost" class="bare">http://localhost</a></code> and you&#8217;ll see a message letting you know that Beer Garden couldn&#8217;t find any systems. That&#8217;s OK - you&#8217;re about to add one!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="create-your-first-plugin"><a class="anchor" href="#create-your-first-plugin"></a>Create your first plugin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now let&#8217;s create a plugin! We&#8217;ll create a plugin that will print and return a message passed to it.</p>
+</div>
+<div class="paragraph">
+<p>Create a file called <code>__main__.py</code> that looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">__main__.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">from</span> <span class="include">brewtils</span> <span class="keyword">import</span> <span class="include">system</span>, <span class="include">parameter</span>, <span class="include">Plugin</span>
+
+
+<span class="decorator">@system</span>
+<span class="keyword">class</span> <span class="class">HelloClient</span>(<span class="predefined">object</span>):
+
+    <span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>, type=<span class="string"><span class="delimiter">&quot;</span><span class="content">String</span><span class="delimiter">&quot;</span></span>, default=<span class="string"><span class="delimiter">&quot;</span><span class="content">Hello, World!</span><span class="delimiter">&quot;</span></span>)
+    <span class="keyword">def</span> <span class="function">say_hello</span>(<span class="predefined-constant">self</span>, message):
+        print(message)
+
+        <span class="keyword">return</span> message
+
+
+<span class="keyword">if</span> __name__ == <span class="string"><span class="delimiter">&quot;</span><span class="content">__main__</span><span class="delimiter">&quot;</span></span>:
+    plugin = Plugin(
+        name=<span class="string"><span class="delimiter">&quot;</span><span class="content">hello-world</span><span class="delimiter">&quot;</span></span>,
+        version=<span class="string"><span class="delimiter">&quot;</span><span class="content">0.0.1.dev0</span><span class="delimiter">&quot;</span></span>,
+        bg_host=<span class="string"><span class="delimiter">'</span><span class="content">localhost</span><span class="delimiter">'</span></span>,
+        bg_port=<span class="integer">80</span>,
+        ssl_enabled=<span class="predefined-constant">False</span>,
+    )
+    plugin.client = HelloClient()
+    plugin.run()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Sweet! Now you can use the plugin image to run your plugin:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>docker run -v $(pwd):/src --network host bgio/plugins</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see a message letting you know that your plugin has started - now just refresh your browser and you should see your plugin available!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="use-your-plugin"><a class="anchor" href="#use-your-plugin"></a>Use your plugin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Click the big <code>Explore</code> button to see a list of commands available for your <code>hello-world</code> plugin. Right now there&#8217;s just one - <code>say_hello</code>. Click the <code>Make it Happen!</code> button to bring up the Make Request page.</p>
+</div>
+<div class="paragraph">
+<p>On this page you&#8217;ll see a text field for the <code>message</code> parameter pre-filled with the default text "Hello, World!". Click the <code>Make Request</code> button to create your first request!</p>
+</div>
+<div class="paragraph">
+<p>Making a request in the GUI navigates to the Request View page for that request. There you&#8217;re able to see attributes of the request like its status and output. For this request you should see "SUCCESS" listed under the "Status" heading and whatever text you entered in the "Output" display.</p>
+</div>
+<div class="paragraph">
+<p>Now check the terminal where your plugin is running - you should see the same "Output" text there as well.</p>
+</div>
+<div class="paragraph">
+<p>Congrats, you&#8217;ve written and executed your first plugin! This is just the tip of the iceberg - please look around if you&#8217;re interested in more information.</p>
+</div>
+<div class="paragraph">
+<p>Happy brewing!</p>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

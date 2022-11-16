@@ -1,0 +1,235 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Beer Garden Configuration</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/app/configuration.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/app/configuration.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/app/configuration.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#configuration-files">Configuration Files</a></li>
+<li><a href="#beer-garden-configuration">Beer Garden Configuration</a></li>
+<li><a href="#beer-garden-logging-configuration">Beer Garden Logging Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#level">Level</a></li>
+<li><a href="#handlers">Handlers</a></li>
+</ul>
+</li>
+<li><a href="#plugin-logging-configuration">Plugin Logging Configuration</a>
+<ul class="sectlevel2">
+<li><a href="#level-2">Level</a></li>
+<li><a href="#handlers-2">Handlers</a></li>
+<li><a href="#beer-garden-plugin-logger-values">Beer Garden Plugin Logger Values</a></li>
+<li><a href="#formatters">Formatters</a></li>
+</ul>
+</li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this guide, we will go over the configuration options in Beer Garden and how they affect the application. We will
+talk about the configuration at a high level, but we assume you have installed Beer Garden somehow.</p>
+</div>
+<div class="paragraph">
+<p>If you would like to jump straight to the definitions of <code>config.yaml</code>, please redirect to
+<a href="../config_yaml/">Config User Manual</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuration-files"><a class="anchor" href="#configuration-files"></a>Configuration Files</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are 3 configuration files that come installed with Beer Garden. If you installed an RPM, you will find these in
+<code>/opt/beer-garden/conf</code>.
+The default names are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>config.yaml</code></p>
+</li>
+<li>
+<p><code>app-logging.yaml</code></p>
+</li>
+<li>
+<p><code>plugin-logging.yaml</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="beer-garden-configuration"><a class="anchor" href="#beer-garden-configuration"></a>Beer Garden Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you do not have a <code>config.yaml</code> file, then you can generate one via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>generate_config -c config.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you already have a <code>config.yaml</code> file, then you can upgrade it to the latest version via:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>migrate_config -c config.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To see all of the definitions of <code>config.yaml</code>, please checkout our <a href="../config_yaml/">Config User Manual</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="beer-garden-logging-configuration"><a class="anchor" href="#beer-garden-logging-configuration"></a>Beer Garden Logging Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As of Beer Garden 3.0.0, there is a new configuration file for plugin logging configurations. If this file is not
+included, a logging configuration is inferred from the logging configuration defined in config.yaml.
+This logging configuration specifies how you would like plugins to log. A valid logging configuration can be found in
+<code>/opt/beer-garden/conf/app-logging.yaml</code>. Let&#8217;s examine what is allowed to go into this configuration.</p>
+</div>
+<div class="sect2">
+<h3 id="level"><a class="anchor" href="#level"></a>Level</h3>
+<div class="paragraph">
+<p>You may specify a default level that you would like all plugins to log at. This can be overwritten by <code>handlers</code>, or
+<code>loggers</code> entries. The supported levels are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DEBUG</code></p>
+</li>
+<li>
+<p><code>INFO</code></p>
+</li>
+<li>
+<p><code>WARN</code></p>
+</li>
+<li>
+<p><code>ERROR</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="handlers"><a class="anchor" href="#handlers"></a>Handlers</h3>
+<div class="paragraph">
+<p>The <code>handlers</code> section is a dictionary which may contain one of the following keys:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>stdout</code></p>
+</li>
+<li>
+<p><code>file</code></p>
+</li>
+<li>
+<p><code>logstash</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="plugin-logging-configuration"><a class="anchor" href="#plugin-logging-configuration"></a>Plugin Logging Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As of Beer Garden 3.0.0, there is a new configuration file for plugin logging configurations. If this file is not
+included, a logging configuration is inferred from the logging configuration defined in <code>config.yaml</code>.
+This logging configuration specifies how you would like plugins to log. A valid logging configuration can be found in
+<code>/opt/beer-garden/conf/plugin-logging.yaml</code>. Let&#8217;s examine what is allowed to go into this configuration.</p>
+</div>
+<div class="sect2">
+<h3 id="level-2"><a class="anchor" href="#level-2"></a>Level</h3>
+<div class="paragraph">
+<p>You may specify a default level that you would like all plugins to log at. This can be overwritten by <code>handlers</code>, or
+<code>loggers</code> entries. The supported levels are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>DEBUG</code></p>
+</li>
+<li>
+<p><code>INFO</code></p>
+</li>
+<li>
+<p><code>WARN</code></p>
+</li>
+<li>
+<p><code>ERROR</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="handlers-2"><a class="anchor" href="#handlers-2"></a>Handlers</h3>
+<div class="paragraph">
+<p>The <code>handlers</code> section is a dictionary which may contain one of the following keys:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>stdout</code></p>
+</li>
+<li>
+<p><code>file</code></p>
+</li>
+<li>
+<p><code>logstash</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each of these keys can have their own configuration and can be overwritten in the <code>loggers</code> section. Other handlers are
+not yet supported.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="beer-garden-plugin-logger-values"><a class="anchor" href="#beer-garden-plugin-logger-values"></a>Beer Garden Plugin Logger Values</h3>
+<div class="paragraph">
+<p>Beer Garden provides additional variables that can be injected into the handlers. The primary use case we provide is
+creating custom logs in a common directory for all plugins.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>namespace</code></p>
+</li>
+<li>
+<p><code>system_name</code></p>
+</li>
+<li>
+<p><code>system_version</code></p>
+</li>
+<li>
+<p><code>instance_name</code></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title">plugin-logging.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">handlers</span>:
+  <span class="key">file</span>:
+    <span class="key">backupCount</span>: <span class="string"><span class="content">5</span></span>
+    <span class="key">class</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">logging.handlers.RotatingFileHandler</span><span class="delimiter">&quot;</span></span>
+    <span class="key">encoding</span>: <span class="string"><span class="content">utf8</span></span>
+    <span class="key">formatter</span>: <span class="string"><span class="content">default</span></span>
+    <span class="key">level</span>: <span class="string"><span class="content">INFO</span></span>
+    <span class="key">maxBytes</span>: <span class="string"><span class="content">10485760</span></span>
+    <span class="key">filename</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">logs/%(instance_name)s.log</span><span class="delimiter">&quot;</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="formatters"><a class="anchor" href="#formatters"></a>Formatters</h3>
+<div class="paragraph">
+<p>The <code>formatters</code> section is also a dictionary. Its keys must match up with a specific handler name or the name
+<code>default</code>. Here you can setup a special formatter for each of the individual handlers. The <code>handlers</code> should specify
+which <code>formatter</code> they would like to use.</p>
+</div>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

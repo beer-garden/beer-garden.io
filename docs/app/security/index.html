@@ -1,0 +1,466 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Security</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/app/security.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/app/security.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/app/security.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#authentication-and-authorization">Authentication and Authorization</a></li>
+<li><a href="#authorization-basics">Authorization Basics</a></li>
+<li><a href="#permissions">Permissions</a></li>
+<li><a href="#authentication-basics">Authentication Basics</a></li>
+<li><a href="#web-ui-access">Web UI Access</a></li>
+<li><a href="#api-access">API Access</a></li>
+<li><a href="#auth-settings">Auth Settings</a>
+<ul class="sectlevel2">
+<li><a href="#authentication-handlers">Authentication Handlers</a></li>
+<li><a href="#default-admin-account">Default Admin Account</a></li>
+<li><a href="#defining-roles">Defining Roles</a></li>
+<li><a href="#assigning-roles">Assigning Roles</a></li>
+<li><a href="#group-definition-file">Group Definition File</a>
+<ul class="sectlevel3">
+<li><a href="#group">group</a></li>
+<li><a href="#role_assignments">role_assignments</a></li>
+</ul>
+</li>
+<li><a href="#remote-gardens">Remote Gardens</a></li>
+<li><a href="#syncing-user-permissions">Syncing User Permissions</a></li>
+</ul>
+</li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div class="sect1">
+<h2 id="authentication-and-authorization"><a class="anchor" href="#authentication-and-authorization"></a>Authentication and Authorization</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Beer Garden supports some basic authentication and authorization features that
+allow you to create users and roles for the purposes of access control. This
+document will walk through how authentication and authorization work, as well as
+the various configuration options.</p>
+</div>
+<div class="paragraph">
+<p>These features are still in their infancy. As such, user fiendly methods of
+configuring the various options do not yet exist in many cases.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="authorization-basics"><a class="anchor" href="#authorization-basics"></a>Authorization Basics</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each API endpoint in Beer Garden is protected by a specific permission. A user
+attempting to access or modify data through an endpoint will first have to pass
+an access check, verifying that they have the required permission for the data
+that they are operating on. Details regarding the various permissions and how to
+assign them will be provided further on, but this is the basic principal on
+which the access control for Beer Garden operates. The Beer Garden UI works by
+making appropriate API calls behind the scenes. So too does the brewtils Plugin
+and EasyClient code. This means that access control for all aspects of Beer
+Garden is done through this permission checking that happens in the API.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="permissions"><a class="anchor" href="#permissions"></a>Permissions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Permissions are currently defined around typical CRUD operations for various
+entities. That is, for a given entity there is a "create", "read", "update", and
+"delete" permission. The current entities that exist are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>job</p>
+</li>
+<li>
+<p>garden</p>
+</li>
+<li>
+<p>queue</p>
+</li>
+<li>
+<p>request</p>
+</li>
+<li>
+<p>system</p>
+</li>
+<li>
+<p>user</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Permissions are defined as strings of the format "&lt;entity&gt;:&lt;operation&gt;". For
+example: <code>garden:read</code>, <code>system:update</code>, <code>request:delete</code>.</p>
+</div>
+<div class="paragraph">
+<p>There are also a limited number of special permissions that do not map to a
+typical entity or operation. These currently include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>event:forward</code> - This permission is required for garden-to-garden
+communications. If your authorization is enabled on your remote gardens, this
+permission must be assigned to the user account that your local garden uses to
+communicate with those remote gardens.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+Regular users should not have the <code>event:forward</code> permission, as it
+allows for the creation of requests against any garden or system.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="authentication-basics"><a class="anchor" href="#authentication-basics"></a>Authentication Basics</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When authorization is enabled on your garden, users need a way to authenticate
+in order to access the garden using their account. From a user&#8217;s perspective,
+this is done via the following:</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="web-ui-access"><a class="anchor" href="#web-ui-access"></a>Web UI Access</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When authorization is enabled, a "login" button will appear toward the top right
+of the page. Clicking this brings up a login box for the user to enter their
+credentials and sign in.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="api-access"><a class="anchor" href="#api-access"></a>API Access</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For direct API access, a user would first send their credentials in a POST to
+<code>/api/v1/token</code>. This results in an access and refresh token being provided back
+in the response. The access token would then be provided by the user in
+subsequent API calls via the <code>Authorization: Bearer</code> header.</p>
+</div>
+<div class="paragraph">
+<p>This token retrieval and usage is handled for the user by the Web UI and
+EasyClient, but both use this API login and access token workflow behind the
+scenes.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="auth-settings"><a class="anchor" href="#auth-settings"></a>Auth Settings</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Authorization and authentication settings are housed under a top level <code>auth</code>
+section of the main application configuration yaml file. Some general information
+about the settings is below, but for the full list of configuration options check
+out the <a href="../config_yaml/#auth-authentication_handlers-basic-enabled">configuration guide</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="authentication-handlers"><a class="anchor" href="#authentication-handlers"></a>Authentication Handlers</h3>
+<div class="paragraph">
+<p>This section allows you to configure the ways that users are able to
+authenticate to the garden. The available handlers are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>basic</strong></p>
+</li>
+<li>
+<p><strong>trusted_header</strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Basic authentication allows users to login with a username and password.</p>
+</div>
+<div class="paragraph">
+<p>The trusted headers method allows for users to be authenticated via request
+headersthat get set via a trusted proxy. If your garden sits behind a proxy
+that will authenticate the user and place their username in a header,
+enabling this will tell the garden to use that provided username.</p>
+</div>
+<div class="paragraph">
+<p>When logging in via the UI, the login dialog will always show the input fields
+for username and password. If a user is authenticating by providing certificates
+on all requests that go through a proxy, these fields can safely be left blank.
+Since the trusted headers will be included on the login request, the user will
+still be able to login.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+If you enable trusted headers authentication, it is imperative that users
+are required to access your garden through the proxy and do not have a means of
+accessing the garden directly. Direct garden access could allow users to set
+what are supposed to be trusted headers themselves. This would allow
+masquerading as whomever they wish.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="default-admin-account"><a class="anchor" href="#default-admin-account"></a>Default Admin Account</h3>
+<div class="paragraph">
+<p>A default admin user with the username "admin" and password "password" will be
+created when a garden is started for the first time. A superuser role will also
+be created and assigned to the admin user. The initial username and password for
+this account can be changed via the settings under <code>auth.default_admin</code>. After
+garden initialization, the password for this account can be changed in the same
+manner as any regular user account, via the "Change Password" option in the top
+right ☰ menu.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="defining-roles"><a class="anchor" href="#defining-roles"></a>Defining Roles</h3>
+<div class="paragraph">
+<p>Roles are simply groupings of permissions. Roles can contain whatever
+permissions you&#8217;d like, though it is generally advisable to construct your roles
+around the functionality that different types of users might need in order to
+perform their work on the garden.</p>
+</div>
+<div class="paragraph">
+<p>To define the roles that will be available in your garden, create a yaml file
+and set the <code>auth.role_definition_file</code> setting to the location of that file.
+The format of the file is simply a list of definitions containig a <code>name</code> and a
+list of <code>permissions</code>. Here are some excepts from the example <code>roles.yaml</code> file
+that you&#8217;ll find in the <a href="https://github.com/beer-garden/beer-garden/tree/master/src/app/example_configs">example configs.</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">- <span class="string"><span class="content">name: &quot;job_manager&quot;</span></span>
+  <span class="key">permissions</span>:
+    - <span class="string"><span class="delimiter">&quot;</span><span class="content">job:create</span><span class="delimiter">&quot;</span></span>
+    - <span class="string"><span class="delimiter">&quot;</span><span class="content">job:read</span><span class="delimiter">&quot;</span></span>
+    - <span class="string"><span class="delimiter">&quot;</span><span class="content">job:update</span><span class="delimiter">&quot;</span></span>
+    - <span class="string"><span class="delimiter">&quot;</span><span class="content">job:delete</span><span class="delimiter">&quot;</span></span>
+
+- <span class="string"><span class="content">name: &quot;operator&quot;</span></span>
+  <span class="key">permissions</span>:
+    - <span class="string"><span class="delimiter">&quot;</span><span class="content">garden:read</span><span class="delimiter">&quot;</span></span>
+    - <span class="string"><span class="delimiter">&quot;</span><span class="content">request:create</span><span class="delimiter">&quot;</span></span>
+    - <span class="string"><span class="delimiter">&quot;</span><span class="content">request:read</span><span class="delimiter">&quot;</span></span>
+    - <span class="string"><span class="delimiter">&quot;</span><span class="content">system:read</span><span class="delimiter">&quot;</span></span>
+
+- <span class="string"><span class="content">name: &quot;read_only&quot;</span></span>
+  <span class="key">permissions</span>:
+    - <span class="string"><span class="delimiter">&quot;</span><span class="content">job:read</span><span class="delimiter">&quot;</span></span>
+    - <span class="string"><span class="delimiter">&quot;</span><span class="content">garden:read</span><span class="delimiter">&quot;</span></span>
+    - <span class="string"><span class="delimiter">&quot;</span><span class="content">queue:read</span><span class="delimiter">&quot;</span></span>
+    - <span class="string"><span class="delimiter">&quot;</span><span class="content">request:read</span><span class="delimiter">&quot;</span></span>
+    - <span class="string"><span class="delimiter">&quot;</span><span class="content">system:read</span><span class="delimiter">&quot;</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The available permissions are discussed in the earlier
+Permissions section.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="assigning-roles"><a class="anchor" href="#assigning-roles"></a>Assigning Roles</h3>
+<div class="paragraph">
+<p>Users are not granted permissions directly. Instead they are assigned roles in a
+specific domain, granting them all of the role&#8217;s permissions in that domain.</p>
+</div>
+<div class="paragraph">
+<p>A domain is a set of gardens or systems (or the special "Global" domain scope,
+which provides universal access). When permissions get checked they follow a
+hierarchy, meaning access at the Global level confers access to all gardens and
+systems, access for a garden confers access for all systems in that garden, etc.</p>
+</div>
+<div class="paragraph">
+<p>Users can be assigned roles by logging into Beer Garden with an admin account
+and navigating to the Users section found in the Admin menu at the top right.
+This is also where you can create new users and reset a user&#8217;s password.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Users will always have access to Requests that they have created, even
+without an explicit role assignment. This means that if a user creates a
+Request and then later the role granting them access to the Garden or System
+of the Request is revoked, the user will still have read access to that
+Request.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="group-definition-file"><a class="anchor" href="#group-definition-file"></a>Group Definition File</h3>
+<div class="paragraph">
+<p>When using the trusted header authentication handler, it is possible to have the
+groups listed in the configured <code>user_groups_header</code> mapped to Beer Garden role
+assignments. This is done via a group definition file, which looks like the
+following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">- <span class="string"><span class="content">group: GLOBAL_SUPERUSER</span></span>
+  <span class="key">role_assignments</span>:
+    - <span class="string"><span class="content">role_name: superuser</span></span>
+      <span class="key">domain</span>:
+        <span class="key">scope</span>: <span class="string"><span class="content">Global</span></span>
+
+- <span class="string"><span class="content">group: DEFAULT_READ_ONLY</span></span>
+  <span class="key">role_assignments</span>:
+    - <span class="string"><span class="content">role_name: read_only</span></span>
+      <span class="key">domain</span>:
+        <span class="key">scope</span>: <span class="string"><span class="content">Garden</span></span>
+        <span class="key">identifiers</span>:
+          <span class="key">name</span>: <span class="string"><span class="content">default</span></span>
+
+- <span class="string"><span class="content">group: DEFAULT_ECHO_JOB_MANAGER</span></span>
+  <span class="key">role_assignments</span>:
+    - <span class="string"><span class="content">role_name: job_manager</span></span>
+      <span class="key">domain</span>:
+        <span class="key">scope</span>: <span class="string"><span class="content">System</span></span>
+        <span class="key">identifiers</span>:
+          <span class="key">name</span>: <span class="string"><span class="content">echo</span></span>
+          <span class="key">namespace</span>: <span class="string"><span class="content">default</span></span>
+    - <span class="string"><span class="content">role_name: read_only</span></span>
+      <span class="key">domain</span>:
+        <span class="key">scope</span>: <span class="string"><span class="content">Garden</span></span>
+        <span class="key">identifiers</span>:
+          <span class="key">name</span>: <span class="string"><span class="content">default</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example above shows how to define groups and the role assignments that will
+be mapped to them. The following is a brief description of each field.</p>
+</div>
+<div class="sect3">
+<h4 id="group"><a class="anchor" href="#group"></a>group</h4>
+<div class="paragraph">
+<p>The name of the assigned group that will be mapped. This is the name that will
+appear in the comma separated list of the header defined by
+<code>user_groups_header</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="role_assignments"><a class="anchor" href="#role_assignments"></a>role_assignments</h4>
+<div class="paragraph">
+<p>A list of one or more role assignments to assign to users of the group. A role
+assignment is defined as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>role_name:</strong> The name of the role as defined in the role file that
+<code>role_definition_file</code> points to.</p>
+</li>
+<li>
+<p><strong>domain:</strong> A domain is how we define the context in which the user has the
+assigned roles. A domain consists of a scope and some identifiers.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>scope:</strong> Can be one of <em>Global</em> (universal access), <em>Garden</em> (access
+gardens matching the identifiers), or <em>System</em> (access to systems matching
+the identifiers).</p>
+</li>
+<li>
+<p><strong>identifiers:</strong> How to identify the items of the given scope that the user
+should have access to. For <em>Global</em>, no identifiers are needed. <em>Garden</em>
+requires a <code>name</code> identifier. <em>System</em> requires at least a <code>name</code> and
+<code>namespace</code> and can optionally take a <code>version</code> as well. Providing fewer
+identifiers results in a broader level of access being granted.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="remote-gardens"><a class="anchor" href="#remote-gardens"></a>Remote Gardens</h3>
+<div class="paragraph">
+<p>One very important note about authorization in Beer Garden is that it is only
+performed against the local garden. That is, the garden that the user is
+directly interacting with. If your garden has a remote garden connected to it,
+permissions for that remote garden should be assigned by a role assignment in an
+appropriate domain on the local garden.</p>
+</div>
+<div class="paragraph">
+<p>For instance, if you have a garden named "parent" and a remote garden connected
+to it named "child", you could have the following in your group definition file
+to assign access to the "child" garden:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml">- <span class="string"><span class="content">group: CHILD_ECHO_OPERATOR</span></span>
+  <span class="key">role_assignments</span>:
+    - <span class="string"><span class="content">role_name: operator</span></span>
+      <span class="key">domain</span>:
+        <span class="key">scope</span>: <span class="string"><span class="content">System</span></span>
+        <span class="key">identifiers</span>:
+          <span class="key">name</span>: <span class="string"><span class="content">echo</span></span>
+          <span class="key">namespace</span>: <span class="string"><span class="content">child</span></span>
+
+- <span class="string"><span class="content">group: CHILD_SUPERUSER</span></span>
+  <span class="key">role_assignments</span>:
+    - <span class="string"><span class="content">role_name: superuser</span></span>
+      <span class="key">domain</span>:
+        <span class="key">scope</span>: <span class="string"><span class="content">Garden</span></span>
+        <span class="key">identifiers</span>:
+          <span class="key">name</span>: <span class="string"><span class="content">child</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is important to note that no corresponding groups or users need to exist on
+the "child" garden. The remote garden effectively assumes that the local garden
+has already performed the necessary authorization checks and treats all
+forwarded operations as trusted.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="syncing-user-permissions"><a class="anchor" href="#syncing-user-permissions"></a>Syncing User Permissions</h3>
+<div class="paragraph">
+<p>It is possible to sync users, along with their permissions and password, from a
+local garden down to all known remote gardens. If your setup has remote gardens,
+a "Sync Users" button will present on the User Management page. This will allow
+you to initiate a sync that will make the user permission for remote garden
+match those of the local user.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The sync operation will overwrite any user on the remote garden with a
+username matching that of a user on the local garden. This means any roles
+that had been assigned on the remote garden will be removed, unless they had
+also been assigned on the local garden.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The User Management page will list if a user is fully synced to all remote
+gardens. On the individual user page, a breakdown of which specific gardens
+are synced is available.</p>
+</div>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

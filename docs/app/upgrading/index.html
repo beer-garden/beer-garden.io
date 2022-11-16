@@ -1,0 +1,479 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Upgrading</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/app/upgrading.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/app/upgrading.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/app/upgrading.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#should-i-upgrade">Should I Upgrade?</a></li>
+<li><a href="#what-s-different">What&#8217;s different?</a>
+<ul class="sectlevel2">
+<li><a href="#goodbye-bartender-brew-view">Goodbye Bartender &amp; Brew-view</a>
+<ul class="sectlevel3">
+<li><a href="#install-and-run">Install and Run</a></li>
+<li><a href="#configuration-files">Configuration Files</a></li>
+</ul>
+</li>
+<li><a href="#configuration-options">Configuration Options</a>
+<ul class="sectlevel3">
+<li><a href="#examples">Examples</a></li>
+</ul>
+</li>
+<li><a href="#user-interface">User Interface</a></li>
+<li><a href="#local-plugins">Local Plugins</a>
+<ul class="sectlevel3">
+<li><a href="#logging">Logging</a></li>
+<li><a href="#beer-conf">beer.conf</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#how-do-i-upgrade">How Do I Upgrade?</a>
+<ul class="sectlevel2">
+<li><a href="#rpm">rpm</a></li>
+<li><a href="#docker">Docker</a></li>
+</ul>
+</li>
+<li><a href="#potential-pitfalls">Potential Pitfalls</a>
+<ul class="sectlevel2">
+<li><a href="#local-plugins-2">Local Plugins</a></li>
+</ul>
+</li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Help with upgrading the Beer Garden application from 2.x to 3.x.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="should-i-upgrade"><a class="anchor" href="#should-i-upgrade"></a>Should I Upgrade?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For most users, the answer is yes. Beer Garden v2 is no longer supported and stopped receiving updates around the end of 2020. There are, however, changes in v3 that should be considered when making the upgrade decision. Specifically:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Users / Roles / Permissions. This has been completely rebuilt for v3 in a way that is fundamentally not compatible with what existed in v2. If you were using these features, be aware that you will need to recreate all users and roles. See the section on <a href="../security/">security</a> for more information.</p>
+</li>
+<li>
+<p>Publishing events to a RabbitMQ topic. This capability was fairly basic, but was not carried over to v3. If you depend on this capability you would need to come up with an alternative solution in order to move to v3.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-s-different"><a class="anchor" href="#what-s-different"></a>What&#8217;s different?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A bunch of stuff! But here we&#8217;re only going to cover the <strong>most important</strong> changes. So if you only read one thing, this should be it.</p>
+</div>
+<div class="paragraph">
+<p>If you want to see <strong>all</strong> the changes then feel free to check out the changelog :)</p>
+</div>
+<div class="sect2">
+<h3 id="goodbye-bartender-brew-view"><a class="anchor" href="#goodbye-bartender-brew-view"></a>Goodbye Bartender &amp; Brew-view</h3>
+<div class="paragraph">
+<p>Brew-view and bartender are no more. The functionality that lived in each of those applications has been combined into a single "beer-garden" application.</p>
+</div>
+<div class="paragraph">
+<p>This has some implications:</p>
+</div>
+<div class="sect3">
+<h4 id="install-and-run"><a class="anchor" href="#install-and-run"></a>Install and Run</h4>
+<div class="paragraph">
+<p>If you use docker you&#8217;ll no longer use the <code>bgio/bartender</code> and <code>bgio/brew-view</code> docker images. Instead, you&#8217;ll use <code>bgio/beer-garden</code>.</p>
+</div>
+<div class="paragraph">
+<p>If you use the rpm the <code>bartender</code> and <code>brew-view</code> services no longer exist. Instead, you&#8217;ll start and stop the <code>beer-garden</code> service. This service already existed in version 2, but it was just a wrapper that invoked the other two "real" services. Now <code>beer-garden</code> is the "real" service.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="configuration-files"><a class="anchor" href="#configuration-files"></a>Configuration Files</h4>
+<div class="paragraph">
+<p>With the rpm install, the two config files (<code>/opt/beer-garden/conf/brew-view-config.yaml</code> and <code>/opt/beer-garden/conf/bartender-config.yaml</code>) have been superseded by the new consolidated <code>/opt/beer-garden/conf/config.yaml</code> file. The two old files will be renamed to have a <code>.old</code> extension. The old files aren&#8217;t needed to run Beer Garden anymore, but unfortunately you&#8217;ll need to migrate the values in them to the new file yourself. After that&#8217;s done it&#8217;s fine to delete them.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="configuration-options"><a class="anchor" href="#configuration-options"></a>Configuration Options</h3>
+<div class="paragraph">
+<p>The configuration names and structure have changed quite a bit between v2 and v3.</p>
+</div>
+<div class="paragraph">
+<p>The largest change is the switch from two config files (one for brew-view, one for bartender) to just one. This is nice since it removes some annoying failure cases relating to redundant configuration (for example, if you changed db.name in one config file but not the other you&#8217;d have a bad time). With this change that&#8217;s no longer a possibility.</p>
+</div>
+<div class="paragraph">
+<p>Unfortunately, it also means that our normal automated configuration migration won&#8217;t work in this case. So if you use configuration files to run Beer Garden you&#8217;ll need to do the migration manually. If you&#8217;re using the rpm the v3 install process will generate a new <code>config.yaml</code> file which will be used going forward. It&#8217;ll also rename the old config files to have a <code>.old</code> suffix.</p>
+</div>
+<div class="paragraph">
+<p>For a complete guide to exactly how the configurations have changed see the tables below. Each table represents the <strong>changes</strong> in the configuration structure. Items with an "*" indicate that the change applies to everything nested under that item. Everything that&#8217;s *not* listed in the tables is unchanged.</p>
+</div>
+<div class="paragraph">
+<p>Some examples are provided below.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Table Brew-view Configuration Mapping</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Brew-view (v2)</th>
+<th class="tableblock halign-left valign-top">Beer Garden (v3)</th>
+<th class="tableblock halign-left valign-top">Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">amq.*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mq.*</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.allow_unsafe_output</p></td>
+<td class="tableblock halign-left valign-top" rowspan="2"><p class="tableblock">ui.execute_javascript</p></td>
+<td class="tableblock halign-left valign-top" rowspan="2"><p class="tableblock">These two items have been combined</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.allow_unsafe_templates</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.icon_default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ui.icon_default</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ui.name</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">backend.*</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This section has been removed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cors_enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ui.cors_enabled</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">debug_mode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ui.debug_mode</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">event.*</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This section has been removed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">log.file</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This item has been removed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">log.level</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">log.fallback_level</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">metrics.*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">metrics.prometheus.*</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">plugin_logging.config_file</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">plugin.local.logging.config_file plugin.remote.logging.config_file</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Local and remote plugins now have separate configurations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">plugin_logging.level</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">plugin.local.logging.fallback_level plugin.remote.logging.fallback_level</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Local and remote plugins now have separate configurations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">scheduler.auth.*</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This section has been removed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">shutdown_timeout</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This item has been removed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">web.*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">entry.http.*</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">web.public_fqdn</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This item has been removed</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 2. Table Bartender Configuration Mapping</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Bartender (v2)</th>
+<th class="tableblock halign-left valign-top">Beer Garden (v3)</th>
+<th class="tableblock halign-left valign-top">Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">amq.*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mq.*</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">db.ttl.event</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This item has been removed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">log.file</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This item has been removed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">log.level</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">log.fallback_level</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">plugin.local.log_directory</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This item has been removed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>publish_hostname</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>plugin.mq.host</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>This one is super important</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">thrift.*</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This section has been removed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">web.*</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This section has been removed</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="examples"><a class="anchor" href="#examples"></a>Examples</h4>
+<div class="sect4">
+<h5 id="config-file"><a class="anchor" href="#config-file"></a>Config file</h5>
+<div class="paragraph">
+<p>Both config files must be combined into a single, new file.</p>
+</div>
+<div class="listingblock">
+<div class="title">bartender-config.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">db</span>:
+  <span class="key">connection</span>:
+    <span class="key">host</span>: <span class="string"><span class="content">localhost</span></span>
+    <span class="key">password</span>: <span class="string"><span class="content">null</span></span>
+    <span class="key">port</span>: <span class="string"><span class="content">27017</span></span>
+    <span class="key">username</span>: <span class="string"><span class="content">null</span></span>
+  <span class="key">name</span>: <span class="string"><span class="content">beer_garden</span></span>
+  <span class="key">ttl</span>:
+    <span class="key">action</span>: <span class="string"><span class="content">-1</span></span>
+    <span class="key">event</span>: <span class="string"><span class="content">15</span></span>
+    <span class="key">info</span>: <span class="string"><span class="content">15</span></span>
+<span class="key">publish_hostname</span>: <span class="string"><span class="content">localhost</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">brew-view-config.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">db</span>:
+  <span class="key">connection</span>:
+    <span class="key">host</span>: <span class="string"><span class="content">localhost</span></span>
+    <span class="key">password</span>: <span class="string"><span class="content">null</span></span>
+    <span class="key">port</span>: <span class="string"><span class="content">27017</span></span>
+    <span class="key">username</span>: <span class="string"><span class="content">null</span></span>
+  <span class="key">name</span>: <span class="string"><span class="content">beer_garden</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>BECOMES</p>
+</div>
+<div class="listingblock">
+<div class="title">config.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">db</span>:
+  <span class="key">connection</span>:
+    <span class="key">host</span>: <span class="string"><span class="content">localhost</span></span>
+    <span class="key">password</span>: <span class="string"><span class="content">null</span></span>
+    <span class="key">port</span>: <span class="string"><span class="content">27017</span></span>
+    <span class="key">username</span>: <span class="string"><span class="content">null</span></span>
+  <span class="key">name</span>: <span class="string"><span class="content">beer_garden</span></span>
+  <span class="key">ttl</span>:
+    <span class="key">action</span>: <span class="string"><span class="content">-1</span></span>
+    <span class="key">info</span>: <span class="string"><span class="content">15</span></span>
+<span class="key">plugin</span>:
+  <span class="key">mq</span>:
+    <span class="key">host</span>: <span class="string"><span class="content">localhost</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="environment-variables"><a class="anchor" href="#environment-variables"></a>Environment Variables</h5>
+<div class="paragraph">
+<p>Environment variables need their names changed according to the mapping.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Old</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">New</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rule</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BG_PUBLISH_HOSTNAME</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BG_PLUGIN_MQ_HOST</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">publish_hostname &#8594; plugin.mq.host</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BG_WEB_PORT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BG_ENTRY_HTTP_PORT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">web.* &#8594; entry.http.*</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BG_DB_NAME</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BG_DB_NAME</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unchanged</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="user-interface"><a class="anchor" href="#user-interface"></a>User Interface</h3>
+<div class="paragraph">
+<p>The user interface has been split out from the rest of the Beer Garden application. In v2 brew-view did double duty: it served the static resources for the frontend as well as the REST endpoints for the application. In v3 the Beer Garden application only does the latter.</p>
+</div>
+<div class="paragraph">
+<p>To run the frontend you&#8217;ll need to either use the docker image (<code>bgio/ui</code>) or install a server capable of serving static files and proxying the REST API. If you&#8217;re using the rpm we recommend you install the "nginx" rpm before installing or upgrading the beer-garden rpm. If you install in that order we&#8217;ll create a symlink in nginx&#8217;s configuration directory to a config file that will serve everything for you.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="local-plugins"><a class="anchor" href="#local-plugins"></a>Local Plugins</h3>
+<div class="paragraph">
+<p>Local plugins got a bit of a makeover in version 3.</p>
+</div>
+<div class="sect3">
+<h4 id="logging"><a class="anchor" href="#logging"></a>Logging</h4>
+<div class="paragraph">
+<p>In version 2 local plugins traditionally logged to STDOUT. Bartender would capture that output and would write it to a "logging" file.</p>
+</div>
+<div class="paragraph">
+<p>In version 3 that&#8217;s no longer the case. Plugins (all plugins, not just local ones) now ask the Beer Garden server for a logging configuration when they&#8217;re created. This allows them to log directly to a file themselves, which simplifies things.</p>
+</div>
+<div class="paragraph">
+<p>However, the logging configuration doesn&#8217;t kick in until the Plugin is able to make a successful connection to Beer Garden. What if something bad occurs before that happens? To help troubleshoot that case there&#8217;s a new option you can set in a Plugin&#8217;s beer.conf: <code>CAPTURE_STREAMS</code>. Setting <code>CAPTURE_STREAMS=True</code> in beer.conf will cause two files, plugin.stdout and plugin.stderr, to be created in the plugin directory. These will contain whatever the plugin process generates.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="beer-conf"><a class="anchor" href="#beer-conf"></a>beer.conf</h4>
+<div class="paragraph">
+<p>The main change is that most of the items in <code>beer.conf</code> that were previously required are now optional. The only item still required is <code>PLUGIN_ENTRY</code>, all others can be omitted.</p>
+</div>
+<div class="paragraph">
+<p>Note that you&#8217;ll still need to provide required information <strong>somehow</strong> when running a plugin. The typical way to do this is to pass things like system name to the Plugin as kwargs. Doing things this way will allow you to run a plugin as either local or remote with minimal duplication.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="how-do-i-upgrade"><a class="anchor" href="#how-do-i-upgrade"></a>How Do I Upgrade?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>That depends on how you run Beer Garden:</p>
+</div>
+<div class="sect2">
+<h3 id="rpm"><a class="anchor" href="#rpm"></a>rpm</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>If you don&#8217;t already have nginx installed, install it first (<code>yum install nginx</code>)</p>
+</li>
+<li>
+<p>Upgrade with <code>yum upgrade beer-garden</code></p>
+</li>
+<li>
+<p>Migrate your config settings from bartender-config.yaml and brew-view-config.yaml to the new consolidated config.yaml</p>
+</li>
+<li>
+<p>Start both Beer Garden and nginx: <code>systemctl start nginx beer-garden</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="docker"><a class="anchor" href="#docker"></a>Docker</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>You&#8217;ll need to use the <code>bgio/beer-garden</code> and <code>bgio/ui</code> images</p>
+</li>
+<li>
+<p>You don&#8217;t need the <code>bgio/bartender</code> or <code>bgio/brew-view</code> images anymore</p>
+</li>
+<li>
+<p>Any configuration you were applying (such as environment variables or command line arguments) to the bartender and brew-view containers needs to be applied to the beer-garden container instead. <strong>HOWEVER</strong>, the names of the configuration items have changed, so please consult the configuration guide when migrating.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="potential-pitfalls"><a class="anchor" href="#potential-pitfalls"></a>Potential Pitfalls</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Just some other things to be aware of:</p>
+</div>
+<div class="sect2">
+<h3 id="local-plugins-2"><a class="anchor" href="#local-plugins-2"></a>Local Plugins</h3>
+<div class="paragraph">
+<p>Local plugins have changed a bit, so be on the lookout for these:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If a Plugin you&#8217;re expecting to see just doesn&#8217;t show up in the Systems list, try adding <code>CAPTURE_STREAMS=True</code> to its beer.conf and looking at the plugin.stdout and plugin.stderr files that are generated in the plugin directory.</p>
+</li>
+<li>
+<p>If a Plugin isn&#8217;t logging like you think it should, make sure that you aren&#8217;t configuring logging in your Plugin&#8217;s <code>main()</code> method. Plugins now get their logging configuration from Beer Garden during initialization. However, if you configure logging yourself the Plugin will respect that configuration and will <strong>NOT</strong> overwrite it. This is most likely not what you want. If you&#8217;d like to change the level the Plugin logs at, a better way to do that is to add <code>LOG_LEVEL="DEBUG"</code> to the beer.conf, or pass <code>log_level="DEBUG"</code> as a kwarg when creating the Plugin.</p>
+</li>
+<li>
+<p>The version of Python used to run Beer Garden has been bumped from 3.6 to 3.7. If you&#8217;re using local plugins and have any additional packages (a vendor directory) then you may run into problems if any of those vendored packages have been built for a specific Python version. This should be fairly straightforward to fix - just make a new version with vendor dependencies installed on 3.7.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

@@ -1,0 +1,222 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Upgrading</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/plugins/upgrading.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/plugins/upgrading.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/plugins/upgrading.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#common-issues">Common Issues</a>
+<ul class="sectlevel2">
+<li><a href="#plugin-creation">Plugin Creation</a>
+<ul class="sectlevel3">
+<li><a href="#i-want-some-examples">I want some examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Help with upgrading plugins from 2.x to 3.x.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="common-issues"><a class="anchor" href="#common-issues"></a>Common Issues</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here are some common issues seen when upgrading (and how to fix them).</p>
+</div>
+<div class="sect2">
+<h3 id="plugin-creation"><a class="anchor" href="#plugin-creation"></a>Plugin Creation</h3>
+<div class="paragraph">
+<p>This is the biggest change. Previously, it was required that the plugin client be passed as a kwarg when creating a Plugin. This is no longer true, and it helps in a couple of ways.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re in a hurry, here&#8217;s what we recommend: <strong>create the plugin as early as possible.</strong> Ideally it should be the first line in your <code>main()</code>. The Plugin <code>__init__</code> does a lot of work behind the scenes, so we recommend calling it as early as possible.</p>
+</div>
+<div class="paragraph">
+<p>Here are the benefits you get from making this change:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Once the plugin is created <strong>logging is configured for you</strong>.</p>
+</li>
+<li>
+<p>The plugin&#8217;s connection parameters are saved globally, and the classes in the <code>brewtils.rest</code> package (eg <code>SystemClient</code>) will use those parameters by default. <strong>You no longer need to store and pass around connection parameters yourself</strong>.</p>
+</li>
+<li>
+<p>The default namespace you&#8217;re operating in will be saved. That enables any `SystemClient`s created to use the same namespace without needing to specify it everywhere. This is comparatively minor, but it&#8217;s still nice.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Bottom line, previously you could run a plugin like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">my_plugin/__main__.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">from</span> <span class="include">my_plugin.client</span> <span class="keyword">import</span> <span class="include">MyPluginClient</span>
+
+<span class="keyword">def</span> <span class="function">main</span>():
+    Plugin(MyPluginClient(), name=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_plugin</span><span class="delimiter">&quot;</span></span>, ...).run()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, we recommend you do this:</p>
+</div>
+<div class="listingblock">
+<div class="title">my_plugin/__main__.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">from</span> <span class="include">my_plugin.client</span> <span class="keyword">import</span> <span class="include">MyPluginClient</span>
+
+<span class="keyword">def</span> <span class="function">main</span>():
+    plugin = Plugin(name=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_plugin</span><span class="delimiter">&quot;</span></span>, ...)
+
+    plugin.client = MyPluginClient()
+    plugin.run()</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="i-want-some-examples"><a class="anchor" href="#i-want-some-examples"></a>I want some examples</h4>
+<div class="paragraph">
+<p>Sounds good, here you go! We&#8217;ll be splitting the client into its own module because we like to be organized:</p>
+</div>
+<div class="listingblock">
+<div class="title">my_plugin/client.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@system</span>
+<span class="keyword">class</span> <span class="class">MyPluginClient</span>:
+    <span class="keyword">pass</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">my_plugin/__main__.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">from</span> <span class="include">my_plugin.client</span> <span class="keyword">import</span> <span class="include">MyPluginClient</span>
+
+<span class="keyword">def</span> <span class="function">main</span>():
+    plugin = Plugin(MyPluginClient(), name=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_plugin</span><span class="delimiter">&quot;</span></span>, ...)</code></pre>
+</div>
+</div>
+<div class="sect4">
+<h5 id="logging-configuration"><a class="anchor" href="#logging-configuration"></a>Logging Configuration</h5>
+<div class="paragraph">
+<p>This example works fine for simple plugins, but can become cumbersome once plugins and clients become more complicated. For example, let&#8217;s say that you want to load a configuration file and use it to populate the choices for a particular parameter. There are a couple of ways to do this, but let&#8217;s further say that the choices will never realistically change while the plugin is running, so it doesn&#8217;t make sense to implement choices as a command.</p>
+</div>
+<div class="paragraph">
+<p>The fastest way to make this work is to stick the choices in a global and populate it <em>before importing the client module</em>:</p>
+</div>
+<div class="listingblock">
+<div class="title">my_plugin/__init__.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python">the_choices = []</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">my_plugin/client.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">from</span> <span class="include">my_plugin</span> <span class="keyword">import</span> <span class="include">the_choices</span>
+
+<span class="decorator">@system</span>
+<span class="keyword">class</span> <span class="class">MyPluginClient</span>:
+    <span class="decorator">@parameter</span>(key=<span class="string"><span class="delimiter">&quot;</span><span class="content">param</span><span class="delimiter">&quot;</span></span>, choices=the_choices)
+    <span class="keyword">def</span> <span class="function">cmd</span>(<span class="predefined-constant">self</span>, param):
+        <span class="keyword">pass</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">my_plugin/__main__.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">import</span> <span class="include">my_plugin</span>
+
+<span class="keyword">def</span> <span class="function">main</span>():
+    plugin = Plugin(name=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_plugin</span><span class="delimiter">&quot;</span></span>, ...)
+
+    my_plugin.the_choices = magic_load_config(<span class="string"><span class="delimiter">&quot;</span><span class="content">config_file</span><span class="delimiter">&quot;</span></span>)
+
+    <span class="keyword">from</span> <span class="include">my_plugin.client</span> <span class="keyword">import</span> <span class="include">MyPluginClient</span>
+
+    plugin.client = MyPluginClient()
+    plugin.run()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can see that by deferring the assignment of the client we&#8217;re able to create the plugin and <em>then</em> worry about setting up the client. This is nice because remember, once the plugin is created <strong>logging is configured for you</strong>. This is just a simple example that handwaves away actually loading the configuration. But what if that configuration file is missing? What if <code>magic_load_config</code> actually needs to make a network call that could fail for a ton of different reasons? It&#8217;s important to have logging configured as soon as possible.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="connection-parameters"><a class="anchor" href="#connection-parameters"></a>Connection Parameters</h5>
+<div class="paragraph">
+<p>Let&#8217;s suppose that you&#8217;d like to have your client use a <code>SystemClient</code> to make requests to another plugin (see the echo-sleeper plugins in the example-plugins repo for a working example of this).</p>
+</div>
+<div class="paragraph">
+<p>In this example we&#8217;ll assume you&#8217;re passing in connection parameters (like <code>bg_host</code>, <code>bg_port</code>, etc.) using environment variables or the command line.</p>
+</div>
+<div class="paragraph">
+<p>Using v2 you&#8217;d need to load the connection parameters yourself and get them to where they could be passed to the <code>SystemClient</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">my_plugin/client.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@system</span>
+<span class="keyword">class</span> <span class="class">MyPluginClient</span>:
+
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="predefined-constant">self</span>, connection_info)
+        <span class="predefined-constant">self</span>._system_client = SystemClient(
+            system_name=<span class="string"><span class="delimiter">&quot;</span><span class="content">other_plugin</span><span class="delimiter">&quot;</span></span> **connection_info
+        )
+
+    <span class="decorator">@command</span>
+    <span class="keyword">def</span> <span class="function">cmd</span>(<span class="predefined-constant">self</span>):
+        <span class="keyword">pass</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">my_plugin/__main__.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">from</span> <span class="include">brewtils</span> <span class="keyword">import</span> <span class="include">get_connection_info</span>
+<span class="keyword">from</span> <span class="include">my_plugin.client</span> <span class="keyword">import</span> <span class="include">MyPluginClient</span>
+
+<span class="keyword">def</span> <span class="function">main</span>():
+    connection_info = get_connection_info(sys.argv[<span class="integer">1</span>:])
+
+    plugin = Plugin(
+        MyPluginClient(connection_info), name=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_plugin</span><span class="delimiter">&quot;</span></span>
+    )
+
+    plugin.run()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, you don&#8217;t have to worry about that. Just create the system client and it will use the same connection parameters as the plugin:</p>
+</div>
+<div class="listingblock">
+<div class="title">my_plugin/client.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="decorator">@system</span>
+<span class="keyword">class</span> <span class="class">MyPluginClient</span>:
+
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="predefined-constant">self</span>, connection_info)
+        <span class="predefined-constant">self</span>._system_client = SystemClient(system_name=<span class="string"><span class="delimiter">&quot;</span><span class="content">other_plugin</span><span class="delimiter">&quot;</span></span>)
+
+    <span class="decorator">@command</span>
+    <span class="keyword">def</span> <span class="function">cmd</span>(<span class="predefined-constant">self</span>):
+        <span class="keyword">pass</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">my_plugin/__main__.py</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">from</span> <span class="include">my_plugin.client</span> <span class="keyword">import</span> <span class="include">MyPluginClient</span>
+
+<span class="keyword">def</span> <span class="function">main</span>():
+    plugin = Plugin(name=<span class="string"><span class="delimiter">&quot;</span><span class="content">my_plugin</span><span class="delimiter">&quot;</span></span>)
+    plugin.client = MyPluginClient()
+    plugin.run()</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

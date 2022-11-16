@@ -1,0 +1,73 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">Securing Your Beer Garden</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/unlinked/security.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/unlinked/security.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/unlinked/security.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#tls">TLS</a></li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Oh boy. This is a big one. Hold on, it&#8217;s about to get real.</p>
+</div>
+<div class="paragraph">
+<p>Please, please, please read and understand Beer Garden architecture before attempting to secure anything. Beer Garden tries to make creating and running plugins as simple as possible, but Beer Garden itself has a fair amount of moving pieces. Understanding what they are and how they fit together is crucial to security.</p>
+</div>
+<div class="paragraph">
+<p>For this discussion we&#8217;re going to assume you&#8217;re not operating Beer Garden behind a reverse proxy.</p>
+</div>
+<div class="paragraph">
+<p>Ok, here we go.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tls"><a class="anchor" href="#tls"></a>TLS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Step one is to use TLS everywhere. If you don&#8217;t, everything else you do will be a waste of time. This is - by far - the most important thing.</p>
+</div>
+<div class="paragraph">
+<p>First, you will need a server certificate. How to obtain one is beyond the scope of these instructions, but check out Let&#8217;s Encrypt if you need guidance. You can also use a self-signed certificate or a certificate signed by an authority not part of the standard Certifi bundle. Again, a discussion of the tradeoffs associated with this is beyond scope. If you do this, Beer Garden assumes that you understand the risks and have made a conscious choice to accept them.</p>
+</div>
+<div class="paragraph">
+<p>Ok, so you have a server certificate. Great! Now you need to tell Brew-view about it:</p>
+</div>
+<div class="listingblock">
+<div class="title">brew-view-config.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">web</span>:
+  <span class="key">host</span>: <span class="string"><span class="content">0.0.0.0</span></span>
+  <span class="key">port</span>: <span class="string"><span class="content">2337</span></span>
+  <span class="key">ssl</span>:
+    <span class="key">ca_cert</span>: <span class="string"><span class="content">null</span></span>
+    <span class="key">ca_path</span>: <span class="string"><span class="content">null</span></span>
+    <span class="key">enabled</span>: <span class="string"><span class="content">true</span></span>
+    <span class="key">private_key</span>: <span class="string"><span class="content">/path/to/the/private/key</span></span>
+    <span class="key">public_key</span>: <span class="string"><span class="content">/path/to/the/public/key</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Some things to note:
+- <code>enabled</code> has been set to <code>true</code>. This tells Brew-view to operate in secure mode.
+- <code>private_key</code> and <code>public_key</code> have been set to their respective paths.
+- <code>ca_cert</code> and <code>ca_path</code> are null. If you&#8217;re using a certificate signed by a real Certificate Authority, this is what you want. However, if you&#8217;re using a certificate signed by some other authority you&#8217;ll need to specify a cert or path describing that authority (and all intermediates). If you&#8217;re familiar with <code>SSLContext</code>, the values provided will be passed to <code>load_verify_locations</code>.</p>
+</div>
+<div class="paragraph">
+<p>Cool! Now you can use https to connect to Brew-view. Since Bartender makes requests to Brew-view it needs to know how to do that correctly:</p>
+</div>
+<div class="listingblock">
+<div class="title">bartender-config.yaml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">web</span>:
+  <span class="key">ca_cert</span>: <span class="string"><span class="content">null</span></span>
+  <span class="key">ca_verify</span>: <span class="string"><span class="content">true</span></span>
+  <span class="key">host</span>: <span class="string"><span class="content">localhost</span></span>
+  <span class="key">port</span>: <span class="string"><span class="content">2337</span></span>
+  <span class="key">ssl_enabled</span>: <span class="string"><span class="content">true</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here you can see that <code>ssl_enabled</code> has been set to true, <code>ca_verify</code> is set to <code>true</code>, and <code>ca_cert</code> is <code>null</code>. Again, these are the correct values for a real certificate. You can use an alternate CA bundle using <code>ca_cert</code> or you can disable certificate verification completely (for a self-signed certificate) by setting <code>ca_verify</code> to <code>false</code>.</p>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>

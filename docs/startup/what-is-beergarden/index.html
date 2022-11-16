@@ -1,0 +1,133 @@
+<!DOCTYPE html><!--[if IE 8]><html class="no-js lt-ie9" lang="en"><![endif]--><!--[if gt IE 8 ]><!--><html class="no-js" lang="en"><!--<![endif]--><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="stylesheet" href="/stylesheets/styles.css"><script src="/javascripts/jquery.js"></script><script src="/javascripts/bootstrap.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-113442079-2"></script><title>Beer Garden Documentation</title></head><script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-113442079-2');</script><body class="antialiased"><div class="bootstrap"><nav class="navbar navbar-default navbar-fixed-top" role="navigation"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle Navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/bg-banner.png">Beer Garden</img></a></div><div class="collapse navbar-collapse" id="navbar-collapse-1"><ul class="nav navbar-nav navbar-right"><li><a href="/">Home</a></li><li class="divider"></li><li><a href="https://github.com/beer-garden/beer-garden">Code</a></li><li class="divider"></li><li><a href="/docs/">Docs</a></li></ul></div></div></nav><main><div class="bootstrap masthead"><div class="container"><h2 class="hero">What is Beer Garden? Why do we need it?</h2></div></div><div class="bootstrap container"><div class="row top-buffer"><div class="col-lg-4"><div class="col-lg-12"><div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups"><div class="btn-group mr-2" role="group" aria-label="First group"><button class="btn btn-default toggle-navigation" type="button" href="#"><span class="toggle-target"><i class="fa fa-toggle-on"></i><i class="fa fa-toggle-off"></i> Nav</span></button></div><div class="btn-group-mr-2 pull-right" role="group" aria-label="First Group"><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/edit/master//docs/startup/what-is-beergarden.adoc">Edit</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/raw/master//docs/startup/what-is-beergarden.adoc">Raw</a><a class="btn btn-default" href="https://github.com/beer-garden/beer-garden.io/commits/master//docs/startup/what-is-beergarden.adoc">History</a></div></div></div><div class="col-lg-12 navigation"><div id="toc" class="toc"><div class="title" id="toctitle">Table of Contents</div><ul class="sectlevel1">
+<li><a href="#what-is-beer-garden">What is Beer Garden</a></li>
+<li><a href="#terminology">Terminology</a></li>
+<li><a href="#an-example">An Example</a></li>
+<li><a href="#how-can-it-help">How can it help?</a></li>
+</ul></div></div></div><div class="col-lg-8" id="docContent"><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this introduction we&#8217;ll cover what Beer Garden is, some basic terminology, and how Beer Garden can solve problems for you.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="what-is-beer-garden"><a class="anchor" href="#what-is-beer-garden"></a>What is Beer Garden</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Beer Garden is a plugin framework that provides a simple home for any type of system you can imagine. It&#8217;s incredibly flexible in the workloads it can execute, though it excels in command-and-control.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="terminology"><a class="anchor" href="#terminology"></a>Terminology</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To really understand Beer Garden, we need to start speaking the same language. Beer Garden has four fundamental building blocks. Quick definitions are given below along with how each would be used if you were to use Beer Garden to define a calculator.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Systems</dt>
+<dd>
+<p>A group of similar commands, analogous to a class. Something like a calculator.</p>
+</dd>
+<dt class="hdlist1">Commands</dt>
+<dd>
+<p>The definition of an action, analogous to functions. The addition operation on a calculator.</p>
+</dd>
+<dt class="hdlist1">Parameters</dt>
+<dd>
+<p>Inputs to a command, analogous to function parameters. The numbers to be added together in the addition operation.</p>
+</dd>
+<dt class="hdlist1">Requests</dt>
+<dd>
+<p>An actual action that is performed, analogous to calling a function. The act of adding two numbers using the addition operation.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="an-example"><a class="anchor" href="#an-example"></a>An Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>So let&#8217;s use those definitions to expand the calculator example a little. You want to give an end user the ability to add two numbers together and see the result.</p>
+</div>
+<div class="paragraph">
+<p>In Beer Garden you would make a System with name "calculator". The calculator System has a single Command, called "add". The "add" command accepts two Parameters, let&#8217;s call them "x" and "y". The "add" Command implements the logic to turn the two Parameters into the correct result. To exercise the "add" Command the user creates a Request with actual values for the "x" and "y" Parameters. Once that Request has been processed the user can look at the Request&#8217;s output to see the result.</p>
+</div>
+<div class="paragraph">
+<p>Ok, that was admittedly a lot. The code should make things clearer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="python"><span class="keyword">class</span> <span class="class">Calculator</span>: <i class="conum" data-value="1"></i><b>(1)</b>
+
+    <span class="keyword">def</span> <span class="function">add</span>(<span class="predefined-constant">self</span>, x, y): &lt;<span class="integer">2</span>, <span class="integer">3</span>&gt;
+        <span class="keyword">return</span> x + y</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Define the "Calculator" System</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Define the "add" Command</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Define the "x" and "y" Parameters</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now when the end user wants to add 1 and 2, they&#8217;ll issue a Request to Beer Garden. The most common way to do that is to use the web UI that Beer Garden creates for this command. There will be input fields for "x" and "y", and a big "Make Request" button. Clicking that will take the user to a page where they&#8217;ll be shown the result of their Request.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+There are other ways to create a Request. Check out <a href="/docs/app/api-users-guide/#requests">Requests</a> to learn more.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="how-can-it-help"><a class="anchor" href="#how-can-it-help"></a>How can it help?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Beer Garden aims to bridge several gaps. Here are some scenarios where it can be helpful:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">"<em>I can write a script, but I&#8217;m not a developer</em>"</dt>
+<dd>
+<p>One gap is between people who know how to write scripts and software developers. Beer Garden can take scripts written by anyone and turn them into a service exposed over REST with very little effort.</p>
+</dd>
+<dt class="hdlist1">"<em>I have a useful script, but I don&#8217;t want to write a GUI</em>"</dt>
+<dd>
+<p>Beer Garden provides a web-based form that can exercise your script. That way you can make life easy for the people that will actually use the script.</p>
+</dd>
+<dt class="hdlist1">"<em>I wish I had a standard way to call many different services</em>"</dt>
+<dd>
+<p>Beer Garden provides a standardized interface for exercising disparate services while allowing the services the flexibility they need to continue to grow in different directions. As you draw abstractions from these services, you can build one interface to rule them all.</p>
+</dd>
+<dt class="hdlist1">"<em>I have lots of useful scripts and I&#8217;d like to make them discoverable</em>"</dt>
+<dd>
+<p>Beer Garden exposes all these functions and makes them programatically discoverable for very little cost. It allows you the flexibility to continue making your plugins do whatever small thing you want, but also allows other people to build on top of your plugins making more complex plugins that are dynamic and easy-to-use.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div></div><hr></div></div></main></div><footer id="bgfooter"><div class="container"><div class="row"><div class="col-sm-3"><h5>Get Started</h5><ul><li><a href="/">Home</a></li><li><a href="https://github.com/beer-garden/beer-garden/blob/master/CONTRIBUTING.md">Contribute</a></li></ul></div><div class="col-sm-3"><h5>About us</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/blob/master/AUTHORS.md">Contributors</a></li><li><a href="/news">News</a></li></ul></div><div class="col-sm-3"><h5>Support</h5><ul><li><a href="https://github.com/beer-garden/beer-garden/issues">GitHub</a></li></ul></div><div class="col-sm-3 info"><h5>Information</h5><p>Composed in AsciiDoc. Styled by bootstrap. Baked with Awestruct.</p></div></div></div><div class="social-networks"><a class="github" href="https://github.com/beer-garden/beer-garden"><i class="fa fa-github"></i></a></div><div class="footer-copyright"><p>© Beer Garden Project 2022.</p></div></footer></body><script>$('.toggle-navigation').click(function() { $('.navigation').toggle(); $('#docContent').toggleClass('col-lg-8'); $('#docContent').toggleClass('col-lg-12'); $('#docContent').toggleClass('top-buffer'); $('.toggle-target').toggleClass('off'); });</script>
