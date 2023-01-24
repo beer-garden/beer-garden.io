@@ -25,7 +25,7 @@
 source 'https://rubygems.org'       # This tells Bundler where to look for gems
 
 gem 'awestruct', '0.5.7'
-gem 'asciidoctor', '1.5.6.1'
+gem 'asciidoctor', '1.5.8'
 gem 'compass', '1.0.3'
 gem 'haml', '4.0.7'
 gem 'slim', '3.0.6'
