@@ -1,5 +1,5 @@
 == Example 4: Connecting to External Data sets
-:imagesdir: ./images
+:imagesdir: ../training/images
 :uri-doc-repo: {git_group_uri}/beer-garden.io
 
 For this example we are going to explore connecting to external API's. There are many different ways to accomplish
