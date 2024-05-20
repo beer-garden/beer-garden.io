@@ -1,7 +1,7 @@
 The `beer.conf` file explains how to configure your plugin. Let's explore the required `beer.conf` options.
 
 [source,python]
-.beer.conf (Required fields)
+.beer.conf (Required fields traditional Plugins)
 ----
 # Defines the system name of your plugin
 NAME = "my-plugin"
@@ -11,6 +11,16 @@ VERSION = "0.0.1"
 
 # Defines way to run the plugin
 PLUGIN_ENTRY='main.py'
+----
+
+[source,python]
+.beer.conf (Required fields for Autobrew)
+----
+# Autobrew module path
+AUTO_BREW_MODULE="my.module"
+
+# Autobrew class
+AUTO_BREW_CLASS="class"
 ----
 
 In addition to the required fields, you may optionally provide other values to enhance your plugin. Each option is explained in more detail below.
@@ -55,6 +65,14 @@ TIP: If you are in the process of developing a plugin, and want to change comman
 === PLUGIN_ENTRY
 
 The `PLUGIN_ENTRY` entry in the `beer.conf` file is simply the python script that will execute `plugin.run()` That's really all there is to this.
+
+=== AUTO_BREW_MODULE
+
+The `AUTO_BREW_MODULE` entry is module on the pythonpath that the class object will be imported from for Autobrew to process
+
+=== AUTO_BREW_CLASS
+
+The `AUTO_BREW_CLASS` entry is class object within `AUTO_BREW_MODULE` for Autobrew to process
 
 === DESCRIPTION
 
