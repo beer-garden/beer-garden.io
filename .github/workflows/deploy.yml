@@ -36,10 +36,17 @@ jobs:
         env:
           NOKOGIRI_USE_SYSTEM_LIBRARIES: true
 
+      # - name: Deploy to GitHub Pages
+      #   uses: crazy-max/ghaction-github-pages@v2
+      #   with:
+      #     target_branch: gh-pages
+      #     build_dir: public
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.BUILDBOT_PAGES }}
+
       - name: Deploy to GitHub Pages
-        uses: crazy-max/ghaction-github-pages@v2
+        uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: gh-pages
           build_dir: public
-        env:
-          GITHUB_TOKEN: ${{ secrets.BUILDBOT_PAGES }}
+          dry_run: true
