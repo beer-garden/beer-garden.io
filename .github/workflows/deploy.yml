@@ -48,7 +48,7 @@ jobs:
       
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v
+        uses: actions/deploy-pages@v2
 
       # - name: Deploy to GitHub Pages
       #   uses: crazy-max/ghaction-github-pages@v2
