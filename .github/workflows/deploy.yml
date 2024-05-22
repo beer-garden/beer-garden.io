@@ -48,24 +48,9 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          # upload entire directory
           path: 'public'
       
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
 
-      # - name: Deploy to GitHub Pages
-      #   uses: crazy-max/ghaction-github-pages@v2
-      #   with:
-      #     target_branch: gh-pages
-      #     build_dir: public
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.BUILDBOT_PAGES }}
-
-      # - name: Deploy to GitHub Pages
-      #   uses: crazy-max/ghaction-github-pages@v4
-      #   with:
-      #     target_branch: gh-pages
-      #     build_dir: public
-      #     dry_run: true

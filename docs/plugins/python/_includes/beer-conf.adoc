@@ -1,7 +1,7 @@
 The `beer.conf` file explains how to configure your plugin. Let's explore the required `beer.conf` options.
 
 [source,python]
-.beer.conf (Required fields)
+.beer.conf (Required fields traditional Plugins)
 ----
 # Defines the system name of your plugin
 NAME = "my-plugin"
@@ -11,6 +11,17 @@ VERSION = "0.0.1"
 
 # Defines way to run the plugin
 PLUGIN_ENTRY='main.py'
+----
+
+[source,python]
+.beer.conf (Required fields for Autobrew)
+----
+# Autobrew module path
+AUTO_BREW_MODULE="my.module"
+
+# Autobrew class
+AUTO_BREW_CLASS="my_class"
+
 ----
 
 In addition to the required fields, you may optionally provide other values to enhance your plugin. Each option is explained in more detail below.
@@ -40,6 +51,12 @@ REQUIRES=['foo']
 
 # Additional Metadata you would like to add to the system
 METADATA = {'foo': 'bar'}
+
+# Autobrew ARG values to pass to AUTO_BREW_CLASS __init__
+AUTO_BREW_ARGS = ["foo","bar"]
+
+# Autobrew KWARG values to pass to AUTO_BREW_CLASS __init__
+AUTO_BREW_KWARGS = {"key","value"}
 ----
 
 === NAME
@@ -55,6 +72,14 @@ TIP: If you are in the process of developing a plugin, and want to change comman
 === PLUGIN_ENTRY
 
 The `PLUGIN_ENTRY` entry in the `beer.conf` file is simply the python script that will execute `plugin.run()` That's really all there is to this.
+
+=== AUTO_BREW_MODULE
+
+The `AUTO_BREW_MODULE` entry is module on the pythonpath that the class object will be imported from for Autobrew to process
+
+=== AUTO_BREW_CLASS
+
+The `AUTO_BREW_CLASS` entry is class object within `AUTO_BREW_MODULE` for Autobrew to process
 
 === DESCRIPTION
 
@@ -154,6 +179,114 @@ If you are writing a plugin that interacts with other plugins, then you should n
 [source,python]
 ----
 REQUIRES=['foo']
+----
+
+=== AUTO_BREW_ARGS
+
+The `AUTO_BREW_ARGS` field allows ARG values to be passed into the class initialization function
+
+The `AUTO_BREW_ARGS` entry plays along with the `INSTANCES` entry. If there are multiple instances and the `AUTO_BREW_ARGS` is a list, Beer Garden assumes that you want to pass the value of `AUTO_BREW_ARGS` to each and every instance that is defined in the `INSTANCES` section. For example:
+
+[source,python]
+----
+INSTANCES=['foo', 'bar']
+AUTO_BREW_ARGS=['arg1', 'arg2']
+AUTO_BREW_MODULE="my.module"
+AUTO_BREW_CLASS="my_class"
+----
+
+Tells Beer Garden to start two instances of your plugin via:
+
+[source,python]
+----
+my.module.my_class('arg1','arg2')
+my.module.my_class('arg1','arg2')
+----
+
+If you want to give different instances different arguments, you could do the following:
+
+[source,python]
+----
+INSTANCES = ['foo', 'bar', 'baz']
+AUTO_BREW_ARGS = {
+    'foo': ['arg1', 'arg2'],
+    'bar': ['arg3'],
+    'baz': []
+}
+----
+
+This will instruct Beer Garden to start 3 instances of your plugins via:
+
+[source,python]
+----
+my.module.my_class('arg1','arg2')
+my.module.my_class('arg3')
+my.module.my_class()
+----
+
+If you define your `AUTO_BREW_ARGS` as a dictionary, then there really is no need to define the `INSTANCES`. So the previous example and this example are functionally equivalent:
+
+[source,python]
+----
+PLUGIN_ARGS = {
+    'foo': ['arg1', 'arg2'],
+    'bar': ['arg3'],
+    'baz': []
+}
+----
+
+=== AUTO_BREW_KWARGS
+
+The `AUTO_BREW_KWARGS` field allows KARG values to be passed into the class initialization function.
+
+The `AUTO_BREW_KWARGS` entry plays along with the `INSTANCES` entry. If there are multiple instances and the `AUTO_BREW_KWARGS` is a list, Beer Garden assumes that you want to pass the value of `AUTO_BREW_KWARGS` to each and every instance that is defined in the `INSTANCES` section. For example:
+
+[source,python]
+----
+INSTANCES=['foo', 'bar']
+AUTO_BREW_KWARGS={"key_1","value_1", "key_2","value_2"}
+AUTO_BREW_MODULE="my.module"
+AUTO_BREW_CLASS="my_class"
+----
+
+Tells Beer Garden to start two instances of your plugin via:
+
+[source,python]
+----
+my.module.my_class(key_1='value_1', key_2='value_2')
+my.module.my_class(key_1='value_1', key_2='value_2')
+----
+
+If you want to give different instances different arguments, you could do the following:
+
+[source,python]
+----
+INSTANCES = ['foo', 'bar', 'baz']
+AUTO_BREW_KWARGS = {
+    'foo': {"key_1","value_1", "key_2","value_2"},
+    'bar': {"key_3","value_3"},
+    'baz': []
+}
+----
+
+This will instruct Beer Garden to start 3 instances of your plugins via:
+
+[source,python]
+----
+my.module.my_class(key_1='value_1', key_2='value_2')
+my.module.my_class(key_3='value_3')
+my.module.my_class()
+----
+
+If you define your `AUTO_BREW_KWARGS` as a dictionary, then there really is no need to define the `INSTANCES`. So the previous example and this example are functionally equivalent:
+
+[source,python]
+----
+AUTO_BREW_KWARGS = {
+    'foo': {"key_1","value_1", "key_2","value_2"},
+    'bar': {"key_3","value_3"},
+    'baz': []
+}
 ----
 
 And that's it!
