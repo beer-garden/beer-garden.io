@@ -2,7 +2,7 @@
 :page-layout: docs
 :includedir: _includes
 
-The goal of this section is to help you utilize an exisitng class as a Plugin.
+The goal of this section is to help you utilize an existing class as a Plugin.
 
 It is important to note that Autobrew is only supported by what is loaded on the pythonpath. The folder that contains the beer.conf that utilizes the Autobrew features is loaded onto the pythonpath.
 
@@ -11,16 +11,23 @@ Autobrew will allow Beer Garden to evaluate the class object and automatically g
 [TIP]
 .Pros of using Autobrew
 ====
-If your client/system class does not require additional configuraitons when setting up the Plugin object, this feature can streamline your development.
+If your client/system class does not require additional configurations when setting up the Plugin object, this feature can streamline your development.
 ====
 
 == Exisiting Class Implementation
 
-Autobrew allows you to utilize exising class objects as a Plugin with no additional work. All it requires is the `beer.conf`!
+Autobrew allows you to utilize existing class objects as a Plugin with no additional work. All it requires is the `beer.conf`!
 
 === Unique beer.conf fields
 
-Autobrew supports all of the fields standard for beer.conf. 
+Autobrew supports all of the fields standard for beer.conf. The primary difference is that Autobrew has the additional fiels of:
+
+- AUTO_BREW_MODULE
+- AUTO_BREW_CLASS
+- AUTO_BREW_ARGS
+- AUTO_BREW_KARGS
+
+Allowing for the class to be intialized with static ARGS/KWARGS.
 
 == Plugin Configuration
 
