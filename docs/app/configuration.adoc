@@ -126,7 +126,7 @@ The `formatters` section is also a dictionary. Its keys must match up with a spe
 which `formatter` they would like to use.
 
 
-=== Beer Garden Children Configuration
+== Beer Garden Children Configuration
 
 If you would like to jump straight to the definitions of Child Configurations, please redirect to
 link:../child_config_yaml/[Child Config User Manual]
