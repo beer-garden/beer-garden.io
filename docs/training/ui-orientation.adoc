@@ -1,4 +1,4 @@
-:imagesdir: ../training/images
+:imagesdir: ../images
 
 == UI Orientation
 
