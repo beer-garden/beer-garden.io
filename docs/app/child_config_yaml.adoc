@@ -1,4 +1,5 @@
 = Beer Garden Children Configuration
+:page-layout: docs
 
 This document describes the configuration for Beer Garden Children. Each section will
 document a particular configuration value and its description. First,

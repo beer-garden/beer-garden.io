@@ -129,7 +129,7 @@ which `formatter` they would like to use.
 === Beer Garden Children Configuration
 
 If you would like to jump straight to the definitions of Child Configurations, please redirect to
-link:../child_config_yaml/[Configurationl]
+link:../child_config_yaml/[Child Config User Manual]
 
 Child configurations files have a specific naming convention for the file. The file should be named as `<garden name>.yaml`. 
 The filename prior to `.yaml` will be stored as the Garden Name in the database. At file reload, all values will be overwritten.
