@@ -24,7 +24,7 @@ The default names are:
 * `{plugin-log-config}`
 
 To configure Child Garden connections, you must create a config file per child. For RPM installs, the default location is 
-folder `{rpm-config-home}\children`.
+folder `{rpm-config-home}/children`.
 
 == Beer Garden Configuration
 
