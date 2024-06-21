@@ -74,6 +74,11 @@ This section outlines the various configuration items Beer Garden supports.
 |
 | Secret to use when signing authentication tokens
 
+| <<children.directory,children.directory>>
+| str
+| ./children
+| Directory where child garden configs are located
+
 | <<configuration.file,configuration.file>>
 | str
 | None
@@ -104,20 +109,45 @@ This section outlines the various configuration items Beer Garden supports.
 | beer_garden
 | Name of the database to use
 
+| <<db.prune_interval,db.prune_interval>>
+| int
+| 15
+| Number of minutes to wait before running db pruner
+
 | <<db.ttl.action,db.ttl.action>>
 | int
 | -1
 | Number of minutes to wait before deleting ACTION requests (negative number for never)
+
+| <<db.ttl.admin,db.ttl.admin>>
+| int
+| -1
+| Number of minutes to wait before deleting Admin requests (negative number for never)
+
+| <<db.ttl.batch_size,db.ttl.batch_size>>
+| int
+| -1
+| Batch size for deleting documents (negative number for never)
 
 | <<db.ttl.file,db.ttl.file>>
 | int
 | 15
 | Number of minutes to wait before deleting FILE documents (negative number for never)
 
+| <<db.ttl.in_progress,db.ttl.in_progress>>
+| int
+| -1
+| Number of minutes to wait for a request in CREATED or IN_PROGRESSto complete before considering timed out and marking as CANCELLED(negative number for never)
+
 | <<db.ttl.info,db.ttl.info>>
 | int
 | 15
 | Number of minutes to wait before deleting INFO requests (negative number for never)
+
+| <<db.ttl.temp,db.ttl.temp>>
+| int
+| 15
+| Number of minutes to wait before deleting TEMP requests (negative number for never)
 
 | <<entry.http.enabled,entry.http.enabled>>
 | bool
@@ -251,7 +281,7 @@ This section outlines the various configuration items Beer Garden supports.
 
 | <<metrics.prometheus.enabled,metrics.prometheus.enabled>>
 | bool
-| True
+| False
 | Enable prometheus server
 
 | <<metrics.prometheus.host,metrics.prometheus.host>>
@@ -514,6 +544,11 @@ This section outlines the various configuration items Beer Garden supports.
 | None
 | Username to use for authentication
 
+| <<parent.sync_interval,parent.sync_interval>>
+| int
+| 15
+| Number of minutes to wait before sending Garden Sync event to parent
+
 | <<plugin.allow_command_updates,plugin.allow_command_updates>>
 | bool
 | False
@@ -521,12 +556,12 @@ This section outlines the various configuration items Beer Garden supports.
 
 | <<plugin.local.auth.password,plugin.local.auth.password>>
 | str
-| None
+| password
 | Password that local plugins will use for authentication (needs bg-plugin role)
 
 | <<plugin.local.auth.username,plugin.local.auth.username>>
 | str
-| None
+| plugin_admin
 | Username that local plugins will use for authentication (needs bg-plugin role)
 
 | <<plugin.local.directory,plugin.local.directory>>
@@ -584,6 +619,11 @@ This section outlines the various configuration items Beer Garden supports.
 | 30
 | Amount of time to wait before marking a plugin asunresponsive
 
+| <<replication.enabled,replication.enabled>>
+| bool
+| False
+| Publish subset of events to Rabbit to allow all Gardens to stay in sync when replicated
+
 | <<request_validation.dynamic_choices.command.timeout,request_validation.dynamic_choices.command.timeout>>
 | int
 | 10
@@ -616,7 +656,7 @@ This section outlines the various configuration items Beer Garden supports.
 
 | <<ui.cors_enabled,ui.cors_enabled>>
 | bool
-| False
+| True
 | Determine if CORS should be enabled
 
 | <<ui.debug_mode,ui.debug_mode>>
@@ -1015,6 +1055,41 @@ You can set auth.token_secret from the environment by setting the environment va
 
 You can set `auth.token_secret` from the command-line by specifying `--auth-token-secret` at Beer Garden's entrypoint.
 
+=== children.directory
+
+Directory where child garden configs are located
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `./children`
+
+| *env_name*
+| `BG_CHILDREN_DIRECTORY`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--children-directory`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set children.directory from the environment by setting the environment variable `BG_CHILDREN_DIRECTORY`
+
+You can set `children.directory` from the command-line by specifying `--children-directory` at Beer Garden's entrypoint.
+
+If `children.directory` is not set in any of the sources listed, it will fallback to the default value `./children`
+
 === configuration.file
 
 Path to configuration file to use
@@ -1219,6 +1294,41 @@ You can set `db.name` from the command-line by specifying `--db-name` at Beer Ga
 
 If `db.name` is not set in any of the sources listed, it will fallback to the default value `beer_garden`
 
+=== db.prune_interval
+
+Number of minutes to wait before running db pruner
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `15`
+
+| *env_name*
+| `BG_DB_PRUNE_INTERVAL`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--db-prune-interval`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set db.prune_interval from the environment by setting the environment variable `BG_DB_PRUNE_INTERVAL`
+
+You can set `db.prune_interval` from the command-line by specifying `--db-prune-interval` at Beer Garden's entrypoint.
+
+If `db.prune_interval` is not set in any of the sources listed, it will fallback to the default value `15`
+
 === db.ttl.action
 
 Number of minutes to wait before deleting ACTION requests (negative number for never)
@@ -1253,6 +1363,76 @@ You can set db.ttl.action from the environment by setting the environment variab
 You can set `db.ttl.action` from the command-line by specifying `--db-ttl-action` at Beer Garden's entrypoint.
 
 If `db.ttl.action` is not set in any of the sources listed, it will fallback to the default value `-1`
+
+=== db.ttl.admin
+
+Number of minutes to wait before deleting Admin requests (negative number for never)
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `-1`
+
+| *env_name*
+| `BG_DB_TTL_ADMIN`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--db-ttl-admin`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set db.ttl.admin from the environment by setting the environment variable `BG_DB_TTL_ADMIN`
+
+You can set `db.ttl.admin` from the command-line by specifying `--db-ttl-admin` at Beer Garden's entrypoint.
+
+If `db.ttl.admin` is not set in any of the sources listed, it will fallback to the default value `-1`
+
+=== db.ttl.batch_size
+
+Batch size for deleting documents (negative number for never)
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `-1`
+
+| *env_name*
+| `BG_DB_TTL_BATCH_SIZE`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--db-ttl-batch-size`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set db.ttl.batch_size from the environment by setting the environment variable `BG_DB_TTL_BATCH_SIZE`
+
+You can set `db.ttl.batch_size` from the command-line by specifying `--db-ttl-batch-size` at Beer Garden's entrypoint.
+
+If `db.ttl.batch_size` is not set in any of the sources listed, it will fallback to the default value `-1`
 
 === db.ttl.file
 
@@ -1289,6 +1469,41 @@ You can set `db.ttl.file` from the command-line by specifying `--db-ttl-file` at
 
 If `db.ttl.file` is not set in any of the sources listed, it will fallback to the default value `15`
 
+=== db.ttl.in_progress
+
+Number of minutes to wait for a request in CREATED or IN_PROGRESSto complete before considering timed out and marking as CANCELLED(negative number for never)
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `-1`
+
+| *env_name*
+| `BG_DB_TTL_IN_PROGRESS`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--db-ttl-in-progress`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set db.ttl.in_progress from the environment by setting the environment variable `BG_DB_TTL_IN_PROGRESS`
+
+You can set `db.ttl.in_progress` from the command-line by specifying `--db-ttl-in-progress` at Beer Garden's entrypoint.
+
+If `db.ttl.in_progress` is not set in any of the sources listed, it will fallback to the default value `-1`
+
 === db.ttl.info
 
 Number of minutes to wait before deleting INFO requests (negative number for never)
@@ -1323,6 +1538,41 @@ You can set db.ttl.info from the environment by setting the environment variable
 You can set `db.ttl.info` from the command-line by specifying `--db-ttl-info` at Beer Garden's entrypoint.
 
 If `db.ttl.info` is not set in any of the sources listed, it will fallback to the default value `15`
+
+=== db.ttl.temp
+
+Number of minutes to wait before deleting TEMP requests (negative number for never)
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `15`
+
+| *env_name*
+| `BG_DB_TTL_TEMP`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--db-ttl-temp`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set db.ttl.temp from the environment by setting the environment variable `BG_DB_TTL_TEMP`
+
+You can set `db.ttl.temp` from the command-line by specifying `--db-ttl-temp` at Beer Garden's entrypoint.
+
+If `db.ttl.temp` is not set in any of the sources listed, it will fallback to the default value `15`
 
 === entry.http.enabled
 
@@ -2209,7 +2459,7 @@ Enable prometheus server
 | `bool`
 
 | *default*
-| `True`
+| `False`
 
 | *env_name*
 | `BG_METRICS_PROMETHEUS_ENABLED`
@@ -2218,7 +2468,7 @@ Enable prometheus server
 | `True`
 
 | *cli_name*
-| `--metrics-prometheus-no-enabled`
+| `--metrics-prometheus-enabled`
 
 | *fallback*
 | `None`
@@ -2229,9 +2479,7 @@ Enable prometheus server
 
 You can set metrics.prometheus.enabled from the environment by setting the environment variable `BG_METRICS_PROMETHEUS_ENABLED`
 
-You can set `metrics.prometheus.enabled` from the command-line by specifying `--metrics-prometheus-no-enabled` at Beer Garden's entrypoint.
-
-If `metrics.prometheus.enabled` is not set in any of the sources listed, it will fallback to the default value `True`
+You can set `metrics.prometheus.enabled` from the command-line by specifying `--metrics-prometheus-enabled` at Beer Garden's entrypoint.
 
 === metrics.prometheus.host
 
@@ -3995,6 +4243,41 @@ You can set parent.stomp.username from the environment by setting the environmen
 
 You can set `parent.stomp.username` from the command-line by specifying `--parent-stomp-username` at Beer Garden's entrypoint.
 
+=== parent.sync_interval
+
+Number of minutes to wait before sending Garden Sync event to parent
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `15`
+
+| *env_name*
+| `BG_PARENT_SYNC_INTERVAL`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--parent-sync-interval`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.sync_interval from the environment by setting the environment variable `BG_PARENT_SYNC_INTERVAL`
+
+You can set `parent.sync_interval` from the command-line by specifying `--parent-sync-interval` at Beer Garden's entrypoint.
+
+If `parent.sync_interval` is not set in any of the sources listed, it will fallback to the default value `15`
+
 === plugin.allow_command_updates
 
 Allow commands of non-dev systems to be updated
@@ -4041,7 +4324,7 @@ Password that local plugins will use for authentication (needs bg-plugin role)
 | `str`
 
 | *default*
-| `None`
+| `password`
 
 | *env_name*
 | `BG_PLUGIN_LOCAL_AUTH_PASSWORD`
@@ -4063,6 +4346,8 @@ You can set plugin.local.auth.password from the environment by setting the envir
 
 You can set `plugin.local.auth.password` from the command-line by specifying `--plugin-local-auth-password` at Beer Garden's entrypoint.
 
+If `plugin.local.auth.password` is not set in any of the sources listed, it will fallback to the default value `password`
+
 === plugin.local.auth.username
 
 Username that local plugins will use for authentication (needs bg-plugin role)
@@ -4074,7 +4359,7 @@ Username that local plugins will use for authentication (needs bg-plugin role)
 | `str`
 
 | *default*
-| `None`
+| `plugin_admin`
 
 | *env_name*
 | `BG_PLUGIN_LOCAL_AUTH_USERNAME`
@@ -4095,6 +4380,8 @@ Username that local plugins will use for authentication (needs bg-plugin role)
 You can set plugin.local.auth.username from the environment by setting the environment variable `BG_PLUGIN_LOCAL_AUTH_USERNAME`
 
 You can set `plugin.local.auth.username` from the command-line by specifying `--plugin-local-auth-username` at Beer Garden's entrypoint.
+
+If `plugin.local.auth.username` is not set in any of the sources listed, it will fallback to the default value `plugin_admin`
 
 === plugin.local.directory
 
@@ -4473,6 +4760,39 @@ You can set `plugin.status_timeout` from the command-line by specifying `--plugi
 
 If `plugin.status_timeout` is not set in any of the sources listed, it will fallback to the default value `30`
 
+=== replication.enabled
+
+Publish subset of events to Rabbit to allow all Gardens to stay in sync when replicated
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
+| `False`
+
+| *env_name*
+| `BG_REPLICATION_ENABLED`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--replication-enabled`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set replication.enabled from the environment by setting the environment variable `BG_REPLICATION_ENABLED`
+
+You can set `replication.enabled` from the command-line by specifying `--replication-enabled` at Beer Garden's entrypoint.
+
 === request_validation.dynamic_choices.command.timeout
 
 Time to wait for a command-based choices validation
@@ -4692,7 +5012,7 @@ Determine if CORS should be enabled
 | `bool`
 
 | *default*
-| `False`
+| `True`
 
 | *env_name*
 | `BG_UI_CORS_ENABLED`
@@ -4701,7 +5021,7 @@ Determine if CORS should be enabled
 | `True`
 
 | *cli_name*
-| `--ui-cors-enabled`
+| `--ui-no-cors-enabled`
 
 | *fallback*
 | `None`
@@ -4712,7 +5032,9 @@ Determine if CORS should be enabled
 
 You can set ui.cors_enabled from the environment by setting the environment variable `BG_UI_CORS_ENABLED`
 
-You can set `ui.cors_enabled` from the command-line by specifying `--ui-cors-enabled` at Beer Garden's entrypoint.
+You can set `ui.cors_enabled` from the command-line by specifying `--ui-no-cors-enabled` at Beer Garden's entrypoint.
+
+If `ui.cors_enabled` is not set in any of the sources listed, it will fallback to the default value `True`
 
 === ui.debug_mode
 
