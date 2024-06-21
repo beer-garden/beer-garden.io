@@ -16,12 +16,15 @@ link:../config_yaml/[Config User Manual]
 
 There are 3 configuration files that come installed with Beer Garden. If you installed an RPM, you will find these in
 `{rpm-config-home}`.
-//otherwise you can generate them through the commands `brew-view` and `bartender` provide.
+
 The default names are:
 
 * `{bg-config}`
 * `{app-log-config}`
 * `{plugin-log-config}`
+
+To configure Child Garden connections, you must create a config file per child. For RPM installs, the default location is 
+folder `{rpm-config-home}\children`.
 
 == Beer Garden Configuration
 
@@ -122,3 +125,11 @@ The `formatters` section is also a dictionary. Its keys must match up with a spe
 `default`. Here you can setup a special formatter for each of the individual handlers. The `handlers` should specify
 which `formatter` they would like to use.
 
+
+=== Beer Garden Children Configuration
+
+If you would like to jump straight to the definitions of Child Configurations, please redirect to
+link:../child_config_yaml/[Configurationl]
+
+Child configurations files have a specific naming convention for the file. The file should be named as `<garden name>.yaml`. 
+The filename prior to `.yaml` will be stored as the Garden Name in the database. At file reload, all values will be overwritten.
