@@ -39,7 +39,7 @@ Beer Garden takes the request body and attempts to transform it into the `Operat
 After the object is evaluated, if it is determined to be forwarded to a child Beer Garden the forwarding logic is invoked,
 else it is passed for local processing.
 
-Beer Garden takes the request body and attempts to parse it into a valid Beer Garden request and save it to Mongo. These steps require passing the first-level validation check. This ensures that the request is syntactically valid and meets certain basic requirements (such as the ``status`` field being a valid value).  If it fails at this it will return a 400 status code, otherwise the request ID is passed to Bartender for processing.
+Beer Garden takes the request body and attempts to parse it into a valid Beer Garden request and save it to Mongo. These steps require passing the first-level validation check. This ensures that the request is syntactically valid and meets certain basic requirements (such as the ``status`` field being a valid value).  If it fails at this it will return a 400 status code, otherwise the request will continue processing.
 
 Beer Garden then  *validates* the request (either locally or on child Beer Garden). Here are some of the validation steps:
 
@@ -49,7 +49,7 @@ Beer Garden then  *validates* the request (either locally or on child Beer Garde
 - The request's command parameters meet all the constraints placed on them by the command definition
 - There are no extra command parameters
 
-If all of these conditions are met Bartender will send the request to RabbitMQ using a routing key that ensures the request will be processed by the correct plugin.
+If all of these conditions are met Beer Garden will send the request to RabbitMQ using a routing key that ensures the request will be processed by the correct plugin.
 
 RabbitMQ will place the request in the specified plugin's request queue.
 
