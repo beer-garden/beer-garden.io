@@ -69,7 +69,7 @@ distributions in 'editable' mode. From the beer-garden root directory:
 
 [source]
 ----
-cd beer-garden; pip uninstall -y brewtils; pip install -e ../../brewtils
+cd beer-garden; pip uninstall -y brewtils; pip install -e ../brewtils
 ----
 
 The Beer Garden UI utilizes NPM to install Javascript dependencies.
