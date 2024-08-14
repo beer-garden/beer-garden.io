@@ -14,9 +14,9 @@ configuring the various options do not yet exist in many cases.
 
 == Authorization Basics
 
-Each API endpoint in Beer Garden is protected by a specific permission. A user
+Each API endpoint in Beer Garden is protected by a specific permission type. A user
 attempting to access or modify data through an endpoint will first have to pass
-an access check, verifying that they have the required permission for the data
+an access check, verifying that they have the required permission type for the data
 that they are operating on. Details regarding the various permissions and how to
 assign them will be provided further on, but this is the basic principal on
 which the access control for Beer Garden operates. The Beer Garden UI works by
@@ -24,32 +24,36 @@ making appropriate API calls behind the scenes. So too does the brewtils Plugin
 and EasyClient code. This means that access control for all aspects of Beer
 Garden is done through this permission checking that happens in the API.
 
-== Permissions
+== Roles
 
-Permissions are currently defined around typical CRUD operations for various
-entities. That is, for a given entity there is a "create", "read", "update", and
-"delete" permission. The current entities that exist are:
+Beer-Garden uses Role-Based Access Control (RBAC) to manage permissions. This means that 
+permissions are granted based on the roles assigned to users, rather than on an individual basis.
 
-* job
-* garden
-* queue
-* request
-* system
-* user
+Roles are the combined value of a permission Type and Scope. 
 
-Permissions are defined as strings of the format "<entity>:<operation>". For
-example: `garden:read`, `system:update`, `request:delete`.
+Permission Types are the broken into 4 typical users categories for interfacing with 
+Beer Garden.
 
-There are also a limited number of special permissions that do not map to a
-typical entity or operation. These currently include:
+* READ_ONLY: View Requests and System Status
+* OPERATOR: Execute Commands
+* PLUGIN_ADMIN: Admin actions against Plugins
+* GARDEN_ADMIN: Admin actions against Child Gardens 
 
-* `event:forward` - This permission is required for garden-to-garden
-  communications. If your authorization is enabled on your remote gardens, this
-  permission must be assigned to the user account that your local garden uses to
-  communicate with those remote gardens. 
+In Beer Garden, scopes are used to define the boundaries within which a role's permissions 
+are applicable. This mechanism helps refine and control access more precisely by limiting 
+what parts of the Beer Garden a role can interact with.
 
-CAUTION: Regular users should not have the `event:forward` permission, as it
-allows for the creation of requests against any garden or system.
+* Gardens
+* Namespaces
+* Systems
+* Instances
+* Versions
+* Commands
+
+For each record evaluated against the scopes list, it must match at least one value in the scope list. For example, if multiple systems are provided, then the user has that permission type against any of those systems.
+
+CAUTION: Scopes will filter records and their internal values. For example, if a Role 
+has a filter for Commands, only those commands are returned inside the System record.
 
 == Authentication Basics
 
@@ -120,40 +124,36 @@ right ☰ menu.
 
 === Defining Roles
 
-Roles are simply groupings of permissions. Roles can contain whatever
+Roles are simply groupings of permission types and scopes. Roles can contain whatever
 permissions you'd like, though it is generally advisable to construct your roles
 around the functionality that different types of users might need in order to
 perform their work on the garden.
 
-To define the roles that will be available in your garden, create a yaml file
-and set the `auth.role_definition_file` setting to the location of that file.
-The format of the file is simply a list of definitions containig a `name` and a
+To define the roles, you have two options. The first is to utilize the UI to create
+the new role. The second is to create a yaml file set the `auth.role_definition_file` 
+setting to the location of that file. The format of the file is simply a list of 
+definitions containig a `name` and a
 list of `permissions`. Here are some excepts from the example `roles.yaml` file
 that you'll find in the link:{bg-github-uri}/example_configs[example configs.]
 
 [source,yaml]
 ----
-- name: "job_manager"
-  permissions:
-    - "job:create"
-    - "job:read"
-    - "job:update"
-    - "job:delete"
+- name: "garden_admin"
+  permission: "GARDEN_ADMIN"
 
 - name: "operator"
-  permissions:
-    - "garden:read"
-    - "request:create"
-    - "request:read"
-    - "system:read"
+  permission: "OPERATOR"
 
 - name: "read_only"
-  permissions:
-    - "job:read"
-    - "garden:read"
-    - "queue:read"
-    - "request:read"
-    - "system:read"
+  permission: "READ_ONLY"
+  
+- name: "plugin_admin"
+  permission: "PLUGIN_ADMIN"
+
+- name: "System A - Operator"
+  permission: "OPERATOR"
+  scope-systems:
+    - "System A"
 ----
 
 The available permissions are discussed in the earlier
@@ -179,46 +179,7 @@ Request and then later the role granting them access to the Garden or System
 of the Request is revoked, the user will still have read access to that
 Request.
 
-=== Group Definition File
 
-When using the trusted header authentication handler, it is possible to have the
-groups listed in the configured `user_groups_header` mapped to Beer Garden role
-assignments. This is done via a group definition file, which looks like the
-following:
-
-[source,yaml]
-----
-- group: GLOBAL_SUPERUSER
-  role_assignments:
-    - role_name: superuser
-      domain:
-        scope: Global
-
-- group: DEFAULT_READ_ONLY
-  role_assignments:
-    - role_name: read_only
-      domain:
-        scope: Garden
-        identifiers:
-          name: default
-
-- group: DEFAULT_ECHO_JOB_MANAGER
-  role_assignments:
-    - role_name: job_manager
-      domain:
-        scope: System
-        identifiers:
-          name: echo
-          namespace: default
-    - role_name: read_only
-      domain:
-        scope: Garden
-        identifiers:
-          name: default
-----
-
-The example above shows how to define groups and the role assignments that will
-be mapped to them. The following is a brief description of each field.
 
 ==== group
 
