@@ -49,7 +49,7 @@ access token is used in subsequent API calls via the Authorization: Bearer heade
 EasyClient handle this token-based workflow behind the scenes.
 
 
-== Authentication Settings
+=== Authentication Settings
 
 Authorization and authentication settings are housed under a top level `auth`
 section of the main application configuration yaml file. Some general information
