@@ -153,8 +153,8 @@ should include a list of user definitions with usernames, roles, and protection 
   protected: True
   
 ----
-For additional examples, refer to the users.yaml file in the following link: {bg-github-uri}/
-example_configs[example configs].
+For additional examples, refer to the users.yaml file in the following 
+link: :{bg-github-uri}/example_configs[example configs.]
 
 
 NOTE: Protected user accounts cannot be managed via the User Admin UI. Users always retain access to 
