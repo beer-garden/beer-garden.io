@@ -5,8 +5,8 @@
 == Security Overview: Authentication and Authorization
 
 Beer Garden offers foundational authentication and authorization features for user 
-and role management to control access. This document explains how authentication 
-and authorization function and outlines the available configuration options.
+and role management. This document explains how authentication and authorization 
+function and outlines the available configuration options.
 
 Note: These features are still developing, and user-friendly configuration methods may be limited.
 
@@ -173,7 +173,7 @@ Child Beer Garden map back to the local Username. Alias mappings are managed thr
 Beer Garden syncs user accounts with Child Beer Gardens under two conditions:
 
 1. The user has alias mappings to the child garden.
-2. The child garden configuration enables `shared_users``.
+2. The child garden configuration enables `shared_users`.
 
 Roles forwarded to Child Beer Gardens are filtered accordingly to what is within their operational scope.
 
