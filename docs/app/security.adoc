@@ -1,6 +1,6 @@
 = Security
 :page-layout: docs
-:bg-github-uri: {git_group_uri}/beer-garden/tree/master/src/app
+:bg-github-uri: {git_group_uri}/beer-garden/tree/develop/src/app
 
 == Security Overview: Authentication and Authorization
 
