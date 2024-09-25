@@ -52,7 +52,7 @@ The best way to stop a plugin is to use the Systems Management page to send a st
 
 You should see your plugin log that it has terminated and stop executing, and if you go to the `Admin -> Systems` page in `Beer Garden` you should see the `hello-world` plugin is 'STOPPED'.
 
-NOTE: You can also use Ctrl-c to stop the plugin from the terminal. This works, but it doesn't tell Beer Garden that the plugin is stopping. You'll still see the plugin terminate and stop executing, but the status in `Brew View` will still be 'RUNNING'. After a short period the status will change to 'UNRESPONSIVE'.
+NOTE: You can also use Ctrl-c to stop the plugin from the terminal. This works, but it doesn't tell Beer Garden that the plugin is stopping. You'll still see the plugin terminate and stop executing, but the status in `Beer Garden` will still be 'RUNNING'. After a short period the status will change to 'UNRESPONSIVE'.
 
 == Exception Handling
 include::{includedir}/exceptions.adoc[]

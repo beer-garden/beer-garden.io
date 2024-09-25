@@ -50,7 +50,8 @@ Sweet. Now for each of the projects you can install the dependencies:
 
 [source]
 ----
-make deps
+cd brewtils; make deps
+cd beer-garden/src/app; make deps
 ----
 
 At this point we need a little sidebar about how beer-garden is structured. Beer-Garden is the application that
@@ -69,7 +70,7 @@ distributions in 'editable' mode. From the beer-garden root directory:
 
 [source]
 ----
-cd beer-garden; pip uninstall -y brewtils; pip install -e ../../brewtils
+cd beer-garden; pip uninstall -y brewtils; pip install -e ../brewtils
 ----
 
 The Beer Garden UI utilizes NPM to install Javascript dependencies.
@@ -86,7 +87,7 @@ and more. To generate coverage:
 
 [source]
 ----
-make coverage
+cd beer-garden/src/app; make coverage
 ----
 
 And you should see all the tests pass.

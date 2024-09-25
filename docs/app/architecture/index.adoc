@@ -39,9 +39,9 @@ Beer Garden takes the request body and attempts to transform it into the `Operat
 After the object is evaluated, if it is determined to be forwarded to a child Beer Garden the forwarding logic is invoked,
 else it is passed for local processing.
 
-Beer Garden takes the request body and attempts to parse it into a valid Beer Garden request and save it to Mongo. These steps require passing the first-level validation check. This ensures that the request is syntactically valid and meets certain basic requirements (such as the ``status`` field being a valid value).  If it fails at this it will return a 400 status code, otherwise the request ID is passed to Bartender for processing.
+Beer Garden takes the request body and attempts to parse it into a valid Beer Garden request and save it to Mongo. These steps require passing the first-level validation check. This ensures that the request is syntactically valid and meets certain basic requirements (such as the ``status`` field being a valid value).  If it fails at this it will return a 400 status code, otherwise the request will continue processing.
 
-Beer Garden then  *validates* the request (either locally or on child Beer Garden). This validation is significantly more involved than the preliminary validation done by Brew View. Here are some of the validation steps:
+Beer Garden then  *validates* the request (either locally or on child Beer Garden). Here are some of the validation steps:
 
 - Ensure that a system (which the correct version) exists that can service the request
 - That system has an instance matching the instance the request is addressed to
@@ -49,7 +49,7 @@ Beer Garden then  *validates* the request (either locally or on child Beer Garde
 - The request's command parameters meet all the constraints placed on them by the command definition
 - There are no extra command parameters
 
-If all of these conditions are met Bartender will send the request to RabbitMQ using a routing key that ensures the request will be processed by the correct plugin.
+If all of these conditions are met Beer Garden will send the request to RabbitMQ using a routing key that ensures the request will be processed by the correct plugin.
 
 RabbitMQ will place the request in the specified plugin's request queue.
 
@@ -61,7 +61,7 @@ If the 'final' update fails then the completed request is placed back on the Rab
 
 If the 'final' update succeeds the plugin will send an acknowledgement of the message to RabbitMQ. This lets RabbitMQ know the message was successfully processed, which ends the request lifecycle.
 
-If at any time an attempt to update a request fails because Brew View appears to be down the plugin will enter a wait state. While in this state no new requests will be processed (since status can't be communicated to Beer Garden). The plugin will periodically attempt to contact Brew View and will resume normal operation once successful.
+If at any time an attempt to update a request fails because Beer Garden appears to be down the plugin will enter a wait state. While in this state no new requests will be processed (since status can't be communicated to Beer Garden). The plugin will periodically attempt to contact Beer Garden and will resume normal operation once successful.
 
 
 === Plugins
@@ -90,7 +90,7 @@ The plugin then continues listening on its queues until it receives a stop messa
 ==== Local
 Local plugins use the same underlying implementation as remote plugins. The difference is that local plugins are packaged with some additional metadata that allows Beer Garden to manage the plugin process for you.
 
-When Beer Garden starts it will attempt to start all the plugins in its configured plugins directory. Since Beer Garden is the one starting the process you don't need to worry about providing Beer Garden connection information - Beer Garden already knows how to talk to Brew View and will pass that information to the plugin by setting the correct environment variables. Beer Garden will read a special file named ``beer.conf`` and use it to pass additional parameter to the plugin as well.
+When Beer Garden starts it will attempt to start all the plugins in its configured plugins directory. Since Beer Garden is the one starting the process you don't need to worry about providing Beer Garden connection information - Beer Garden will pass that information to the plugin by setting the correct environment variables. Beer Garden will read a special file named ``beer.conf`` and use it to pass additional parameter to the plugin as well.
 
 The actual implementation of starting, initialization, running, and stopping is exactly the same for local plugins as it is for remote plugins. The difference is how the Python process is created. With remote plugins starting the plugin process is the plugin developer's responsibility, but with local plugins Beer Garden assumes that responsibility.
 
