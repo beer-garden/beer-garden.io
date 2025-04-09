@@ -117,7 +117,7 @@ def get_choices(self):
     ]
 ----
 
-===== Choice parameters
+==== Choice parameters
 It's often useful to have the choices for one parameter depend on the current value of another. To do that you can use choice parameters. 
 
 To create a reference on another parameter enclose its key in `${}`. How the parameter is passed depends on what choice source is being used. 
