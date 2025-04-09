@@ -1,0 +1,123 @@
+= Publish Client and Subscriber in Beer Garden
+
+The Beer Garden project utilizes a powerful event-driven system, where the `PublishClient` class and `Subscriber` annotation help 
+facilitate Requests between different components within the system. 
+
+== Overview of PublishClient and Subscriber
+
+The `PublishClient` and `Subscriber` annotations are used to define message producers and consumers in the system. 
+The Publish-Subscribe (Pub/Sub) pattern is employed to allow different components to exchange data asynchronously.
+
+=== PublishClient Annotation
+
+The `PublishClient` class in Brewtils is used for publishing messages to the message bus. 
+These messages are broadcaste to other Systems that are subscribed to the corresponding event.
+
+Key Features:
+* Used to define a component that will emit events.
+* Supports asynchronous messaging and event-driven behavior.
+* Works in tandem with `Subscriber` components to broadcast and consume events.
+* Only Publishes to RUNNING instances
+
+Example of `PublishClient` usage:
+
+```python
+from brewtils import PublishClient, command
+
+
+class OrderClient:
+
+    def __init__(self):
+        self.publisher = PublishClient()
+
+    @command
+    def create_order(self, order_data: dict):
+        # Publish the 'OrderCreated' event to the message bus
+        self.publisher.publish(_topic="OrderCreated", order_data)
+
+```
+
+In this example, the OrderClient is marked with the PublishClient class. The create_order method will publish an event (e.g., OrderCreated) when 
+a new order is created. Other components can subscribe to this event and take appropriate actions.
+
+=== Subscriber Annotation
+
+The Subscriber annotation, on the other hand, is used to mark functions or methods that consume or listen to events published by 
+PublishClient components. It enables the Beer Garden components to respond to specific events that they are interested in.
+
+Key Features:
+
+Used to define a method that will listen for specific events.
+
+Can process incoming messages asynchronously.
+
+Allows decoupling of event producers and consumers.
+
+Example of Subscriber usage:
+
+```python
+from brewtils import subscribe, command
+
+class OrderProcessor:
+
+    @subscribe(topic="OrderCreated")
+    @command
+    def on_order_created(self, order_data: dict):
+        # Process the incoming order data when 'OrderCreated' event is received
+        print(f"Processing order: {order_data}")
+
+```
+In this example, the OrderProcessor class listens for the OrderCreated event. When the event is published by a PublishClient, 
+the on_order_created method will be triggered, processing the event data.
+
+=== Dynamic subscribers
+
+Dynamic subscribers persist after a System is removed. This is helpful for subscriber metrics that you want to monitor over multiple installs.
+The downside is Beer Garden will not clean up these Subscribers for you. This is a more advance feature.
+
+This example registers the command with the topic, instead of using the `@subscribe` annotation. 
+
+```python
+
+class OrderProcessor:
+
+    def __init__(self):
+        self.publisher = PublishClient()
+
+    def start_listening(self):
+        self.publisher.register_command(topic_name="OrderCreated", cmd_func=self.on_order_created)
+
+    def stop_listening(self):
+        self.publisher.unregister_command(topic_name="OrderCreated", cmd_func=self.on_order_created)    
+
+    @command
+    def on_order_created(self, order_data: dict):
+        # Process the incoming order data when 'OrderCreated' event is received
+        print(f"Processing order: {order_data}")
+
+```
+
+== How PublishClient and Subscriber Work Together
+
+The PublishClient and Subscriber annotations enable an event-driven architecture in Beer Garden. When a PublishClient publishes an event, 
+Beer Garden checks for any Running systems that are registered to handle that event. If a matching Subscriber is found, 
+the corresponding Request is generated, allowing the subscriber to process the event.
+
+The PublishClient is responsible for publishing an event to the message bus.
+
+When the event is published, the Subscriber method is invoked, and the subscriber processes the event. Allowing for the Publisher System to 
+complete the current Request without waiting for a response.
+
+This decouples components within the system, allowing for more flexibility, scalability, and responsiveness in Beer Garden's architecture.
+
+== Benefits of Using PublishClient and Subscriber Annotations
+
+Using the PublishClient and Subscriber annotations in Beer Garden brings several benefits:
+
+Asynchronous Communication: Events can be processed in parallel, allowing the system to handle a large number of events without blocking.
+
+Loose Coupling: Components that publish and consume events don't need to know about each other, making the system easier to maintain and extend.
+
+Scalability: The Pub/Sub pattern allows components to scale independently, as subscribers can be added or removed without affecting the publisher.
+
+Extensibility: New events and subscribers can be introduced into the system without disrupting existing functionality.

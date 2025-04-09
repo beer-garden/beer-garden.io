@@ -48,6 +48,9 @@ link:app/security[Security Guide]::
 link:app/api-users-guide/[API Guide]::
     If you aren't writing plugins, but rather using them, this guide is for you
 
+link:app/topics/[Publish/Subscribe Guide]::
+  Learn how Pub/Sub is implemented
+
 link:app/upgrading[Upgrade Guide]::
   Instructions for upgrading Beer Garden from 2.x to 3.x
 
