@@ -26,13 +26,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      # - name: Cache Bundler
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: .cache/bundler
-      #     key: ${{ runner.os }}-bundler-${{ hashFiles('**/Gemfile.lock') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-bundler
+      - name: Cache Bundler
+        uses: actions/cache@v3
+        with:
+          path: .cache/bundler
+          key: ${{ runner.os }}-bundler-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bundler
 
 
       - name: Bundle Install
@@ -46,7 +46,7 @@ jobs:
           NOKOGIRI_USE_SYSTEM_LIBRARIES: true
 
       - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: 'public'
       
