@@ -1,5 +1,6 @@
 = Remote Gardens
 :page-layout: docs
+:rpm-config-home: /opt/beer-garden/conf
 
 == Parent and Child Gardens
 
@@ -13,6 +14,8 @@ Another design approach is that Parents have no concept of Grand Children. Beer 
 execute against, not what systems are connected to itself and children. So if a Child has 3 Beer Gardens connected, the
 child tells the Parent it has the ability to route to all of the systems. The Parent will trust the Child Beer Garden to
 the routing appropriately.
+
+To configure a Child Garden connection information, check out our link:../configuration_yaml/[Configuration Manual]
 
 == Internal Routing
 
@@ -58,14 +61,23 @@ determine the Target Beer Garden, same as the Systems and Instances is looked up
 
 === What does a Child emit to the Parent?
 
+
 Children forward all internal events to their Parents. If there are events that should not be forwarded, then that can
 be configured in the configuration of Beer Garden.
 
 === How does a Parent connect to a Child?
 
-Child configuration is done through the User Interface. If an administrator does not configure the child connection
-class, then the Systems connected through that Child are inaccessible. These Systems will appear on the UI, and a user
-can create Requests against them, but will be prompted with an error message stating the invalid connection.
+If you would like to jump straight to the definitions of Child Configurations, please redirect to
+link:../child_config_yaml/[Child Config User Manual]
+
+Children configuration files are located within the `./children` directory. For RPM installs, the default location is 
+folder `{rpm-config-home}/children`.
+
+Child configurations files have a specific naming convention for the file. The file should be named as `<garden name>.yaml`. 
+The filename prior to `.yaml` will be stored as the Garden Name in the database. At file reload, all values will be overwritten.
+
+If an administrator does not configure the child, then the Systems connected through that Child are inaccessible. These Systems will not 
+be routable for Requests and not appear on the Systems page.
 
 
 === How does a Child connect to a Parent?
@@ -181,3 +193,8 @@ parent:
     - RUNNER_STOPPED
     - RUNNER_REMOVED
 ----
+
+==== Filtering Events Based on Commands
+There is a Command Publishing Blocklist that allows commands to be added to the list through the UI found in the admin section of the navigation bar under Command Publishing Blocklist. Any events involving requests for commands in the blocklist will be filtered out and not sent to the parent.
+
+WARNING: Once a command has been added to the blocklist, tasking status will no longer be available on the parent garden. If a blocked command is tasked through the parent garden, the request will still be forwarded to the child and executed. However, the parent will always show a status of CREATED, as the child will no longer be publishing task updates back up to the parent.

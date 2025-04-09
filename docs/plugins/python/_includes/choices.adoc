@@ -93,14 +93,20 @@ def format(self, p1, p2):
 CAUTION: Be aware that the user's browser will be making this request. So if the Beer Garden UI is being accessed at a secure (https) address then a request to a non-secure (http) URL will likely fail due to mixed-content restrictions.
 
 ===== Command
-Specifying a command will load choices by making a request to the current system. You can use type 'command' if using dictionary configuration or just pass the command as a string. If you're not using choice parameters (more on those in a minute) you can omit the parenthesis for brevity.
+Specifying a command will load choices by making a request to the given system. You can use type 'command' if using dictionary configuration or just pass the command as a string. If you're not using choice parameters (more on those in a minute) you can omit the parenthesis for brevity.
 [source,python]
 .Choices Command example
 ----
 @parameter(key="p1", choices="get_choices()")
 @parameter(key="p2", choices={"type": "command",
                               "value": "get_choices"})
-def format(self, p1, p2):
+@parameter(key="p3", choices={"type": "command",
+                              "value": {"command": "get_choices",
+                                        "system": "echo",
+                                        "version": "latest",
+                                        "instance_name": "default"}
+                              })
+def format(self, p1, p2, p3):
     ...
 
 @command
@@ -110,9 +116,6 @@ def get_choices(self):
         {"text": "The worst", "value": "xml"}
     ]
 ----
-
-NOTE: Currently you must use a command from the same system (this restriction will be removed in a future release - see {issues_uri}/269[issue 269]).
-
 
 ==== Choice parameters
 It's often useful to have the choices for one parameter depend on the current value of another. To do that you can use choice parameters. 

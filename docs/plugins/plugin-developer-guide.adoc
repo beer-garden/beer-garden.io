@@ -8,6 +8,7 @@ These guides provide gentle introductions to plugin development. They are intend
 
 * link:../python/local-guide/[Python Plugin (Local)]
 * link:../python/remote-guide/[Python Plugin (Remote)]
+* link:../python/autobrew-guide/[Python Plugin (Autobrew)]
 
 TIP: If you want to know what Beer Garden is all about, find the answer in link:/docs/startup/what-is-beergarden/[What is Beer Garden?] If you're looking for a concise survey of plugin developer options, checkout the link:../plugin-syntax-quick-reference/[Plugin Developer Syntax Guide]
 
@@ -18,3 +19,5 @@ These guides will dive into some of the more specific ways you can develop plugi
 * How to run your plugin
 
 TIP: If you don't know the difference between remote and local plugins, please check the link:../local-vs-remote/[local vs remote plugins docs]
+
+TIP: If you have an external library that you want converted to a plugin, please checkout the Autobrew guide.

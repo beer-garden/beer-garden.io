@@ -25,7 +25,7 @@
 source 'https://rubygems.org'       # This tells Bundler where to look for gems
 
 gem 'awestruct', '0.5.7'
-gem 'asciidoctor', '1.5.6.1'
+gem 'asciidoctor', '1.5.8'
 gem 'compass', '1.0.3'
 gem 'haml', '4.0.7'
 gem 'slim', '3.0.6'
@@ -33,6 +33,6 @@ gem 'tilt', '2.0.2'
 gem 'rb-inotify', '0.9.7', :platforms => [:ruby, :jruby]
 gem 'bootstrap-sass', '< 3.4'
 gem 'font-awesome-sass', '<= 5'
-gem 'tzinfo', '1.2.2', :group => :test
+gem 'tzinfo', '1.2.10', :group => :test
 gem 'rake', '12.3.3', :group => :test
 gem 'html-proofer', '3.0.2', :group => :test

@@ -34,10 +34,20 @@ This section outlines the various configuration items Beer Garden supports.
 | False
 | Enable authentication via trusted headers
 
-| <<auth.authentication_handlers.trusted_header.user_groups_header,auth.authentication_handlers.trusted_header.user_groups_header>>
+| <<auth.authentication_handlers.trusted_header.user_alias_mapping_header,auth.authentication_handlers.trusted_header.user_alias_mapping_header>>
 | str
-| bg-user-groups
-| The http header containing the comma separated list of the user's groups.
+| bg-user-alias-mapping
+| The http header containing the JSON list of the user's alias user accounts mapping
+
+| <<auth.authentication_handlers.trusted_header.user_local_roles_header,auth.authentication_handlers.trusted_header.user_local_roles_header>>
+| str
+| bg-user-local-roles
+| The http header containing the str list of the user's local role names
+
+| <<auth.authentication_handlers.trusted_header.user_upstream_roles_header,auth.authentication_handlers.trusted_header.user_upstream_roles_header>>
+| str
+| bg-user-upstream-roles
+| The http header containing the JSON list of the user's roles
 
 | <<auth.authentication_handlers.trusted_header.username_header,auth.authentication_handlers.trusted_header.username_header>>
 | str
@@ -59,20 +69,65 @@ This section outlines the various configuration items Beer Garden supports.
 | False
 | Use role-based authentication / authorization
 
-| <<auth.group_definition_file,auth.group_definition_file>>
-| str
-| None
-| Path to the file containg a mapping of groups to beer garden role assignments
-
 | <<auth.role_definition_file,auth.role_definition_file>>
 | str
 | None
 | Path to the yaml file that defines roles used for authorization
 
+| <<auth.token_access_ttl.garden_admin,auth.token_access_ttl.garden_admin>>
+| int
+| 15
+| The Garden Admin Permission access token expiration time
+
+| <<auth.token_access_ttl.operator,auth.token_access_ttl.operator>>
+| int
+| 15
+| The Operator Permission access token expiration time
+
+| <<auth.token_access_ttl.plugin_admin,auth.token_access_ttl.plugin_admin>>
+| int
+| 15
+| The Plugin Admin Permission access token expiration time
+
+| <<auth.token_access_ttl.read_only,auth.token_access_ttl.read_only>>
+| int
+| 15
+| The Read Only Permission access token expiration time
+
+| <<auth.token_refresh_ttl.garden_admin,auth.token_refresh_ttl.garden_admin>>
+| int
+| 720
+| The Garden Admin Permission refresh token expiration time
+
+| <<auth.token_refresh_ttl.operator,auth.token_refresh_ttl.operator>>
+| int
+| 720
+| The Operator Permission refresh token expiration time
+
+| <<auth.token_refresh_ttl.plugin_admin,auth.token_refresh_ttl.plugin_admin>>
+| int
+| 720
+| The Plugin Admin Permission refresh token expiration time
+
+| <<auth.token_refresh_ttl.read_only,auth.token_refresh_ttl.read_only>>
+| int
+| 720
+| The Read Only Permission refresh token expiration time
+
 | <<auth.token_secret,auth.token_secret>>
 | str
 |
 | Secret to use when signing authentication tokens
+
+| <<auth.user_definition_file,auth.user_definition_file>>
+| str
+| None
+| Path to the yaml file that defines users used for authorization
+
+| <<children.directory,children.directory>>
+| str
+| ./children
+| Directory where child garden configs are located
 
 | <<configuration.file,configuration.file>>
 | str
@@ -104,20 +159,45 @@ This section outlines the various configuration items Beer Garden supports.
 | beer_garden
 | Name of the database to use
 
+| <<db.prune_interval,db.prune_interval>>
+| int
+| 15
+| Number of minutes to wait before running db pruner
+
 | <<db.ttl.action,db.ttl.action>>
 | int
 | -1
 | Number of minutes to wait before deleting ACTION requests (negative number for never)
+
+| <<db.ttl.admin,db.ttl.admin>>
+| int
+| -1
+| Number of minutes to wait before deleting Admin requests (negative number for never)
+
+| <<db.ttl.batch_size,db.ttl.batch_size>>
+| int
+| -1
+| Batch size for deleting documents (negative number for never)
 
 | <<db.ttl.file,db.ttl.file>>
 | int
 | 15
 | Number of minutes to wait before deleting FILE documents (negative number for never)
 
+| <<db.ttl.in_progress,db.ttl.in_progress>>
+| int
+| -1
+| Number of minutes to wait for a request in CREATED or IN_PROGRESSto complete before considering timed out and marking as CANCELLED(negative number for never)
+
 | <<db.ttl.info,db.ttl.info>>
 | int
 | 15
 | Number of minutes to wait before deleting INFO requests (negative number for never)
+
+| <<db.ttl.temp,db.ttl.temp>>
+| int
+| 15
+| Number of minutes to wait before deleting TEMP requests (negative number for never)
 
 | <<entry.http.enabled,entry.http.enabled>>
 | bool
@@ -234,6 +314,11 @@ This section outlines the various configuration items Beer Garden supports.
 | default
 | The routing name for upstream Beer Gardens to use
 
+| <<garden.status_history,garden.status_history>>
+| int
+| 50
+| Amount of historical status heartbeats tracked for Garden and Connections
+
 | <<log.config_file,log.config_file>>
 | str
 | None
@@ -249,9 +334,19 @@ This section outlines the various configuration items Beer Garden supports.
 | INFO
 | Log level to use if config_file is not specified
 
+| <<metrics.elastic.enabled,metrics.elastic.enabled>>
+| bool
+| False
+| Enable elastic APM server
+
+| <<metrics.elastic.url,metrics.elastic.url>>
+| str
+| None
+| URL to elastic apm server.
+
 | <<metrics.prometheus.enabled,metrics.prometheus.enabled>>
 | bool
-| True
+| False
 | Enable prometheus server
 
 | <<metrics.prometheus.host,metrics.prometheus.host>>
@@ -514,6 +609,11 @@ This section outlines the various configuration items Beer Garden supports.
 | None
 | Username to use for authentication
 
+| <<parent.sync_interval,parent.sync_interval>>
+| int
+| 15
+| Number of minutes to wait before sending Garden Sync event to parent
+
 | <<plugin.allow_command_updates,plugin.allow_command_updates>>
 | bool
 | False
@@ -521,12 +621,12 @@ This section outlines the various configuration items Beer Garden supports.
 
 | <<plugin.local.auth.password,plugin.local.auth.password>>
 | str
-| None
+| password
 | Password that local plugins will use for authentication (needs bg-plugin role)
 
 | <<plugin.local.auth.username,plugin.local.auth.username>>
 | str
-| None
+| plugin_admin
 | Username that local plugins will use for authentication (needs bg-plugin role)
 
 | <<plugin.local.directory,plugin.local.directory>>
@@ -579,10 +679,20 @@ This section outlines the various configuration items Beer Garden supports.
 | 10
 | Amount of time between status messages
 
+| <<plugin.status_history,plugin.status_history>>
+| int
+| 50
+| Amount of historical status heartbeats tracked
+
 | <<plugin.status_timeout,plugin.status_timeout>>
 | int
 | 30
 | Amount of time to wait before marking a plugin asunresponsive
+
+| <<replication.enabled,replication.enabled>>
+| bool
+| False
+| Publish subset of events to Rabbit to allow all Gardens to stay in sync when replicated
 
 | <<request_validation.dynamic_choices.command.timeout,request_validation.dynamic_choices.command.timeout>>
 | int
@@ -614,9 +724,14 @@ This section outlines the various configuration items Beer Garden supports.
 | 10
 | Number of workers (processes) to run concurrently.
 
-| <<ui.cors_enabled,ui.cors_enabled>>
+| <<ui.auto_refresh,ui.auto_refresh>>
 | bool
 | False
+| Auto refresh user interface
+
+| <<ui.cors_enabled,ui.cors_enabled>>
+| bool
+| True
 | Determine if CORS should be enabled
 
 | <<ui.debug_mode,ui.debug_mode>>
@@ -743,9 +858,9 @@ You can set auth.authentication_handlers.trusted_header.enabled from the environ
 
 You can set `auth.authentication_handlers.trusted_header.enabled` from the command-line by specifying `--auth-authentication_handlers-trusted_header-enabled` at Beer Garden's entrypoint.
 
-=== auth.authentication_handlers.trusted_header.user_groups_header
+=== auth.authentication_handlers.trusted_header.user_alias_mapping_header
 
-The http header containing the comma separated list of the user's groups.
+The http header containing the JSON list of the user's alias user accounts mapping
 
 |===
 | Attribute | Value
@@ -754,16 +869,16 @@ The http header containing the comma separated list of the user's groups.
 | `str`
 
 | *default*
-| `bg-user-groups`
+| `bg-user-alias-mapping`
 
 | *env_name*
-| `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_USER_GROUPS_HEADER`
+| `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_USER_ALIAS_MAPPING_HEADER`
 
 | *required*
 | `True`
 
 | *cli_name*
-| `--auth-authentication_handlers-trusted_header-user-groups-header`
+| `--auth-authentication_handlers-trusted_header-user-alias-mapping-header`
 
 | *fallback*
 | `None`
@@ -772,11 +887,81 @@ The http header containing the comma separated list of the user's groups.
 | `None`
 |===
 
-You can set auth.authentication_handlers.trusted_header.user_groups_header from the environment by setting the environment variable `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_USER_GROUPS_HEADER`
+You can set auth.authentication_handlers.trusted_header.user_alias_mapping_header from the environment by setting the environment variable `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_USER_ALIAS_MAPPING_HEADER`
 
-You can set `auth.authentication_handlers.trusted_header.user_groups_header` from the command-line by specifying `--auth-authentication_handlers-trusted_header-user-groups-header` at Beer Garden's entrypoint.
+You can set `auth.authentication_handlers.trusted_header.user_alias_mapping_header` from the command-line by specifying `--auth-authentication_handlers-trusted_header-user-alias-mapping-header` at Beer Garden's entrypoint.
 
-If `auth.authentication_handlers.trusted_header.user_groups_header` is not set in any of the sources listed, it will fallback to the default value `bg-user-groups`
+If `auth.authentication_handlers.trusted_header.user_alias_mapping_header` is not set in any of the sources listed, it will fallback to the default value `bg-user-alias-mapping`
+
+=== auth.authentication_handlers.trusted_header.user_local_roles_header
+
+The http header containing the str list of the user's local role names
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `bg-user-local-roles`
+
+| *env_name*
+| `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_USER_LOCAL_ROLES_HEADER`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-authentication_handlers-trusted_header-user-local-roles-header`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.authentication_handlers.trusted_header.user_local_roles_header from the environment by setting the environment variable `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_USER_LOCAL_ROLES_HEADER`
+
+You can set `auth.authentication_handlers.trusted_header.user_local_roles_header` from the command-line by specifying `--auth-authentication_handlers-trusted_header-user-local-roles-header` at Beer Garden's entrypoint.
+
+If `auth.authentication_handlers.trusted_header.user_local_roles_header` is not set in any of the sources listed, it will fallback to the default value `bg-user-local-roles`
+
+=== auth.authentication_handlers.trusted_header.user_upstream_roles_header
+
+The http header containing the JSON list of the user's roles
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `bg-user-upstream-roles`
+
+| *env_name*
+| `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_USER_UPSTREAM_ROLES_HEADER`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-authentication_handlers-trusted_header-user-upstream-roles-header`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.authentication_handlers.trusted_header.user_upstream_roles_header from the environment by setting the environment variable `BG_AUTH_AUTHENTICATION_HANDLERS_TRUSTED_HEADER_USER_UPSTREAM_ROLES_HEADER`
+
+You can set `auth.authentication_handlers.trusted_header.user_upstream_roles_header` from the command-line by specifying `--auth-authentication_handlers-trusted_header-user-upstream-roles-header` at Beer Garden's entrypoint.
+
+If `auth.authentication_handlers.trusted_header.user_upstream_roles_header` is not set in any of the sources listed, it will fallback to the default value `bg-user-upstream-roles`
 
 === auth.authentication_handlers.trusted_header.username_header
 
@@ -916,39 +1101,6 @@ You can set auth.enabled from the environment by setting the environment variabl
 
 You can set `auth.enabled` from the command-line by specifying `--auth-enabled` at Beer Garden's entrypoint.
 
-=== auth.group_definition_file
-
-Path to the file containg a mapping of groups to beer garden role assignments
-
-|===
-| Attribute | Value
-
-| *item_type*
-| `str`
-
-| *default*
-| `None`
-
-| *env_name*
-| `BG_AUTH_GROUP_DEFINITION_FILE`
-
-| *required*
-| `False`
-
-| *cli_name*
-| `--auth-group-definition-file`
-
-| *fallback*
-| `None`
-
-| *choices*
-| `None`
-|===
-
-You can set auth.group_definition_file from the environment by setting the environment variable `BG_AUTH_GROUP_DEFINITION_FILE`
-
-You can set `auth.group_definition_file` from the command-line by specifying `--auth-group-definition-file` at Beer Garden's entrypoint.
-
 === auth.role_definition_file
 
 Path to the yaml file that defines roles used for authorization
@@ -982,6 +1134,286 @@ You can set auth.role_definition_file from the environment by setting the enviro
 
 You can set `auth.role_definition_file` from the command-line by specifying `--auth-role-definition-file` at Beer Garden's entrypoint.
 
+=== auth.token_access_ttl.garden_admin
+
+The Garden Admin Permission access token expiration time
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `15`
+
+| *env_name*
+| `BG_AUTH_TOKEN_ACCESS_TTL_GARDEN_ADMIN`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-token_access_ttl-garden-admin`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.token_access_ttl.garden_admin from the environment by setting the environment variable `BG_AUTH_TOKEN_ACCESS_TTL_GARDEN_ADMIN`
+
+You can set `auth.token_access_ttl.garden_admin` from the command-line by specifying `--auth-token_access_ttl-garden-admin` at Beer Garden's entrypoint.
+
+If `auth.token_access_ttl.garden_admin` is not set in any of the sources listed, it will fallback to the default value `15`
+
+=== auth.token_access_ttl.operator
+
+The Operator Permission access token expiration time
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `15`
+
+| *env_name*
+| `BG_AUTH_TOKEN_ACCESS_TTL_OPERATOR`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-token_access_ttl-operator`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.token_access_ttl.operator from the environment by setting the environment variable `BG_AUTH_TOKEN_ACCESS_TTL_OPERATOR`
+
+You can set `auth.token_access_ttl.operator` from the command-line by specifying `--auth-token_access_ttl-operator` at Beer Garden's entrypoint.
+
+If `auth.token_access_ttl.operator` is not set in any of the sources listed, it will fallback to the default value `15`
+
+=== auth.token_access_ttl.plugin_admin
+
+The Plugin Admin Permission access token expiration time
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `15`
+
+| *env_name*
+| `BG_AUTH_TOKEN_ACCESS_TTL_PLUGIN_ADMIN`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-token_access_ttl-plugin-admin`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.token_access_ttl.plugin_admin from the environment by setting the environment variable `BG_AUTH_TOKEN_ACCESS_TTL_PLUGIN_ADMIN`
+
+You can set `auth.token_access_ttl.plugin_admin` from the command-line by specifying `--auth-token_access_ttl-plugin-admin` at Beer Garden's entrypoint.
+
+If `auth.token_access_ttl.plugin_admin` is not set in any of the sources listed, it will fallback to the default value `15`
+
+=== auth.token_access_ttl.read_only
+
+The Read Only Permission access token expiration time
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `15`
+
+| *env_name*
+| `BG_AUTH_TOKEN_ACCESS_TTL_READ_ONLY`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-token_access_ttl-read-only`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.token_access_ttl.read_only from the environment by setting the environment variable `BG_AUTH_TOKEN_ACCESS_TTL_READ_ONLY`
+
+You can set `auth.token_access_ttl.read_only` from the command-line by specifying `--auth-token_access_ttl-read-only` at Beer Garden's entrypoint.
+
+If `auth.token_access_ttl.read_only` is not set in any of the sources listed, it will fallback to the default value `15`
+
+=== auth.token_refresh_ttl.garden_admin
+
+The Garden Admin Permission refresh token expiration time
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `720`
+
+| *env_name*
+| `BG_AUTH_TOKEN_REFRESH_TTL_GARDEN_ADMIN`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-token_refresh_ttl-garden-admin`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.token_refresh_ttl.garden_admin from the environment by setting the environment variable `BG_AUTH_TOKEN_REFRESH_TTL_GARDEN_ADMIN`
+
+You can set `auth.token_refresh_ttl.garden_admin` from the command-line by specifying `--auth-token_refresh_ttl-garden-admin` at Beer Garden's entrypoint.
+
+If `auth.token_refresh_ttl.garden_admin` is not set in any of the sources listed, it will fallback to the default value `720`
+
+=== auth.token_refresh_ttl.operator
+
+The Operator Permission refresh token expiration time
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `720`
+
+| *env_name*
+| `BG_AUTH_TOKEN_REFRESH_TTL_OPERATOR`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-token_refresh_ttl-operator`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.token_refresh_ttl.operator from the environment by setting the environment variable `BG_AUTH_TOKEN_REFRESH_TTL_OPERATOR`
+
+You can set `auth.token_refresh_ttl.operator` from the command-line by specifying `--auth-token_refresh_ttl-operator` at Beer Garden's entrypoint.
+
+If `auth.token_refresh_ttl.operator` is not set in any of the sources listed, it will fallback to the default value `720`
+
+=== auth.token_refresh_ttl.plugin_admin
+
+The Plugin Admin Permission refresh token expiration time
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `720`
+
+| *env_name*
+| `BG_AUTH_TOKEN_REFRESH_TTL_PLUGIN_ADMIN`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-token_refresh_ttl-plugin-admin`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.token_refresh_ttl.plugin_admin from the environment by setting the environment variable `BG_AUTH_TOKEN_REFRESH_TTL_PLUGIN_ADMIN`
+
+You can set `auth.token_refresh_ttl.plugin_admin` from the command-line by specifying `--auth-token_refresh_ttl-plugin-admin` at Beer Garden's entrypoint.
+
+If `auth.token_refresh_ttl.plugin_admin` is not set in any of the sources listed, it will fallback to the default value `720`
+
+=== auth.token_refresh_ttl.read_only
+
+The Read Only Permission refresh token expiration time
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `720`
+
+| *env_name*
+| `BG_AUTH_TOKEN_REFRESH_TTL_READ_ONLY`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--auth-token_refresh_ttl-read-only`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.token_refresh_ttl.read_only from the environment by setting the environment variable `BG_AUTH_TOKEN_REFRESH_TTL_READ_ONLY`
+
+You can set `auth.token_refresh_ttl.read_only` from the command-line by specifying `--auth-token_refresh_ttl-read-only` at Beer Garden's entrypoint.
+
+If `auth.token_refresh_ttl.read_only` is not set in any of the sources listed, it will fallback to the default value `720`
+
 === auth.token_secret
 
 Secret to use when signing authentication tokens
@@ -1014,6 +1446,74 @@ Secret to use when signing authentication tokens
 You can set auth.token_secret from the environment by setting the environment variable `BG_AUTH_TOKEN_SECRET`
 
 You can set `auth.token_secret` from the command-line by specifying `--auth-token-secret` at Beer Garden's entrypoint.
+
+=== auth.user_definition_file
+
+Path to the yaml file that defines users used for authorization
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_AUTH_USER_DEFINITION_FILE`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--auth-user-definition-file`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set auth.user_definition_file from the environment by setting the environment variable `BG_AUTH_USER_DEFINITION_FILE`
+
+You can set `auth.user_definition_file` from the command-line by specifying `--auth-user-definition-file` at Beer Garden's entrypoint.
+
+=== children.directory
+
+Directory where child garden configs are located
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `./children`
+
+| *env_name*
+| `BG_CHILDREN_DIRECTORY`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--children-directory`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set children.directory from the environment by setting the environment variable `BG_CHILDREN_DIRECTORY`
+
+You can set `children.directory` from the command-line by specifying `--children-directory` at Beer Garden's entrypoint.
+
+If `children.directory` is not set in any of the sources listed, it will fallback to the default value `./children`
 
 === configuration.file
 
@@ -1219,6 +1719,41 @@ You can set `db.name` from the command-line by specifying `--db-name` at Beer Ga
 
 If `db.name` is not set in any of the sources listed, it will fallback to the default value `beer_garden`
 
+=== db.prune_interval
+
+Number of minutes to wait before running db pruner
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `15`
+
+| *env_name*
+| `BG_DB_PRUNE_INTERVAL`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--db-prune-interval`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set db.prune_interval from the environment by setting the environment variable `BG_DB_PRUNE_INTERVAL`
+
+You can set `db.prune_interval` from the command-line by specifying `--db-prune-interval` at Beer Garden's entrypoint.
+
+If `db.prune_interval` is not set in any of the sources listed, it will fallback to the default value `15`
+
 === db.ttl.action
 
 Number of minutes to wait before deleting ACTION requests (negative number for never)
@@ -1253,6 +1788,76 @@ You can set db.ttl.action from the environment by setting the environment variab
 You can set `db.ttl.action` from the command-line by specifying `--db-ttl-action` at Beer Garden's entrypoint.
 
 If `db.ttl.action` is not set in any of the sources listed, it will fallback to the default value `-1`
+
+=== db.ttl.admin
+
+Number of minutes to wait before deleting Admin requests (negative number for never)
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `-1`
+
+| *env_name*
+| `BG_DB_TTL_ADMIN`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--db-ttl-admin`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set db.ttl.admin from the environment by setting the environment variable `BG_DB_TTL_ADMIN`
+
+You can set `db.ttl.admin` from the command-line by specifying `--db-ttl-admin` at Beer Garden's entrypoint.
+
+If `db.ttl.admin` is not set in any of the sources listed, it will fallback to the default value `-1`
+
+=== db.ttl.batch_size
+
+Batch size for deleting documents (negative number for never)
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `-1`
+
+| *env_name*
+| `BG_DB_TTL_BATCH_SIZE`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--db-ttl-batch-size`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set db.ttl.batch_size from the environment by setting the environment variable `BG_DB_TTL_BATCH_SIZE`
+
+You can set `db.ttl.batch_size` from the command-line by specifying `--db-ttl-batch-size` at Beer Garden's entrypoint.
+
+If `db.ttl.batch_size` is not set in any of the sources listed, it will fallback to the default value `-1`
 
 === db.ttl.file
 
@@ -1289,6 +1894,41 @@ You can set `db.ttl.file` from the command-line by specifying `--db-ttl-file` at
 
 If `db.ttl.file` is not set in any of the sources listed, it will fallback to the default value `15`
 
+=== db.ttl.in_progress
+
+Number of minutes to wait for a request in CREATED or IN_PROGRESSto complete before considering timed out and marking as CANCELLED(negative number for never)
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `-1`
+
+| *env_name*
+| `BG_DB_TTL_IN_PROGRESS`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--db-ttl-in-progress`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set db.ttl.in_progress from the environment by setting the environment variable `BG_DB_TTL_IN_PROGRESS`
+
+You can set `db.ttl.in_progress` from the command-line by specifying `--db-ttl-in-progress` at Beer Garden's entrypoint.
+
+If `db.ttl.in_progress` is not set in any of the sources listed, it will fallback to the default value `-1`
+
 === db.ttl.info
 
 Number of minutes to wait before deleting INFO requests (negative number for never)
@@ -1323,6 +1963,41 @@ You can set db.ttl.info from the environment by setting the environment variable
 You can set `db.ttl.info` from the command-line by specifying `--db-ttl-info` at Beer Garden's entrypoint.
 
 If `db.ttl.info` is not set in any of the sources listed, it will fallback to the default value `15`
+
+=== db.ttl.temp
+
+Number of minutes to wait before deleting TEMP requests (negative number for never)
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `15`
+
+| *env_name*
+| `BG_DB_TTL_TEMP`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--db-ttl-temp`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set db.ttl.temp from the environment by setting the environment variable `BG_DB_TTL_TEMP`
+
+You can set `db.ttl.temp` from the command-line by specifying `--db-ttl-temp` at Beer Garden's entrypoint.
+
+If `db.ttl.temp` is not set in any of the sources listed, it will fallback to the default value `15`
 
 === entry.http.enabled
 
@@ -2097,6 +2772,41 @@ You can set `garden.name` from the command-line by specifying `--garden-name` at
 
 If `garden.name` is not set in any of the sources listed, it will fallback to the default value `default`
 
+=== garden.status_history
+
+Amount of historical status heartbeats tracked for Garden and Connections
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `50`
+
+| *env_name*
+| `BG_GARDEN_STATUS_HISTORY`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--garden-status-history`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set garden.status_history from the environment by setting the environment variable `BG_GARDEN_STATUS_HISTORY`
+
+You can set `garden.status_history` from the command-line by specifying `--garden-status-history` at Beer Garden's entrypoint.
+
+If `garden.status_history` is not set in any of the sources listed, it will fallback to the default value `50`
+
 === log.config_file
 
 Path to a logging config file.
@@ -2198,6 +2908,72 @@ You can set `log.fallback_level` from the command-line by specifying `--log-fall
 
 If `log.fallback_level` is not set in any of the sources listed, it will fallback to the default value `INFO`
 
+=== metrics.elastic.enabled
+
+Enable elastic APM server
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
+| `False`
+
+| *env_name*
+| `BG_METRICS_ELASTIC_ENABLED`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--metrics-elastic-enabled`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set metrics.elastic.enabled from the environment by setting the environment variable `BG_METRICS_ELASTIC_ENABLED`
+
+You can set `metrics.elastic.enabled` from the command-line by specifying `--metrics-elastic-enabled` at Beer Garden's entrypoint.
+
+=== metrics.elastic.url
+
+URL to elastic apm server.
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `str`
+
+| *default*
+| `None`
+
+| *env_name*
+| `BG_METRICS_ELASTIC_URL`
+
+| *required*
+| `False`
+
+| *cli_name*
+| `--metrics-elastic-url`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set metrics.elastic.url from the environment by setting the environment variable `BG_METRICS_ELASTIC_URL`
+
+You can set `metrics.elastic.url` from the command-line by specifying `--metrics-elastic-url` at Beer Garden's entrypoint.
+
 === metrics.prometheus.enabled
 
 Enable prometheus server
@@ -2209,7 +2985,7 @@ Enable prometheus server
 | `bool`
 
 | *default*
-| `True`
+| `False`
 
 | *env_name*
 | `BG_METRICS_PROMETHEUS_ENABLED`
@@ -2218,7 +2994,7 @@ Enable prometheus server
 | `True`
 
 | *cli_name*
-| `--metrics-prometheus-no-enabled`
+| `--metrics-prometheus-enabled`
 
 | *fallback*
 | `None`
@@ -2229,9 +3005,7 @@ Enable prometheus server
 
 You can set metrics.prometheus.enabled from the environment by setting the environment variable `BG_METRICS_PROMETHEUS_ENABLED`
 
-You can set `metrics.prometheus.enabled` from the command-line by specifying `--metrics-prometheus-no-enabled` at Beer Garden's entrypoint.
-
-If `metrics.prometheus.enabled` is not set in any of the sources listed, it will fallback to the default value `True`
+You can set `metrics.prometheus.enabled` from the command-line by specifying `--metrics-prometheus-enabled` at Beer Garden's entrypoint.
 
 === metrics.prometheus.host
 
@@ -3995,6 +4769,41 @@ You can set parent.stomp.username from the environment by setting the environmen
 
 You can set `parent.stomp.username` from the command-line by specifying `--parent-stomp-username` at Beer Garden's entrypoint.
 
+=== parent.sync_interval
+
+Number of minutes to wait before sending Garden Sync event to parent
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `15`
+
+| *env_name*
+| `BG_PARENT_SYNC_INTERVAL`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--parent-sync-interval`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set parent.sync_interval from the environment by setting the environment variable `BG_PARENT_SYNC_INTERVAL`
+
+You can set `parent.sync_interval` from the command-line by specifying `--parent-sync-interval` at Beer Garden's entrypoint.
+
+If `parent.sync_interval` is not set in any of the sources listed, it will fallback to the default value `15`
+
 === plugin.allow_command_updates
 
 Allow commands of non-dev systems to be updated
@@ -4041,7 +4850,7 @@ Password that local plugins will use for authentication (needs bg-plugin role)
 | `str`
 
 | *default*
-| `None`
+| `password`
 
 | *env_name*
 | `BG_PLUGIN_LOCAL_AUTH_PASSWORD`
@@ -4063,6 +4872,8 @@ You can set plugin.local.auth.password from the environment by setting the envir
 
 You can set `plugin.local.auth.password` from the command-line by specifying `--plugin-local-auth-password` at Beer Garden's entrypoint.
 
+If `plugin.local.auth.password` is not set in any of the sources listed, it will fallback to the default value `password`
+
 === plugin.local.auth.username
 
 Username that local plugins will use for authentication (needs bg-plugin role)
@@ -4074,7 +4885,7 @@ Username that local plugins will use for authentication (needs bg-plugin role)
 | `str`
 
 | *default*
-| `None`
+| `plugin_admin`
 
 | *env_name*
 | `BG_PLUGIN_LOCAL_AUTH_USERNAME`
@@ -4095,6 +4906,8 @@ Username that local plugins will use for authentication (needs bg-plugin role)
 You can set plugin.local.auth.username from the environment by setting the environment variable `BG_PLUGIN_LOCAL_AUTH_USERNAME`
 
 You can set `plugin.local.auth.username` from the command-line by specifying `--plugin-local-auth-username` at Beer Garden's entrypoint.
+
+If `plugin.local.auth.username` is not set in any of the sources listed, it will fallback to the default value `plugin_admin`
 
 === plugin.local.directory
 
@@ -4438,6 +5251,41 @@ You can set `plugin.status_heartbeat` from the command-line by specifying `--plu
 
 If `plugin.status_heartbeat` is not set in any of the sources listed, it will fallback to the default value `10`
 
+=== plugin.status_history
+
+Amount of historical status heartbeats tracked
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `int`
+
+| *default*
+| `50`
+
+| *env_name*
+| `BG_PLUGIN_STATUS_HISTORY`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--plugin-status-history`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set plugin.status_history from the environment by setting the environment variable `BG_PLUGIN_STATUS_HISTORY`
+
+You can set `plugin.status_history` from the command-line by specifying `--plugin-status-history` at Beer Garden's entrypoint.
+
+If `plugin.status_history` is not set in any of the sources listed, it will fallback to the default value `50`
+
 === plugin.status_timeout
 
 Amount of time to wait before marking a plugin asunresponsive
@@ -4472,6 +5320,39 @@ You can set plugin.status_timeout from the environment by setting the environmen
 You can set `plugin.status_timeout` from the command-line by specifying `--plugin-status-timeout` at Beer Garden's entrypoint.
 
 If `plugin.status_timeout` is not set in any of the sources listed, it will fallback to the default value `30`
+
+=== replication.enabled
+
+Publish subset of events to Rabbit to allow all Gardens to stay in sync when replicated
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
+| `False`
+
+| *env_name*
+| `BG_REPLICATION_ENABLED`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--replication-enabled`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set replication.enabled from the environment by setting the environment variable `BG_REPLICATION_ENABLED`
+
+You can set `replication.enabled` from the command-line by specifying `--replication-enabled` at Beer Garden's entrypoint.
 
 === request_validation.dynamic_choices.command.timeout
 
@@ -4681,9 +5562,9 @@ You can set `scheduler.max_workers` from the command-line by specifying `--sched
 
 If `scheduler.max_workers` is not set in any of the sources listed, it will fallback to the default value `10`
 
-=== ui.cors_enabled
+=== ui.auto_refresh
 
-Determine if CORS should be enabled
+Auto refresh user interface
 
 |===
 | Attribute | Value
@@ -4695,13 +5576,46 @@ Determine if CORS should be enabled
 | `False`
 
 | *env_name*
+| `BG_UI_AUTO_REFRESH`
+
+| *required*
+| `True`
+
+| *cli_name*
+| `--ui-auto-refresh`
+
+| *fallback*
+| `None`
+
+| *choices*
+| `None`
+|===
+
+You can set ui.auto_refresh from the environment by setting the environment variable `BG_UI_AUTO_REFRESH`
+
+You can set `ui.auto_refresh` from the command-line by specifying `--ui-auto-refresh` at Beer Garden's entrypoint.
+
+=== ui.cors_enabled
+
+Determine if CORS should be enabled
+
+|===
+| Attribute | Value
+
+| *item_type*
+| `bool`
+
+| *default*
+| `True`
+
+| *env_name*
 | `BG_UI_CORS_ENABLED`
 
 | *required*
 | `True`
 
 | *cli_name*
-| `--ui-cors-enabled`
+| `--ui-no-cors-enabled`
 
 | *fallback*
 | `None`
@@ -4712,7 +5626,9 @@ Determine if CORS should be enabled
 
 You can set ui.cors_enabled from the environment by setting the environment variable `BG_UI_CORS_ENABLED`
 
-You can set `ui.cors_enabled` from the command-line by specifying `--ui-cors-enabled` at Beer Garden's entrypoint.
+You can set `ui.cors_enabled` from the command-line by specifying `--ui-no-cors-enabled` at Beer Garden's entrypoint.
+
+If `ui.cors_enabled` is not set in any of the sources listed, it will fallback to the default value `True`
 
 === ui.debug_mode
 

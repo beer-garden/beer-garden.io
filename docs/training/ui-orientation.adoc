@@ -1,4 +1,4 @@
-:imagesdir: ./images
+:imagesdir: images
 
 == UI Orientation
 
@@ -20,7 +20,7 @@ image::navigation-user.png[Navigation User]
 
 Admin users have additional areas where they can navigate to.
 
-image::navigation-admin.png[Naviagation Admin]
+image::navigation-admin.png[Navigation Admin]
 
 . `System Management` - Administrative page to start/stop/rescan/delete connected systems
 . `Queue Management` - Administrative page to manage the queues that systems are listening to

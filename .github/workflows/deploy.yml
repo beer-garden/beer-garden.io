@@ -13,12 +13,21 @@ jobs:
     runs-on: ubuntu-latest
     container: ruby:2.7.2
 
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
+
     name: Build and Deploy Beer-Garden.io
     steps:
       - uses: actions/checkout@v2
 
       - name: Cache Bundler
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .cache/bundler
           key: ${{ runner.os }}-bundler-${{ hashFiles('**/Gemfile.lock') }}
@@ -36,10 +45,12 @@ jobs:
         env:
           NOKOGIRI_USE_SYSTEM_LIBRARIES: true
 
-      - name: Deploy to GitHub Pages
-        uses: crazy-max/ghaction-github-pages@v2
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          target_branch: gh-pages
-          build_dir: public
-        env:
-          GITHUB_TOKEN: ${{ secrets.BUILDBOT_PAGES }}
+          path: 'public'
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+
