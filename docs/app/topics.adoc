@@ -2,12 +2,9 @@
 :page-layout: docs
 :bg-github-uri: {git_group_uri}/beer-garden/tree/develop/src/app
 
-The Beer Garden project utilizes a powerful event-driven system, where the `PublishClient` class and `Subscriber` annotation help 
-facilitate Requests between different components within the system. 
-
 == Overview of PublishClient and Subscriber
 
-The `PublishClient` and `Subscriber` annotations are used to define message producers and consumers in the system. 
+The `PublishClient` class and `Subscriber` annotations are used to define message producers and consumers in the system. 
 The Publish-Subscribe (Pub/Sub) pattern is employed to allow different components to exchange data asynchronously.
 
 === PublishClient Annotation
@@ -16,10 +13,11 @@ The `PublishClient` class in Brewtils is used for publishing messages to the mes
 These messages are broadcaste to other Systems that are subscribed to the corresponding event.
 
 Key Features:
-* Used to define a component that will emit events.
-* Supports asynchronous messaging and event-driven behavior.
-* Works in tandem with `Subscriber` components to broadcast and consume events.
-* Only Publishes to RUNNING instances
+
+. Used to define a component that will emit events.
+. Supports asynchronous messaging and event-driven behavior.
+. Works in tandem with `Subscriber` components to broadcast and consume events.
+. Only Publishes to RUNNING instances
 
 Example of `PublishClient` usage:
 
