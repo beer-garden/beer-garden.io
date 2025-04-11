@@ -1,4 +1,6 @@
 = Publish Client and Subscriber in Beer Garden
+:page-layout: docs
+:bg-github-uri: {git_group_uri}/beer-garden/tree/develop/src/app
 
 The Beer Garden project utilizes a powerful event-driven system, where the `PublishClient` class and `Subscriber` annotation help 
 facilitate Requests between different components within the system. 
