@@ -11,6 +11,8 @@ Beer Garden requires connectivity to a MongoDB server as well as a RabbitMQ inst
 
 === RabbitMQ ===
 
+Official Source: https://www.rabbitmq.com/docs/download
+
 First, we need to install the rabbitmq-server and the plugins:
 
 [source]
@@ -79,12 +81,15 @@ If you want remote plugins to be able to connect to your Rabbit queue you'll nee
 
 [source]
 ----
-sudo rabbitmqctl add_user USER PASSWORD
-sudo rabbitmqctl set_user_tags USER administrator
+# The USER and PASSWORD will be required for your beer-garden configuration
+sudo rabbitmqctl add_user {USER} {PASSWORD}
+sudo rabbitmqctl set_user_tags {USER} administrator
 sudo rabbitmqctl set_permissions beer_garden ".*" ".*" ".*"
 ----
 
 === MongoDB ===
+
+Official Source: https://www.mongodb.com/docs/manual/installation/
 
 First we need to install the mongo packages:
 
@@ -123,11 +128,35 @@ sudo chkconfig mongod on
 sudo systemctl enable mongod
 ----
 
+=== Nginx ===
+
+Official Source: https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-open-source/
+
+First we need to install the nginx packages. Nginx is utilized for hosting ths Beer-Garden UI html. If there is already
+a service being hosted on Nginx you will want to backup your configurations before installing.
+
+[source]
+----
+sudo yum install -y nginx
+----
+
+Next, run the service:
+
+[source]
+.Centos 6
+----
+sudo service nginx start
+----
+
+[source]
+.Centos 7
+----
+sudo systemctl restart nginx
+----
+
 == Installing Beer Garden
 
-CAUTION: We are working on getting a yum repository hosted through https://packagecloud.io/[Package cloud], so hopefully we can point you at a yum repo sometime soon! For now you'll have to download an RPM from our GitHub releases section.
-
-You'll have to download our latest RPM. Then install with yum:
+You'll have to download our latest RPM from our GitHub releases section. Then install with yum:
 
 [source]
 ----
@@ -135,6 +164,12 @@ sudo yum install beer-garden
 ----
 
 All Beer Garden configuration files are located in `/opt/beer-garden/conf`. Feel free to adjust the configuration as necessary. For more information on configuration see link:/docs/app/configuration/[Configuring Beer Garden].
+
+Common Configuration Updates:
+
+1. RabbitMQ Username (mq.connection.admin.user, mq.connection.message.user)
+2. RabbitMQ Password (mq.connection.admin.password, mq.connection.message.password)
+3. Host names of Mongo and RabbitMQ if installed on different host (db.connection.host, mq.host)
 
 Next we just need to start the service and make sure it's running by default:
 
