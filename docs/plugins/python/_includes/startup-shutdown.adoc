@@ -1,0 +1,39 @@
+Use the `@startup` and `@shutdown` decorators from `brewtils` to run setup and
+cleanup methods as part of your plugin's lifecycle. Apply them to methods on
+your plugin client; Beer Garden calls each method with that client instance.
+
+[source,python]
+.main.py
+----
+from brewtils import Plugin, shutdown, startup
+
+
+class DeviceClient:
+
+    @startup
+    def connect(self):
+        self.connection = open_device_connection()
+
+    @shutdown
+    def disconnect(self):
+        self.connection.close()
+
+
+def main():
+    plugin = Plugin(
+        client=DeviceClient(),
+        name="device-plugin",
+        version="1.0",
+    )
+    plugin.run()
+
+
+if __name__ == "__main__":
+    main()
+----
+
+The startup method runs when the plugin starts, so it can initialize state or
+open resources that commands need. The shutdown method runs when the plugin
+stops, so use it to release those resources. Both methods run synchronously as
+part of the plugin lifecycle; keep them brief to avoid delaying startup or
+shutdown.

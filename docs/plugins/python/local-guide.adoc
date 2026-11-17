@@ -139,6 +139,18 @@ include::{includedir}/beer-conf.adoc[]
 
 include::{includedir}/exceptions.adoc[]
 
+== Startup and Shutdown
+
+include::{includedir}/startup-shutdown.adoc[]
+
+== Topic Subscribers
+
+include::{includedir}/annotation-subscriber.adoc[]
+
+== Publishing to Topics
+
+include::{includedir}/publisher-client.adoc[]
+
 == Logging
 
 For Local plugins, Beer Garden will attempt to make decent decisions about where it should log. For example, if Beer Garden is configured to log to `STDOUT` or `STDERR` then your plugin will log there as well. If, however, Beer Garden is configured to log to a file (the default behavior for RPMs), then it will give each unique plugin its own log file. If you would like to log, you can either print to `STDOUT` or `STDERR`. The `LocalPlugin` will take care of everything else.

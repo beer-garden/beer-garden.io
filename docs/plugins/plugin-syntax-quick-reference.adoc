@@ -58,12 +58,18 @@ curl -X POST -H 'Content-Type: application/json' -d '{"system": "echo", "command
             "message": "Hello, World!"
         },
         "parent": null,
+        "parent_id": null,
         "status": "SUCCESS",
         "system": "echo",
         "system_version": "0.0.1"
     }
 
 ----
+
+With `brewtils` 3.35.0 and later, the `Request` model also exposes `parent_id`.
+It contains the ID of the parent request for child requests, or `null` for a
+top-level request. This ID supports associating requests without needing to
+inspect the nested `parent` model.
 
 === Python
 

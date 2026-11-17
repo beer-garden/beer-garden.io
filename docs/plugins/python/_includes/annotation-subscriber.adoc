@@ -1,0 +1,36 @@
+Use the `@subscribe` decorator to register a client method to handle messages
+published to one or more Beer Garden topics. A subscribed method is exposed as a
+command, so use `@command` to set its command details when needed.
+
+[source,python]
+.main.py
+----
+from brewtils import Plugin, command, subscribe
+
+
+class OrderProcessor:
+
+    @subscribe(topic="orders.created")
+    @command(description="Process a newly created order")
+    def process_order(self, order_id):
+        print(f"Processing order {order_id}")
+
+
+def main():
+    plugin = Plugin(
+        client=OrderProcessor(),
+        name="order-processor",
+        version="1.0",
+    )
+    plugin.run()
+
+
+if __name__ == "__main__":
+    main()
+----
+
+Use `topic` for one topic or `topics` for a list, for example
+`@subscribe(topics=["orders.created", "orders.updated"])`. The method's
+parameters should match the parameters sent by the publisher. If a publish
+matches more than one topic subscribed to by the same command, that command is
+triggered only once.
