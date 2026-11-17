@@ -1,0 +1,43 @@
+In `brewtils`, the publisher class is named `PublishClient`. Use it to publish
+messages to a Beer Garden topic; Beer Garden routes each publish to matching
+subscribed commands.
+
+[source,python]
+.main.py
+----
+from brewtils import Plugin, PublishClient, command
+
+
+class OrderClient:
+
+    def __init__(self):
+        self.publisher = PublishClient(
+            bg_host="localhost",
+            bg_port=2337,
+        )
+
+    @command
+    def create_order(self, order_id):
+        self.publisher.publish(
+            _topic="orders.created",
+            order_id=order_id,
+        )
+
+
+def main():
+    plugin = Plugin(
+        client=OrderClient(),
+        name="order-service",
+        version="1.0",
+    )
+    plugin.run()
+
+
+if __name__ == "__main__":
+    main()
+----
+
+Set `bg_host` and `bg_port` to the Beer Garden server you use. Pass the topic
+with `_topic`; other keyword arguments become request parameters for the
+subscribed command. Topics are Beer Garden routing values, not RabbitMQ or Pika
+topics.
